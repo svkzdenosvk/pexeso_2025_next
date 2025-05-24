@@ -5,6 +5,7 @@ import  Providers  from './providers';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {defaultTheme} from '@pexeso/themes/defaultTheme';
+import AppInit from '@pexeso/components/_internal/AppInit'
 
 
 export const metadata: Metadata = {
@@ -18,13 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-       <Providers>
-          <ThemeProvider theme={defaultTheme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
-        </Providers>
+     <html lang="sk">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

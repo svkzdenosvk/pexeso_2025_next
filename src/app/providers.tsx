@@ -1,9 +1,55 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { Provider } from "react-redux";
-import { store } from "@pexeso/redux/store/store";
+import { ReactNode } from 'react';
+import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
+import { store, RootState } from '@pexeso/redux/store/store';
+import AppInit from '@pexeso/components/_internal/AppInit';
+import { GlobalStyle } from '@pexeso/components/StylingComp/GlobalStyle';
+// import {
+//   defaultTheme,
+//   mediumTheme,
+//   hardTheme,
+// } from '@pexeso/components/StylingComp/themes';
+import { defaultTheme } from "@pexeso/components/StylingComp/themes/defaultTheme";
+import { mediumTheme } from "@pexeso/components/StylingComp/themes/mediumTheme";
+import { hardTheme } from "@pexeso/components/StylingComp/themes/hardTheme";
+
+const themeMap = {
+  defaultTheme,
+  mediumTheme,
+  hardTheme,
+};
+
+function InnerThemeProvider({ children }: { children: ReactNode }) {
+  const { theme: currentThemeKey, isEnd } = useSelector((state: RootState) => state.game);
+  const currentTheme = themeMap[currentThemeKey as keyof typeof themeMap] ?? defaultTheme;
+
+  const wrapperStyles = {
+    minHeight: '100vh',
+    width: '100vw',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: isEnd ? 'center' : 'flex-start',
+  };
+
+  return (
+    <ThemeProvider theme={currentTheme}>
+      <CssBaseline />
+      <GlobalStyle />
+      <Box sx={wrapperStyles}>
+        <AppInit />
+        {children}
+      </Box>
+    </ThemeProvider>
+  );
+}
 
 export default function Providers({ children }: { children: ReactNode }) {
-  return <Provider store={store}>{children}</Provider>;
+  return (
+    <ReduxProvider store={store}>
+      <InnerThemeProvider>{children}</InnerThemeProvider>
+    </ReduxProvider>
+  );
 }
