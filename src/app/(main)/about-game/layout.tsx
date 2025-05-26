@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { Box } from '@mui/material';
-import Link from 'next/link';
-import styled from 'styled-components';
 
+import Button from '@mui/material/Button';
+import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 // ---------- sx styles
@@ -55,11 +55,10 @@ const mainContentAboutStyles = {
   },
 } as const;
 
-// ---------- styled components
- const StyledNextAboutLink = styled(Link)`
-   ${sharedNavLinkStyles};
-   margin: 10px 0;
-`;
+const navLinkStyles = {
+  margin: '10px 0px;',
+} as const;
+
 
 // ---------- component
 
@@ -68,16 +67,29 @@ const SharedAboutLayout = ({ children }: { children: React.ReactNode }) => {
     <Box sx={sharedAboutWrapperStyles}>
       <Box sx={sharedAboutAsideNavigation}>
         <Box component="nav" sx={navStyles}>
-        
-          <StyledNextAboutLink href="/about-game/rules">Pravidlá</StyledNextAboutLink>
-          <StyledNextAboutLink href="/about-game/images">Obrázky</StyledNextAboutLink>
+          {/* // <StyledNextAboutLink href="/about-game/rules">Pravidlá</StyledNextAboutLink> */}
+          {/* // <Style>dNextAboutLink href="/about-game/images">Obrázky</StyledNextAboutLink> */}
 
+          <Button
+            component={NextLinkComposed}
+            to="/about-game/rules"
+            variant="contained"
+            sx={[sharedNavLinkStyles, navLinkStyles]}
+          >
+            Pravidlá
+          </Button>
+          <Button
+            component={NextLinkComposed}
+            to="/about-game/images"
+            variant="contained"
+            sx={[sharedNavLinkStyles, navLinkStyles]}
+          >
+            Obrázky
+          </Button>
         </Box>
       </Box>
 
-      <Box sx={mainContentAboutStyles}>
-        {children}
-      </Box>
+      <Box sx={mainContentAboutStyles}>{children}</Box>
     </Box>
   );
 };

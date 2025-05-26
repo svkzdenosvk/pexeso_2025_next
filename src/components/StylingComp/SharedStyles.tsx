@@ -29,35 +29,57 @@ export const pulsatingButtonStyles = {
     boxShadow: "0px 7px 10px grey",
   },
 };
+//navLinks
+export const sharedNavLinkStyles = {
+  textAlign: "center",
+  padding: "20px",
+  color: "white",
+  backgroundColor: "#808080",
+  fontSize: "20px",
+  fontWeight: "bold",
+  textDecoration: "none",
+  outline: "none",
+  boxShadow: "none",
+  border: "none",
+  transition:
+    "color 0.3s ease, background-color 0.3s ease, transform 0.3s ease",
+
+  "&:hover": {
+    color: "goldenrod",
+    backgroundColor: "#696969",
+    textDecoration: "none",
+    outline: "none",
+    border: "none",
+    boxShadow: "0px 4px 8px rgba(255, 165, 0, 0.3)",
+  },
+} as const;
 
 //-----------------------------------------------------------------------------------------
-
-
 //--------------------------styled comp
 
-//navLinks
-export const sharedNavLinkStyles = css`
-  text-align: center;
-  padding: 20px;
-  color: white;
-  background-color: #808080;
-  font-size: 20px;
-  font-weight: bold;
-  text-decoration: none;
-  outline: none;
-  box-shadow: none;
-  border: none;
-  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+// //navLinks
+// export const sharedNavLinkStyles = css`
+//   text-align: center;
+//   padding: 20px;
+//   color: white;
+//   background-color: #808080;
+//   font-size: 20px;
+//   font-weight: bold;
+//   text-decoration: none;
+//   outline: none;
+//   box-shadow: none;
+//   border: none;
+//   transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
 
-  &:hover {
-    color: goldenrod;
-    background-color: #696969;
-    text-decoration: none;
-    outline: none;
-    border: none;
-    box-shadow: 0px 4px 8px rgba(255, 165, 0, 0.3);
-  }
-`;
+//   &:hover {
+//     color: goldenrod;
+//     background-color: #696969;
+//     text-decoration: none;
+//     outline: none;
+//     border: none;
+//     box-shadow: 0px 4px 8px rgba(255, 165, 0, 0.3);
+//   }
+// `;
 
 //--------------------------shared styles in themes
 export const sharedThemeStyles = {
