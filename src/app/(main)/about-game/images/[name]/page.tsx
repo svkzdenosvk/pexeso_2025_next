@@ -5,10 +5,12 @@ import { useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { Typography, Box } from '@mui/material';
 import { RootState } from '@pexeso/redux/store/store';
+import Link from 'next/link';
+import styled from 'styled-components';
+import   {keyframes } from "styled-components";
+
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
-import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
 import { MyMUIImg } from '@pexeso/components/SharedMUIElements/MyMUIImg';
-import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 // ---------- sx styles
 
@@ -28,24 +30,59 @@ const singleImgMainContentStyles = {
   alignItems: 'center',
 } as const;
 
-const errorStyles = {
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-} as const;
+// const errorStyles = {
+//   height: '100%',
+//   width: '100%',
+//   display: 'flex',
+//   flexDirection: 'column',
+//   justifyContent: 'space-evenly',
+//   alignItems: 'center',
+// } as const;
 
 const imgStyles = {
   width: '200px',
   height: '200px',
 } as const;
 
+// ---------- styled comp
+
+//pulsating button
+const pulseShadowComp = keyframes`
+  0% { box-shadow: 0 2px 0px white; }
+  50% { box-shadow: 0 6px 10px goldenrod; }
+  100% { box-shadow: 0 2px 0px white; }
+`;
+
+ const StyledNextBtnBackLink = styled(Link)`
+  text-align: center;
+  text-decoration: none;
+  width: 50%;
+  border: none;
+  background: transparent;
+  color: black;
+  margin: 10px auto;
+  font-weight: bold;
+  padding: 10px 25px;
+  display: inline;
+  border-radius: 25px;
+  cursor: pointer;
+  animation: ${pulseShadowComp} 1.5s infinite ease-in-out;
+  
+  &:hover {
+    color: goldenrod;
+    transition: color 0.3s ease;
+    box-shadow: 0px 7px 10px grey;
+  }
+`;
+
 // ---------- component
 
 const SingleImagePage = () => {
-  const { name } = useParams(); // z Next.js hooku
+  console.log('useParams()', useParams());
+
+ const params = useParams();
+const name = typeof params?.name === 'string' ? params.name : undefined;
+
   const { imgNames } = useSelector((state: RootState) => state.game);
 
   const [errorImgName, setErrorImgName] = useState(false);
@@ -63,9 +100,9 @@ const SingleImagePage = () => {
       setNameH1('Neexistujúci obrázok');
     } else {
       setErrorImgName(false);
-      let displayName = name;
+      let displayName:string = name;
 
-      // Lokalizované výnimky
+      // exceptions
       if (name === 'vesmir') displayName = 'vesmír';
       if (name === 'vibracia') displayName = 'vibrácia';
 
@@ -81,20 +118,18 @@ const SingleImagePage = () => {
 
       <Box sx={singleImgMainContentStyles}>
         {errorImgName ? (
-          <Box sx={errorStyles}>
+        <>
+          
             <Typography variant="h3" component="h3">
               Error, tento obrázok neexistuje
             </Typography>
-            <MyMUIButton sx={pulsatingButtonStyles} to="/about-game/images">
-              Klikni sem a poď na stránku obrázkov
-            </MyMUIButton>
-          </Box>
+              <StyledNextBtnBackLink href="/about-game/images"> Klikni sem a poď na stránku obrázkov</StyledNextBtnBackLink>
+           
+          </>
         ) : (
           <>
             <MyMUIImg sx={imgStyles} src={`/pictures/pexeso/${name}.jpg`} />
-            <MyMUIButton sx={pulsatingButtonStyles} to="/about-game/images">
-              Späť na stránku obrázkov
-            </MyMUIButton>
+             <StyledNextBtnBackLink href="/about-game/images"> Späť na stránku obrázkov</StyledNextBtnBackLink>
           </>
         )}
       </Box>

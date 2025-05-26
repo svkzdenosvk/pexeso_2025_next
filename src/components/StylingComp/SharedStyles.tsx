@@ -1,7 +1,8 @@
-//pulse button
 'use client';
+//pulse button
 import { css } from "styled-components";
-import { keyframes } from "@mui/system";
+
+ import { keyframes } from "@mui/system";
 
 export const pulseShadow = keyframes`
   0% { box-shadow: 0 2px 0px white; }
@@ -30,32 +31,10 @@ export const pulsatingButtonStyles = {
 };
 
 //-----------------------------------------------------------------------------------------
-//navLinks
-// export const sharedNavLinkStyles = {
-//   textAlign: "center",
-//   padding: "20px",
-//   color: "white",
-//   backgroundColor: "#808080",
-//   fontSize: "20px",
-//   fontWeight: "bold",
-//   textDecoration: "none",
-//   outline: "none",
-//   boxShadow: "none",
-//   border: "none",
-//   transition:
-//     "color 0.3s ease, background-color 0.3s ease, transform 0.3s ease",
 
-//   "&:hover": {
-//     color: "goldenrod",
-//     backgroundColor: "#696969",
-//     textDecoration: "none",
-//     outline: "none",
-//     border: "none",
-//     boxShadow: "0px 4px 8px rgba(255, 165, 0, 0.3)",
-//   },
-// } as const;
 
 //--------------------------styled comp
+
 //navLinks
 export const sharedNavLinkStyles = css`
   text-align: center;

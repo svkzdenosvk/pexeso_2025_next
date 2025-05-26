@@ -49,7 +49,7 @@ const mainContentStyles = {
 
 // ---------- styled components
 
-export const StyledNextMainLink = styled(Link)`
+ const StyledNextMainLink = styled(Link)`
   ${sharedNavLinkStyles};
   width: 50%;
 

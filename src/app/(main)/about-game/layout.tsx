@@ -56,7 +56,7 @@ const mainContentAboutStyles = {
 } as const;
 
 // ---------- styled components
-export const StyledNextAboutLink = styled(Link)`
+ const StyledNextAboutLink = styled(Link)`
    ${sharedNavLinkStyles};
    margin: 10px 0;
 `;

@@ -72,6 +72,7 @@ export const GameDivPictures = () => {
           dispatch(match());
         } else {
           dispatch(un_match(level));
+
         }
       }
 

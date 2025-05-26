@@ -105,7 +105,7 @@ const GameSettingsPage = () => {
     );
 
     formRef.current?.reset();
-    router.push('/game'); // nahrádza navigate('/game')
+    router.push('/game'); //redirect
   };
 
   return (

@@ -4,7 +4,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@pexeso/redux/store/store';
 import { Typography, Box } from '@mui/material';
-import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
+import Link from 'next/link';
+import styled from 'styled-components';
+
+// import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
 import { MyMUIImg } from '@pexeso/components/SharedMUIElements/MyMUIImg';
 
 // ---------- sx styles
@@ -44,7 +47,18 @@ const imgStyles = {
     boxShadow: '0px 0px 28px 19px goldenrod',
   },
 } as const;
+// ---------- styled components
+ const StyledImageLink = styled(Link)`
+    background-color: white;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+  border: none;
 
+  &:hover {
+    box-shadow: none;
+  }
+`;
 // ---------- component
 
 const Images = () => {
@@ -64,15 +78,13 @@ const Images = () => {
         ) : (
           imgNames.map((oneImgName) => (
             <Box key={oneImgName}>
-              <MyMUIButton
-                to={`/about-game/images/${oneImgName}`}
-                sx={btnLinkStyles}
-              >
-                <MyMUIImg
-                  sx={imgStyles}
-                  src={`/pictures/pexeso/${oneImgName}.jpg`}
-                />
-              </MyMUIButton>
+                <StyledImageLink key={oneImgName} href={`/about-game/images/${oneImgName}`}>
+    <img
+      src={`/pictures/pexeso/${oneImgName}.jpg`}
+      alt={`Obrázok ${oneImgName}`}
+    />
+  </StyledImageLink>
+             
             </Box>
           ))
         )}
