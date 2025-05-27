@@ -3,12 +3,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@pexeso/redux/store/store';
-import { Typography, Box } from '@mui/material';
-import Link from 'next/link';
-import styled from 'styled-components';
+import { Typography, Box ,Button} from '@mui/material';
 
-// import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
-import { MyMUIImg } from '@pexeso/components/SharedMUIElements/MyMUIImg';
+import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
 // ---------- sx styles
 
@@ -48,17 +45,17 @@ const imgStyles = {
   },
 } as const;
 // ---------- styled components
- const StyledImageLink = styled(Link)`
-    background-color: white;
-  text-decoration: none;
-  outline: none;
-  box-shadow: none;
-  border: none;
+// const StyledImageLink = styled(Link)`
+//   background-color: white;
+//   text-decoration: none;
+//   outline: none;
+//   box-shadow: none;
+//   border: none;
 
-  &:hover {
-    box-shadow: none;
-  }
-`;
+//   &:hover {
+//     box-shadow: none;
+//   }
+// `;
 // ---------- component
 
 const Images = () => {
@@ -77,15 +74,20 @@ const Images = () => {
           </Typography>
         ) : (
           imgNames.map((oneImgName) => (
-            <Box key={oneImgName}>
-                <StyledImageLink key={oneImgName} href={`/about-game/images/${oneImgName}`}>
-    <img
-      src={`/pictures/pexeso/${oneImgName}.jpg`}
-      alt={`Obrázok ${oneImgName}`}
-    />
-  </StyledImageLink>
-             
-            </Box>
+           
+            <Button
+              component={NextLinkComposed}
+              key={oneImgName}
+              to={`/about-game/images/${oneImgName}`}
+              sx={btnLinkStyles}
+            >
+              <Box
+                component="img"
+                src={`/pictures/pexeso/${oneImgName}.jpg`}
+                alt={`Obrázok ${oneImgName}`}
+                sx={imgStyles}
+              />
+            </Button>
           ))
         )}
       </Box>

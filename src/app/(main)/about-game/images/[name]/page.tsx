@@ -5,12 +5,11 @@ import { useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { Typography, Box } from '@mui/material';
 import { RootState } from '@pexeso/redux/store/store';
-import Link from 'next/link';
-import styled from 'styled-components';
-import   {keyframes } from "styled-components";
-
+import Button from '@mui/material/Button';
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
 import { MyMUIImg } from '@pexeso/components/SharedMUIElements/MyMUIImg';
+import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
+import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
 // ---------- sx styles
 
@@ -44,44 +43,14 @@ const imgStyles = {
   height: '200px',
 } as const;
 
-// ---------- styled comp
-
-//pulsating button
-const pulseShadowComp = keyframes`
-  0% { box-shadow: 0 2px 0px white; }
-  50% { box-shadow: 0 6px 10px goldenrod; }
-  100% { box-shadow: 0 2px 0px white; }
-`;
-
- const StyledNextBtnBackLink = styled(Link)`
-  text-align: center;
-  text-decoration: none;
-  width: 50%;
-  border: none;
-  background: transparent;
-  color: black;
-  margin: 10px auto;
-  font-weight: bold;
-  padding: 10px 25px;
-  display: inline;
-  border-radius: 25px;
-  cursor: pointer;
-  animation: ${pulseShadowComp} 1.5s infinite ease-in-out;
-  
-  &:hover {
-    color: goldenrod;
-    transition: color 0.3s ease;
-    box-shadow: 0px 7px 10px grey;
-  }
-`;
 
 // ---------- component
 
 const SingleImagePage = () => {
   console.log('useParams()', useParams());
 
- const params = useParams();
-const name = typeof params?.name === 'string' ? params.name : undefined;
+  const params = useParams();
+  const name = typeof params?.name === 'string' ? params.name : undefined;
 
   const { imgNames } = useSelector((state: RootState) => state.game);
 
@@ -100,7 +69,7 @@ const name = typeof params?.name === 'string' ? params.name : undefined;
       setNameH1('Neexistujúci obrázok');
     } else {
       setErrorImgName(false);
-      let displayName:string = name;
+      let displayName: string = name;
 
       // exceptions
       if (name === 'vesmir') displayName = 'vesmír';
@@ -118,18 +87,31 @@ const name = typeof params?.name === 'string' ? params.name : undefined;
 
       <Box sx={singleImgMainContentStyles}>
         {errorImgName ? (
-        <>
-          
+          <>
             <Typography variant="h3" component="h3">
               Error, tento obrázok neexistuje
             </Typography>
-              <StyledNextBtnBackLink href="/about-game/images"> Klikni sem a poď na stránku obrázkov</StyledNextBtnBackLink>
-           
+            <Button
+              component={NextLinkComposed}
+              to="/about-game/images"
+              variant="contained"
+              sx={pulsatingButtonStyles}
+            >
+              Klikni sem a poď na stránku obrázkov
+            </Button>
           </>
         ) : (
           <>
             <MyMUIImg sx={imgStyles} src={`/pictures/pexeso/${name}.jpg`} />
-             <StyledNextBtnBackLink href="/about-game/images"> Späť na stránku obrázkov</StyledNextBtnBackLink>
+
+            <Button
+              component={NextLinkComposed}
+              to="/about-game/images"
+              variant="contained"
+              sx={pulsatingButtonStyles}
+            >
+              Späť na stránku obrázkov
+            </Button>
           </>
         )}
       </Box>

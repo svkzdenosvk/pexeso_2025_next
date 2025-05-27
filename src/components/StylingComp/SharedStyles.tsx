@@ -1,6 +1,5 @@
 'use client';
-//pulse button
-import { css } from "styled-components";
+//pulsating button
 
  import { keyframes } from "@mui/system";
 
@@ -55,31 +54,7 @@ export const sharedNavLinkStyles = {
 } as const;
 
 //-----------------------------------------------------------------------------------------
-//--------------------------styled comp
 
-// //navLinks
-// export const sharedNavLinkStyles = css`
-//   text-align: center;
-//   padding: 20px;
-//   color: white;
-//   background-color: #808080;
-//   font-size: 20px;
-//   font-weight: bold;
-//   text-decoration: none;
-//   outline: none;
-//   box-shadow: none;
-//   border: none;
-//   transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
-
-//   &:hover {
-//     color: goldenrod;
-//     background-color: #696969;
-//     text-decoration: none;
-//     outline: none;
-//     border: none;
-//     box-shadow: 0px 4px 8px rgba(255, 165, 0, 0.3);
-//   }
-// `;
 
 //--------------------------shared styles in themes
 export const sharedThemeStyles = {

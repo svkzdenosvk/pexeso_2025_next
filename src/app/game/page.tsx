@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 import {
@@ -16,8 +16,7 @@ import { createDivsArrayFromImgNamesAndCountImg } from '@pexeso/_inc/data';
 import { after_settings_selected_img_count } from '@pexeso/redux/store/reducers/gameSlice';
 import { RootState } from '@pexeso/redux/store/store';
 import { My_Type_DivImg } from '@pexeso/_inc/my_types';
-
-import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
+import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 import { GameDivPictures } from '@pexeso/components/RelatedToGame/GameDivPictures';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
@@ -122,9 +121,14 @@ const Game = () => {
           </Typography>
         )}
 
-        <MyMUIButton sx={gameLinkButtonStyles} to="/settings">
+        <Button
+          component={NextLinkComposed}
+          to="/settings"
+          variant="contained"
+          sx={gameLinkButtonStyles}
+        >
           {linkName}
-        </MyMUIButton>
+        </Button>
 
         <Typography variant="h5" component="h5" sx={colorTextThemeStyles}>
           Pre začatie hry stlačte tlačítko štart

@@ -4,7 +4,6 @@ import React from 'react';
 import { Box, Button } from '@mui/material';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
-
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 // ---------- sx styles
@@ -48,27 +47,14 @@ const mainContentStyles = {
 } as const;
 
 const navLinkStyles = {
-  width: "50%",
+  width: '50%',
 
-  "@media (max-width: 436px)": {
-    width: "100%",
-    textAlign: "center",
-    alignItems: "center",
+  '@media (max-width: 436px)': {
+    width: '100%',
+    textAlign: 'center',
+    alignItems: 'center',
   },
 } as const;
-
-// ---------- styled components
-
-// const StyledNextMainLink = styled(Link)`
-//   ${sharedNavLinkStyles};
-//   width: 50%;
-
-//   @media (max-width: 436px) {
-//     width: 100%;
-//     text-align: center;
-//     align-items: center;
-//   }
-// `;
 
 // ---------- component
 
@@ -77,8 +63,6 @@ const SharedLayout = ({ children }: { children: React.ReactNode }) => {
     <Box sx={sharedWrapperStyles}>
       <Box sx={sharedHeaderNavigation}>
         <Box sx={navStyles}>
-          {/* // <StyledNextMainLink href="/about-game">O Hre</StyledNextMainLink> */}
-          {/* // <StyledNextMainLink href="/settings"> Hraj hru</StyledNextMainLink> */}
           <Button
             component={NextLinkComposed}
             to="/about-game"
@@ -94,7 +78,7 @@ const SharedLayout = ({ children }: { children: React.ReactNode }) => {
             sx={[sharedNavLinkStyles, navLinkStyles]}
           >
             Hraj
-          </Button>  
+          </Button>
         </Box>
       </Box>
       <Box sx={mainContentStyles}>{children}</Box>

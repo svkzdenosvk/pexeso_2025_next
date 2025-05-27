@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import {
   Box,
+  Button,
   FormControl,
   FormLabel,
   RadioGroup,
@@ -27,7 +28,7 @@ import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,
 } from '@pexeso/_inc/_inc_functions';
-import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
+// import { MyMUIButton } from '@pexeso/components/SharedMUIElements/MyMUIButton';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 // ---------- sx styles
@@ -158,9 +159,9 @@ const GameSettingsPage = () => {
         </Alert>
       )}
 
-      <MyMUIButton sx={pulsatingButtonStyles} type="submit">
+      <Button sx={pulsatingButtonStyles} type="submit">
         Hraj
-      </MyMUIButton>
+      </Button>
     </Box>
   );
 };
