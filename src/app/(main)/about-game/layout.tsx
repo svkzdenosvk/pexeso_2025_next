@@ -67,9 +67,7 @@ const SharedAboutLayout = ({ children }: { children: React.ReactNode }) => {
     <Box sx={sharedAboutWrapperStyles}>
       <Box sx={sharedAboutAsideNavigation}>
         <Box component="nav" sx={navStyles}>
-          {/* // <StyledNextAboutLink href="/about-game/rules">Pravidlá</StyledNextAboutLink> */}
-          {/* // <Style>dNextAboutLink href="/about-game/images">Obrázky</StyledNextAboutLink> */}
-
+          
           <Button
             component={NextLinkComposed}
             to="/about-game/rules"

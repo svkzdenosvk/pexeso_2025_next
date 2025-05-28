@@ -10,15 +10,6 @@ export const GlobalStyle = createGlobalStyle`
      transition: background-color 0.5s ease, color 0.5s ease;
   }
 
-  // #result {
-   
-  //   min-height: 100vh;
-  //   display: flex;
-  //   flex-direction: column;
-  //   align-items: center;
-  // }
-
- 
 
   .column_content {
     
@@ -34,8 +25,8 @@ export const GlobalStyle = createGlobalStyle`
         cursor: pointer;
 
          img {
-      opacity: 0%;
-    }
+           opacity: 0%;
+         }
       }
 
       .div_on_click {
@@ -47,14 +38,7 @@ export const GlobalStyle = createGlobalStyle`
      }
   }
 
-  // .div_center {
-  //   margin: 0;
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   transform: translate(-50%, -50%);
-  // }
-
+  
   .column_content .row .selected_Div_img {
     pointer-events: none;
 
@@ -77,14 +61,5 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
-  @media screen and (min-width: 1650px) {
-    // #result {
-    //   text-align: center;
-    //   align-items: center;
-    // }
-
-  }
-
- 
- 
+  
 `;

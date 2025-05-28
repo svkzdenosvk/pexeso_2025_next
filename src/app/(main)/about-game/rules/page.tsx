@@ -3,7 +3,6 @@
 import React from 'react';
 import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
 import Image from 'next/image';
-// import { MyMUIImg } from "@pexeso/components/SharedMUIElements/MyMUIImg";
 
 // ---------- sx styles
 

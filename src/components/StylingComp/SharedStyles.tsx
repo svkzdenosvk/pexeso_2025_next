@@ -28,6 +28,7 @@ export const pulsatingButtonStyles = {
     boxShadow: "0px 7px 10px grey",
   },
 };
+
 //navLinks
 export const sharedNavLinkStyles = {
   textAlign: "center",

@@ -6,11 +6,6 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { store, RootState } from '@pexeso/redux/store/store';
 import AppInit from '@pexeso/components/_internal/AppInit';
 import { GlobalStyle } from '@pexeso/components/StylingComp/GlobalStyle';
-// import {
-//   defaultTheme,
-//   mediumTheme,
-//   hardTheme,
-// } from '@pexeso/components/StylingComp/themes';
 import { defaultTheme } from "@pexeso/components/StylingComp/themes/defaultTheme";
 import { mediumTheme } from "@pexeso/components/StylingComp/themes/mediumTheme";
 import { hardTheme } from "@pexeso/components/StylingComp/themes/hardTheme";
@@ -20,6 +15,8 @@ const themeMap = {
   mediumTheme,
   hardTheme,
 };
+
+//solution from chatGPT
 
 function InnerThemeProvider({ children }: { children: ReactNode }) {
   const { theme: currentThemeKey, isEnd } = useSelector((state: RootState) => state.game);

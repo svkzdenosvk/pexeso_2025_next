@@ -36,5 +36,5 @@ export default function AppInit() {
       });
   }, [isLoading, imgNames, dispatch]);
 
-  return null; // no UI
+  return null; 
 }

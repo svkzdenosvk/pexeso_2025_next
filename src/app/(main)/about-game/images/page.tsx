@@ -4,10 +4,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@pexeso/redux/store/store';
 import { Typography, Box, Button } from '@mui/material';
-
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
-
 import Image from 'next/image';
+import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
 // ---------- sx styles
 
