@@ -55,7 +55,6 @@ export const sharedNavLinkStyles = {
 
 //-----------------------------------------------------------------------------------------
 
-
 //--------------------------shared styles in themes
 export const sharedThemeStyles = {
   typography: {

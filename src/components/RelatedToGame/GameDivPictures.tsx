@@ -1,35 +1,37 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Typography, Box } from "@mui/material";
-import type { Theme } from "@mui/material/styles";
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Typography, Box } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
+import Image from 'next/image';
 
-import { My_Type_DivImg } from "@pexeso/_inc/my_types";
-import { RootState } from "@pexeso/redux/store/store";
+import { My_Type_DivImg } from '@pexeso/_inc/my_types';
+import { RootState } from '@pexeso/redux/store/store';
 import {
   showOne,
   match,
   un_match,
   hardest_level_shuffle,
-} from "@pexeso/redux/store/reducers/gameSlice";
-import { MyMUIImg } from "@pexeso/components/SharedMUIElements/MyMUIImg";
+} from '@pexeso/redux/store/reducers/gameSlice';
 
 // ---------- sx styles
 
-const imgStyles = {
-  width: "107px",
-  height: "107px",
-  opacity: "0%",
+const divOnCliCkBoxStyles = {
+  width: '107px',
+  height: '107px',
+  position: 'relative',
+  borderRadius: 2,
+  overflow: 'hidden',
 } as const;
 
 const rowStyles = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-evenly",
-  flexWrap: "wrap",
-  flex: "1 1 50%",
-  mt: "1.5%",
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+  flexWrap: 'wrap',
+  flex: '1 1 50%',
+  mt: '1.5%',
 } as const;
 
 const colorTextThemeStyles = (theme: Theme) => ({
@@ -46,14 +48,14 @@ export const GameDivPictures = () => {
 
   const showImg = (element: HTMLDivElement, divObject: My_Type_DivImg) => {
     const selectedArr = divImgs.filter((oneDiv) =>
-      oneDiv.classNames.includes("selected_Div_img")
+      oneDiv.classNames.includes('selected_Div_img')
     );
     const rotatedArr = divImgs.filter((oneDiv) =>
-      oneDiv.classNames.includes("rotate-center")
+      oneDiv.classNames.includes('rotate-center')
     );
 
     if (
-      element.classList.contains("mask") &&
+      element.classList.contains('mask') &&
       (selectedArr.length === 0 || selectedArr.length === 1) &&
       rotatedArr.length === 0
     ) {
@@ -64,7 +66,7 @@ export const GameDivPictures = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       const selectedArr = divImgs.filter((oneDiv) =>
-        oneDiv.classNames.includes("selected_Div_img")
+        oneDiv.classNames.includes('selected_Div_img')
       );
 
       if (selectedArr.length === 2) {
@@ -72,14 +74,13 @@ export const GameDivPictures = () => {
           dispatch(match());
         } else {
           dispatch(un_match(level));
-
         }
       }
 
-      document.body.style.pointerEvents = "auto";
+      document.body.style.pointerEvents = 'auto';
     }, 200);
 
-    if (level === "hard") {
+    if (level === 'hard') {
       const intervalShuffle = setInterval(() => {
         dispatch(hardest_level_shuffle());
       }, 400);
@@ -99,14 +100,16 @@ export const GameDivPictures = () => {
       ) : (
         divImgs.map((oneDiv) => (
           <Box
+            sx={divOnCliCkBoxStyles}
             key={oneDiv.id}
             onClick={(e) => showImg(e.currentTarget, oneDiv)}
-            className={oneDiv.classNames.join(" ")}
+            className={oneDiv.classNames.join(' ')}
           >
-            <MyMUIImg
-              sx={imgStyles}
+            <Image
               src={`/pictures/pexeso/${oneDiv.name}.jpg`}
-              alt={oneDiv.name}
+              alt={`oneDiv.name`}
+              fill
+              style={{ objectFit: 'cover' }} // this is needed because of "fill"
             />
           </Box>
         ))

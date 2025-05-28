@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Button } from '@mui/material';
 import { RootState } from '@pexeso/redux/store/store';
-import Button from '@mui/material/Button';
+import Image from 'next/image';
+
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
-import { MyMUIImg } from '@pexeso/components/SharedMUIElements/MyMUIImg';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
@@ -29,20 +29,13 @@ const singleImgMainContentStyles = {
   alignItems: 'center',
 } as const;
 
-// const errorStyles = {
-//   height: '100%',
-//   width: '100%',
-//   display: 'flex',
-//   flexDirection: 'column',
-//   justifyContent: 'space-evenly',
-//   alignItems: 'center',
-// } as const;
-
 const imgStyles = {
   width: '200px',
   height: '200px',
+  overflow: 'hidden',
+  position: 'relative',
+  borderRadius: 2,
 } as const;
-
 
 // ---------- component
 
@@ -102,7 +95,14 @@ const SingleImagePage = () => {
           </>
         ) : (
           <>
-            <MyMUIImg sx={imgStyles} src={`/pictures/pexeso/${name}.jpg`} />
+            <Box sx={imgStyles}>
+              <Image
+                src={`/pictures/pexeso/${name}.jpg`}
+                alt={`Obrázok ${name}`}
+                fill
+                style={{ objectFit: 'cover' }} // this is neededbecause of "fill"
+              />
+            </Box>
 
             <Button
               component={NextLinkComposed}
