@@ -1,30 +1,44 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOnlyImgNames, preloadImages } from '@pexeso/_inc/data';
+import useSWR from 'swr';
+import { preloadImages } from '@pexeso/_inc/data';
+import { _jsonFetcher } from '@pexeso/_inc/_inc_functions'; //better for stable reference ->important for SWR cache
+
+import { My_Type_Api_Data, My_Type_Img_Name } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/redux/store/store';
-import { set_img_names, set_loading } from '@pexeso/redux/store/reducers/gameSlice';
+import {
+  set_img_names,
+  set_loading,
+} from '@pexeso/redux/store/reducers/gameSlice';
 
 export default function AppInit() {
   const dispatch = useDispatch();
   const { imgNames, isLoading } = useSelector((state: RootState) => state.game);
 
-  useEffect(() => {
-    const fetchImgNamesFunc = async () => {
-      try {
-        const fetchedImgNames = await fetchOnlyImgNames();
-        dispatch(set_img_names(fetchedImgNames));
-      } catch (error) {
-        console.error('Error fetching names:', error);
-      }
-    };
+  //swr
+  const {
+    data,
+    error: errorSWR, //errorSWR is alias for error
+    isLoading: isLoadingSWR, //isLoadingSWR is alias for isLoading
+  } = useSWR<My_Type_Api_Data[]>('/api/images', _jsonFetcher);
 
-    fetchImgNamesFunc();
-  }, [dispatch]);
-
+  //set fetched img names to redux
   useEffect(() => {
-    if (!isLoading) return;
+    if (!isLoading || !data || errorSWR) {
+      return;
+    } else {
+      let imgNamesArr: My_Type_Img_Name[] = data.map(
+        (oneImgName) => oneImgName.name
+      );
+      dispatch(set_img_names(imgNamesArr));
+    }
+  }, [isLoading, errorSWR, data, dispatch]);
+
+  //preloading pictures
+  useEffect(() => {
+    if (!isLoading || imgNames.length === 0) return;
 
     preloadImages(imgNames)
       .then(() => {
@@ -36,5 +50,5 @@ export default function AppInit() {
       });
   }, [isLoading, imgNames, dispatch]);
 
-  return null; 
+  return null;
 }

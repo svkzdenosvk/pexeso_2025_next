@@ -39,6 +39,7 @@ const btnLinkStyles = {
 } as const;
 
 const imgStyles = {
+  mt:2,
   width: 200,
   height: 200,
   borderRadius: 2,

@@ -2,6 +2,9 @@
 // ---------------------------file with included functions to make cleaner and more readable code
 // ---------------------------
 
+// ---------------------------function JSON fetching (then for SWR)
+export const _jsonFetcher = (url: string) => fetch(url).then(res => res.json());
+
 
 // ---------------------------function for shuffle
 

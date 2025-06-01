@@ -81,3 +81,9 @@ export type My_Type_Redux_Root_State = {
   };
   time: { seconds: number };
 };
+
+/*----------------------------------------API type----------------------------------------- */
+
+ export type My_Type_Api_Data = {
+  name: My_Type_Img_Name;
+};

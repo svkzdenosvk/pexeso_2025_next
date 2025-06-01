@@ -39,7 +39,6 @@ const imgStyles = {
 // ---------- component
 
 const SingleImagePage = () => {
-  console.log('useParams()', useParams());
 
   const params = useParams();
   const name = typeof params?.name === 'string' ? params.name : undefined;
