@@ -27,6 +27,7 @@ const imgMainContentStyles = {
 };
 
 const btnLinkStyles = {
+  mt:2,
   p:0,
   backgroundColor: 'white',
   textDecoration: 'none',
@@ -39,7 +40,6 @@ const btnLinkStyles = {
 } as const;
 
 const imgStyles = {
-  mt:2,
   width: 200,
   height: 200,
   borderRadius: 2,
