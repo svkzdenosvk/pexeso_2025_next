@@ -1,11 +1,7 @@
 // ---------------------------
 // ---------------------------file with included functions to make cleaner and more readable code
 // ---------------------------
-
-// ---------------------------function JSON fetching (then for SWR)
-export const _jsonFetcher = (url: string) => fetch(url).then(res => res.json());
-
-
+   
 // ---------------------------function for shuffle
 
 export function _shuffleArray(arrayIn: any[]) {
@@ -27,7 +23,7 @@ export function _myFormatSeconds(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
-  const minPart = minutes > 0 ? `${minutes}m ` : "";
+  const minPart = minutes > 0 ? `${minutes}m ` : '';
   const secPart = `${remainingSeconds}s`;
 
   return minPart + secPart;

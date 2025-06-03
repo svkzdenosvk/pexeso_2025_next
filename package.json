@@ -14,12 +14,11 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.1.0",
     "@reduxjs/toolkit": "^2.8.2",
-    "firebase": "^11.8.1",
+    "axios": "^1.9.0",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
-    "swr": "^2.3.3",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

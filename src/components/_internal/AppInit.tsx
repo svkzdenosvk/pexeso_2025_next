@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useSWR from 'swr';
 import { preloadImages } from '@pexeso/_inc/data';
-import { _jsonFetcher } from '@pexeso/_inc/_inc_functions'; //better for stable reference ->important for SWR cache
+import { _graphqlRequest } from '@pexeso/graphql/graphqlClient';
 
-import { My_Type_Api_Data, My_Type_Img_Name } from '@pexeso/_inc/my_types';
+import { IMAGES_QUERY } from '@pexeso/graphql/queries';
+import { My_Type_Img_Name } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/redux/store/store';
 import {
   set_img_names,
@@ -17,24 +17,24 @@ export default function AppInit() {
   const dispatch = useDispatch();
   const { imgNames, isLoading } = useSelector((state: RootState) => state.game);
 
-  //swr
-  const {
-    data,
-    error: errorSWR, //errorSWR is alias for error
-    isLoading: isLoadingSWR, //isLoadingSWR is alias for isLoading
-  } = useSWR<My_Type_Api_Data[]>('/api/images', _jsonFetcher);
-
-  //set fetched img names to redux
   useEffect(() => {
-    if (!isLoading || !data || errorSWR) {
+    if (!isLoading) {
       return;
     } else {
-      let imgNamesArr: My_Type_Img_Name[] = data.map(
-        (oneImgName) => oneImgName.name
-      );
-      dispatch(set_img_names(imgNamesArr));
+      //axios fetching graphql
+      const fetchApiGraphqlImages = async () => {
+        const { data } = await _graphqlRequest(IMAGES_QUERY);
+
+        let imgNamesArr: My_Type_Img_Name[] = data.images.map(
+          (oneImgName: { name: My_Type_Img_Name }) => oneImgName.name
+        );
+        //set names to redux from API graphql
+        dispatch(set_img_names(imgNamesArr));
+      };
+
+      fetchApiGraphqlImages();
     }
-  }, [isLoading, errorSWR, data, dispatch]);
+  }, [dispatch]);
 
   //preloading pictures
   useEffect(() => {
