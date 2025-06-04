@@ -1,7 +1,17 @@
 // ---------------------------
 // ---------------------------file with included functions to make cleaner and more readable code
 // ---------------------------
-   
+
+// ---------------------------axios client (something like fetcher in swr)
+import axios from 'axios';
+
+export const _axiosClient = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // ---------------------------function for shuffle
 
 export function _shuffleArray(arrayIn: any[]) {
