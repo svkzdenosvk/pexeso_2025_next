@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOnlyImgNames, preloadImages } from '@pexeso/_inc/data';
-import { RootState } from '@pexeso/redux/store/store';
-import { set_img_names, set_loading } from '@pexeso/redux/store/reducers/gameSlice';
+import { RootState } from '@pexeso/lib/redux/store/store';
+import { set_img_names, set_loading } from '@pexeso/lib/redux/store/reducers/gameSlice';
 
 export default function AppInit() {
   const dispatch = useDispatch();

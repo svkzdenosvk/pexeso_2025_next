@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
-import { RootState } from '@pexeso/redux/store/store';
-import { after_settings_selected_img_count } from '@pexeso/redux/store/reducers/gameSlice';
+import { RootState } from '@pexeso/lib/redux/store/store';
+import { after_settings_selected_img_count } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,

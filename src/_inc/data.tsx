@@ -1,4 +1,4 @@
-import { projectFirestore } from "../firebase/config";
+import { projectFirestore } from "../lib/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
 import { _shuffleArray } from "./_inc_functions";
 import { My_Type_Img_Name, My_Type_ImgCount, My_Type_DivImg } from "./my_types";

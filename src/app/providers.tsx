@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import { store, RootState } from '@pexeso/redux/store/store';
+import { store, RootState } from '@pexeso/lib/redux/store/store';
 import AppInit from '@pexeso/components/_internal/AppInit';
 import { GlobalStyle } from '@pexeso/components/StylingComp/GlobalStyle';
 import { defaultTheme } from "@pexeso/components/StylingComp/themes/defaultTheme";

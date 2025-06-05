@@ -17,8 +17,8 @@ import {
 import {
   settings_and_styling_before_start,
   reset_settings,
-} from '@pexeso/redux/store/reducers/gameSlice';
-import { seconds_reset } from '@pexeso/redux/store/reducers/secondsSlice';
+} from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { seconds_reset } from '@pexeso/lib/redux/store/reducers/secondsSlice';
 import {
   My_Type_ImgCount,
   My_Type_Level,

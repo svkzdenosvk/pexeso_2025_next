@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Box } from "@mui/material";
 import type { Theme } from "@mui/material/styles";
 
-import { RootState } from "@pexeso/redux/store/store";
-import { seconds_counter } from "@pexeso/redux/store/reducers/secondsSlice";
-import { set_start_game } from "@pexeso/redux/store/reducers/gameSlice";
+import { RootState } from "@pexeso/lib/redux/store/store";
+import { seconds_counter } from "@pexeso/lib/redux/store/reducers/secondsSlice";
+import { set_start_game } from "@pexeso/lib/redux/store/reducers/gameSlice";
 
 // ---------- sx styles
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@pexeso/redux/store/store';
+import { RootState } from '@pexeso/lib/redux/store/store';
 import { Typography, Box, Button } from '@mui/material';
 import Image from 'next/image';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';

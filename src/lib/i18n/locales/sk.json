@@ -1,0 +1,83 @@
+{
+  "shared_main_nav": {
+    "about_link": "O hre",
+    "game_link": "Hraj"
+  },
+
+  "shared_about_nav": {
+    "rules_link": "Pravidlá",
+    "images_link": "Obrázky",
+    "h2": {
+      "about_page": "O hre exeso",
+      "rules_page": "Pravidlá",
+      "images_page": "Hracie obrázky",
+      "single_img_page": {
+        "drop": "Kvapka",
+        "vibration": "Vibrácia",
+        "sea": "More",
+        "lightning": "Blesk",
+        "wood": "Drevo",
+        "sun": "Slnko",
+        "space": "Vesmír",
+        "wind": "Vietor",
+        "not_exist": "Neexistujúci obrázok"
+      }
+    },
+    "pages": {
+      "rules": {
+        "h4": {
+          "principle": "Princíp",
+          "level": "Nastavenie levelu obtiažnosti"
+        },
+        "content": {
+          "principle": "Hľadať zhodný pár obrázkov pod obrázkom jokera.",
+          "level": {
+            "name": {
+              "easy": "Ľahký",
+              "medium": "Stredný",
+              "hard": "Ťažký"
+            },
+            "description": {
+              "easy": "Obrázky sa nemiešajú, ale uhádnuté sa vymažú a zvyšné sa posúvajú k sebe.",
+              "medium": "Usporiadanie obrázkov sa mieša po každej neuhádnutej dvojici.",
+              "hard": "Usporiadanie obrázkov sa mieša takmer každú sekundu."
+            }
+          }
+        }
+      },
+      "single_img_page": {
+        "btn": {
+          "btn_back": "Späť na stránku obrázkov",
+          "btn_error": "Klikni sem a poď na stránku obrázkov"
+        },
+        "h3_error": "Error, tento obrázok neexistuje"
+      }
+    }
+  },
+
+  "game": {
+    "settings": {
+      "h4": "Nastavte parametre hry",
+      "legend": {
+        "level": "Vyberte úroveň obtiažnosti:",
+        "img_count": "Vyberte počet obrázkov:"
+      },
+      "value": {
+        "level": {
+          "easy": "Ľahký",
+          "medium": "Stredný",
+          "hard": "Ťažký"
+        }
+      },
+      "btn_play": "Hraj"
+    },
+    "game_itself": {
+        "h5":"Pre začatie hry stlačte štart",
+        "btn_start":"Štart",
+        "link_before_start": "Späť na nastavenie hry",
+        "link_after_start":"Nová hra",
+        "link_end_game":"Hraj znova",
+        "gratulation_text":"Gratulácia, vyhrali ste za "
+    }
+  }
+}

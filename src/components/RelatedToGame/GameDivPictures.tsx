@@ -7,13 +7,13 @@ import type { Theme } from '@mui/material/styles';
 import Image from 'next/image';
 
 import { My_Type_DivImg } from '@pexeso/_inc/my_types';
-import { RootState } from '@pexeso/redux/store/store';
+import { RootState } from '@pexeso/lib/redux/store/store';
 import {
   showOne,
   match,
   un_match,
   hardest_level_shuffle,
-} from '@pexeso/redux/store/reducers/gameSlice';
+} from '@pexeso/lib/redux/store/reducers/gameSlice';
 
 // ---------- sx styles
 
