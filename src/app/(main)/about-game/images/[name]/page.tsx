@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { Typography, Box, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import Image from 'next/image';
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
@@ -39,7 +40,7 @@ const imgStyles = {
 // ---------- component
 
 const SingleImagePage = () => {
-  console.log('useParams()', useParams());
+  const { t } = useTranslation();
 
   const params = useParams();
   const name = typeof params?.name === 'string' ? params.name : undefined;
@@ -81,7 +82,7 @@ const SingleImagePage = () => {
         {errorImgName ? (
           <>
             <Typography variant="h3" component="h3">
-              Error, tento obrázok neexistuje
+              {t('single_img_page.h3_error')}
             </Typography>
             <Button
               component={NextLinkComposed}
@@ -89,7 +90,7 @@ const SingleImagePage = () => {
               variant="contained"
               sx={pulsatingButtonStyles}
             >
-              Klikni sem a poď na stránku obrázkov
+              {t('single_img_page.btn_error')}
             </Button>
           </>
         ) : (
@@ -109,7 +110,7 @@ const SingleImagePage = () => {
               variant="contained"
               sx={pulsatingButtonStyles}
             >
-              Späť na stránku obrázkov
+              {t('single_img_page.btn_back')}
             </Button>
           </>
         )}

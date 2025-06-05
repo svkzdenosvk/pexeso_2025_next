@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Box } from '@mui/material';
-
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
@@ -59,22 +59,22 @@ const navLinkStyles = {
   margin: '10px 0px;',
 } as const;
 
-
 // ---------- component
 
 const SharedAboutLayout = ({ children }: { children: React.ReactNode }) => {
+  const { t } = useTranslation();
+
   return (
     <Box sx={sharedAboutWrapperStyles}>
       <Box sx={sharedAboutAsideNavigation}>
         <Box component="nav" sx={navStyles}>
-          
           <Button
             component={NextLinkComposed}
             to="/about-game/rules"
             variant="contained"
             sx={[sharedNavLinkStyles, navLinkStyles]}
           >
-            Pravidlá
+            {t('shared_about_nav.rules_link')}
           </Button>
           <Button
             component={NextLinkComposed}
@@ -82,7 +82,7 @@ const SharedAboutLayout = ({ children }: { children: React.ReactNode }) => {
             variant="contained"
             sx={[sharedNavLinkStyles, navLinkStyles]}
           >
-            Obrázky
+            {t('shared_about_nav.images_link')}
           </Button>
         </Box>
       </Box>

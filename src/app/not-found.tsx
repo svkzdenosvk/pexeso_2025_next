@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Box, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
@@ -15,12 +16,14 @@ const boxStyles = {
 
 // ---------- component
 const ErrorPage = () => {
+  const { t } = useTranslation();
+
   return (
     <Box sx={boxStyles}>
       <Typography variant="h3" component="h3">
         {' '}
         {/*originally h1 */}
-        Error, táto stránka neexistuje
+        {t('not_found_page.h3')}
       </Typography>
 
       <Button
@@ -29,7 +32,7 @@ const ErrorPage = () => {
         variant="contained"
         sx={pulsatingButtonStyles}
       >
-        Klikni sem a poď na hlavnú stránku
+        {t('not_found_page.btn_back')}
       </Button>
     </Box>
   );

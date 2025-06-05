@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { RootState } from '@pexeso/lib/redux/store/store';
@@ -67,6 +68,8 @@ const columnContentStyles = {
 // ---------- component
 
 const Game = () => {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -117,7 +120,7 @@ const Game = () => {
       <Box className="welcome" sx={welcomeStyles}>
         {isEnd && (
           <Typography variant="h1" sx={{ marginBottom: '70px' }}>
-            Gratulácia, vyhrali ste za {_myFormatSeconds(seconds)}
+            {t('game_page.welcome')} {_myFormatSeconds(seconds)}
           </Typography>
         )}
 
@@ -131,7 +134,7 @@ const Game = () => {
         </Button>
 
         <Typography variant="h5" component="h5" sx={colorTextThemeStyles}>
-          Pre začatie hry stlačte tlačítko štart
+          {t('game_page.h5')}
         </Typography>
 
         <TimeAndStart />

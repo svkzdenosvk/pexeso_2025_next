@@ -4,6 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { Typography, Box, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 
@@ -27,7 +28,7 @@ const imgMainContentStyles = {
 };
 
 const btnLinkStyles = {
-  p:0,
+  p: 0,
   backgroundColor: 'white',
   textDecoration: 'none',
   outline: 'none',
@@ -55,18 +56,20 @@ const imgStyles = {
 // ---------- component
 
 const Images = () => {
+  const { t } = useTranslation();
+
   const { isLoading, imgNames } = useSelector((state: RootState) => state.game);
 
   return (
     <Box sx={imgContentStyles}>
       <Typography variant="h2" component="h2">
-        Hracie obrázky
+        {t('images_page.h2')}
       </Typography>
 
       <Box sx={imgMainContentStyles}>
         {isLoading || imgNames.length === 0 ? (
           <Typography variant="h4" component="h4">
-            Načítavajú sa obrázky
+            {t('images_page.loading')}
           </Typography>
         ) : (
           imgNames.map((oneImgName) => (
@@ -76,7 +79,6 @@ const Images = () => {
               to={`/about-game/images/${oneImgName}`}
               sx={btnLinkStyles}
             >
-              
               <Box sx={imgStyles}>
                 <Image
                   src={`/pictures/pexeso/${oneImgName}.jpg`}

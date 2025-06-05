@@ -6,78 +6,91 @@
 
   "shared_about_nav": {
     "rules_link": "Rules",
-    "images_link": "Images",
-    "h2": {
-      "about_page": "About the Exeso Game",
-      "rules_page": "Rules",
-      "images_page": "Game Images",
-      "single_img_page": {
-        "drop": "Drop",
-        "vibration": "Vibration",
-        "sea": "Sea",
-        "lightning": "Lightning",
-        "wood": "Wood",
-        "sun": "Sun",
-        "space": "Space",
-        "wind": "Wind",
-        "not_exist": "Non-existent image"
-      }
+    "images_link": "Images"
+  },
+
+  "home_page": {
+    "h1": "Memory Game"
+  },
+
+  "about_page": {
+    "h2": "About the game"
+  },
+
+  "images_page": {
+    "h2": "Game images",
+    "loading": "Loading images"
+  },
+
+  "rules_page": {
+    "h2": "Rules",
+    "h4": {
+      "principle": "Principle",
+      "level": "Difficulty level settings"
     },
-    "pages": {
-      "rules": {
-        "h4": {
-          "principle": "Principle",
-          "level": "Difficulty Level Settings"
+    "content": {
+      "principle": "Find a matching image pair under the joker card.",
+      "level": {
+        "name": {
+          "easy": "Easy",
+          "medium": "Medium",
+          "hard": "Hard"
         },
-        "content": {
-          "principle": "Find a matching pair of images under the joker image.",
-          "level": {
-            "name": {
-              "easy": "Easy",
-              "medium": "Medium",
-              "hard": "Hard"
-            },
-            "description": {
-              "easy": "Images do not shuffle, but matched ones disappear and the remaining ones move closer.",
-              "medium": "Image arrangement shuffles after every incorrect pair.",
-              "hard": "Image arrangement shuffles nearly every second."
-            }
-          }
+        "description": {
+          "easy": "Images don't shuffle, but matched pairs are removed and the rest slide together.",
+          "medium": "Images are shuffled after each failed pair.",
+          "hard": "Images are shuffled almost every second."
         }
-      },
-      "single_img_page": {
-        "btn": {
-          "btn_back": "Back to images page",
-          "btn_error": "Click here to go to the images page"
-        },
-        "h3_error": "Error, this image does not exist"
       }
     }
   },
 
-  "game": {
-    "settings": {
-      "h4": "Set game parameters",
-      "legend": {
-        "level": "Select difficulty level:",
-        "img_count": "Select number of images:"
-      },
-      "value": {
-        "level": {
-          "easy": "Easy",
-          "medium": "Medium",
-          "hard": "Hard"
-        }
-      },
-      "btn_play": "Play"
+  "single_img_page": {
+    "h2": {
+      "drop": "Drop",
+      "vibration": "Vibration",
+      "sea": "Sea",
+      "lightning": "Lightning",
+      "wood": "Wood",
+      "sun": "Sun",
+      "space": "Space",
+      "wind": "Wind",
+      "not_exist": "Image does not exist"
     },
-    "game_itself": {
-      "h5": "Press start to begin the game",
-      "btn_start": "Start",
-      "link_before_start": "Back to game settings",
-      "link_after_start": "New Game",
-      "link_end_game": "Play again",
-      "gratulation_text": "Congratulations, you won in "
-    }
+    "btn": {
+      "btn_back": "Back to image page",
+      "btn_error": "Click here to return to the image page"
+    },
+    "h3_error": "Error: This image does not exist"
+  },
+
+  "settings_page": {
+    "h4": "Set game parameters",
+    "legend": {
+      "level": "Select difficulty level:",
+      "img_count": "Select number of images:"
+    },
+    "value": {
+      "level": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      }
+    },
+    "btn_play": "Play"
+  },
+
+  "game_page": {
+    "h5": "Press start to begin the game",
+    "btn_start": "Start",
+    "link_before_start": "Back to game settings",
+    "link_after_start": "New game",
+    "link_end_game": "Play again",
+    "congratulations": "Congratulations! You won in "
+  },
+
+  "not_found_page": {
+    "h3": "Error: This page does not exist",
+    "btn_back": "Click here to go to the home page"
   }
 }

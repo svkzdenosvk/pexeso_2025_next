@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Box, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
-
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 // ---------- sx styles
@@ -59,6 +59,8 @@ const navLinkStyles = {
 // ---------- component
 
 const SharedLayout = ({ children }: { children: React.ReactNode }) => {
+  const { t } = useTranslation();
+
   return (
     <Box sx={sharedWrapperStyles}>
       <Box sx={sharedHeaderNavigation}>
@@ -69,7 +71,7 @@ const SharedLayout = ({ children }: { children: React.ReactNode }) => {
             variant="contained"
             sx={[sharedNavLinkStyles, navLinkStyles]}
           >
-            O Hre
+            {t('shared_main_nav.about_link')}
           </Button>
           <Button
             component={NextLinkComposed}
@@ -77,7 +79,7 @@ const SharedLayout = ({ children }: { children: React.ReactNode }) => {
             variant="contained"
             sx={[sharedNavLinkStyles, navLinkStyles]}
           >
-            Hraj
+            {t('shared_main_nav.game_link')}
           </Button>
         </Box>
       </Box>
