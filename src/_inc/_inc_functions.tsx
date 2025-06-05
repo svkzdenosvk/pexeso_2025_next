@@ -2,9 +2,21 @@
 // ---------------------------file with included functions to make cleaner and more readable code
 // ---------------------------
 
-// ---------------------------function JSON fetching (then for SWR)
-export const _jsonFetcher = (url: string) => fetch(url).then(res => res.json());
+// ---------------------------function fetching api graphql for SWR
+export const _graphqlFetcher = async (query: string) => {
+  const res = await fetch('/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query }),
+  });
 
+  if (!res.ok) throw new Error('GraphQL error');
+
+  const json = await res.json();
+  return json.data;
+};
 
 // ---------------------------function for shuffle
 
@@ -27,7 +39,7 @@ export function _myFormatSeconds(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
-  const minPart = minutes > 0 ? `${minutes}m ` : "";
+  const minPart = minutes > 0 ? `${minutes}m ` : '';
   const secPart = `${remainingSeconds}s`;
 
   return minPart + secPart;
