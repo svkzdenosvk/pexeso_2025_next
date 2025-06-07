@@ -48,37 +48,36 @@ const SingleImagePage = () => {
   const { imgNames } = useSelector((state: RootState) => state.game);
 
   const [errorImgName, setErrorImgName] = useState(false);
-  const [imgNameH1, setNameH1] = useState('');
+  const [imgNameH3, setNameH3] = useState('');
 
+  //error if img doesn´t exist
   useEffect(() => {
     if (!name || typeof name !== 'string') {
       setErrorImgName(true);
-      setNameH1('Neexistujúci obrázok');
+      setNameH3(t('single_img_page.h2.not_exist'));
       return;
     }
 
     if (!my_Type_Guard_function(name, imgNames)) {
       setErrorImgName(true);
-      setNameH1('Neexistujúci obrázok');
+      setNameH3(t('single_img_page.h2.not_exist'));
     } else {
+      // if not error set H3 from param (name of picture)
       setErrorImgName(false);
       let displayName: string = name;
 
-      // exceptions
-      if (name === 'vesmir') displayName = 'vesmír';
-      if (name === 'vibracia') displayName = 'vibrácia';
-
-      setNameH1(displayName);
+      setNameH3(t(`single_img_page.h2.${displayName}`));
     }
   }, [name, imgNames]);
 
   return (
     <Box sx={singleImgContentStyles}>
+      {/* //the first letter is capitalized */}
       <Typography variant="h3" component="h3">
-        {imgNameH1.charAt(0).toUpperCase() + imgNameH1.slice(1)}
+        {imgNameH3.charAt(0).toUpperCase() + imgNameH3.slice(1)}
       </Typography>
-
       <Box sx={singleImgMainContentStyles}>
+        {/* if error */}
         {errorImgName ? (
           <>
             <Typography variant="h3" component="h3">
@@ -90,10 +89,11 @@ const SingleImagePage = () => {
               variant="contained"
               sx={pulsatingButtonStyles}
             >
-              {t('single_img_page.btn_error')}
+              {t('single_img_page.btn.btn_error')}
             </Button>
           </>
         ) : (
+          //  if not error
           <>
             <Box sx={imgStyles}>
               <Image
@@ -110,7 +110,7 @@ const SingleImagePage = () => {
               variant="contained"
               sx={pulsatingButtonStyles}
             >
-              {t('single_img_page.btn_back')}
+              {t('single_img_page.btn.btn_back')}
             </Button>
           </>
         )}

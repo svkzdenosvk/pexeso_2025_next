@@ -47,15 +47,15 @@
 
   "single_img_page": {
     "h2": {
-      "drop": "Drop",
-      "vibration": "Vibration",
-      "sea": "Sea",
-      "lightning": "Lightning",
-      "wood": "Wood",
-      "sun": "Sun",
-      "space": "Space",
-      "wind": "Wind",
-      "not_exist": "Image does not exist"
+      "drop": "drop",
+      "vibration": "vibration",
+      "sea": "sea",
+      "lightning": "lightning",
+      "wood": "wood",
+      "sun": "sun",
+      "space": "space",
+      "wind": "wind",
+      "not_exist": "image does not exist"
     },
     "btn": {
       "btn_back": "Back to image page",
@@ -65,18 +65,21 @@
   },
 
   "settings_page": {
-    "h4": "Set game parameters",
+    "h5": "Set game parameters",
     "legend": {
       "level": "Select difficulty level:",
       "img_count": "Select number of images:"
     },
-    "value": {
-      "level": {
-        "easy": "Easy",
-        "medium": "Medium",
-        "hard": "Hard"
-      }
+    "level": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
     },
+    "error_alert": {
+      "level": "Set the difficulty level!",
+      "img_count": "Set the number of images you want to play with!"
+    },
+
     "btn_play": "Play"
   },
 
@@ -86,7 +89,7 @@
     "link_before_start": "Back to game settings",
     "link_after_start": "New game",
     "link_end_game": "Play again",
-    "congratulations": "Congratulations! You won in "
+    "congratulations": "Congratulations, You won in "
   },
 
   "not_found_page": {

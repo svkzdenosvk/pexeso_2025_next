@@ -3,6 +3,7 @@
 import React from 'react';
 import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 // ---------- sx styles
 
@@ -91,43 +92,47 @@ const pStyles = {
   },
 } as const;
 
-// ---------- data for section - level
-
-const levelsSectionData = [
-  {
-    name: 'Ľahký',
-    description:
-      'Obrázky sa nemiešajú, ale uhádnuté sa vymažú a zvyšné sa posúvajú k sebe.',
-  },
-  {
-    name: 'Stredný',
-    description:
-      'Usporiadanie obrázkov sa mieša po každej neuhádnutej dvojici.',
-  },
-  {
-    name: 'Ťažký',
-    description: 'Usporiadanie obrázkov sa mieša takmer každú sekundu.',
-  },
-];
 // ---------- component
 
 const Rules = () => {
+  const { t } = useTranslation();
+
+  // ---------- data for section - level
+  
+  const levelsSectionData = [
+    {
+      name: t('rules_page.content.level.name.easy'),
+      description:
+        t('rules_page.content.level.description.easy'),
+    },
+    {
+      name: t('rules_page.content.level.name.medium'),
+      description:
+        t('rules_page.content.level.description.medium'),
+    },
+    {
+      name: t('rules_page.content.level.name.hard'),
+      description: t('rules_page.content.level.description.hard'),
+    },
+  ];
+
   return (
     <Box sx={rulesContentStyles}>
       <Typography variant="h2" component="h2">
         {' '}
         {/*originally h1 */}
-        Pravidlá
+        {t('rules_page.h2')}
       </Typography>
       <Box sx={rulesMainContentStyles}>
         <Typography variant="h4" component="h4">
           {' '}
           {/*originally h2 */}
-          Princíp
+          {t('rules_page.h4.principle')}
         </Typography>
         <Box sx={rulesPrincipleSectionStyles}>
           <Typography component="p" sx={pStyles}>
-            Hľadať zhodný pár obrázkov pod obrázkom jokera.
+                                      {t('rules_page.content.principle')}
+
           </Typography>
           <Box sx={imgStyles}>
             <Image
@@ -141,7 +146,7 @@ const Rules = () => {
         <Typography variant="h4" component="h4">
           {' '}
           {/*originally h2 */}
-          Nastavenie levelu obtiažnosti
+          {t('rules_page.h4.level')}
         </Typography>
         <Box sx={rulesLevelSectionStyles}>
           {/* automatization */}

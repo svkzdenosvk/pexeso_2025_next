@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
-
+import  TranslateButton  from '@pexeso/components/SharedNextElements/TranslateButton'
 // ---------- sx styles
 
 const sharedWrapperStyles = {
@@ -63,6 +63,7 @@ const SharedLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Box sx={sharedWrapperStyles}>
+      <TranslateButton/>
       <Box sx={sharedHeaderNavigation}>
         <Box sx={navStyles}>
           <Button

@@ -5,31 +5,34 @@ import {
   My_Type_ClassNames,
   My_Type_ImgCount,
   My_Type_Theme,
-} from "@pexeso/_inc/my_types";
-import { _shuffleArray } from "@pexeso/_inc/_inc_functions";
+} from '@pexeso/_inc/my_types';
+import { _shuffleArray } from '@pexeso/_inc/_inc_functions';
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 //----------------------------------------------------------------------------redux toolkit
 
 const gameSlice = createSlice({
-  name: "game",
+  name: 'game',
   initialState: {
     imgNames: [] as My_Type_Img_Name[],
     isLoading: true,
     isRunning: false,
-    linkName: "Späť na nastavenia hry.",
-    level: "" as My_Type_Level,
+    // linkName: "Späť na nastavenia hry.",
+    linkName: 'game_page.link_before_start',
+    level: '' as My_Type_Level,
     isEnd: false,
     divImgs: [] as My_Type_DivImg[],
     selectedImgCount: 0 as My_Type_ImgCount,
-    theme: "defaultTheme" as My_Type_Theme,
+    theme: 'defaultTheme' as My_Type_Theme,
   },
   reducers: {
     set_start_game: (state) => {
       //-----------------------------------------------------------------------start the game
       state.isRunning = true;
-      state.linkName = "Nová hra.";
+      // state.linkName = 'Nova hra';
+
+      state.linkName = 'game_page.link_after_start';
     },
     hardest_level_shuffle: (state) => {
       //-----------------------------------------------------------------------when level is the "hardest" shuffle cards every 0.4 sec.
@@ -42,8 +45,8 @@ const gameSlice = createSlice({
       state.divImgs.forEach((oneDiv) => {
         if (oneDiv.id === action.payload.id) {
           oneDiv.classNames = [
-            ...oneDiv.classNames.filter((className) => className !== "mask"),
-            "selected_Div_img",
+            ...oneDiv.classNames.filter((className) => className !== 'mask'),
+            'selected_Div_img',
           ];
         }
       });
@@ -51,14 +54,14 @@ const gameSlice = createSlice({
     un_match: (state, action) => {
       //------------------------------------------after revealing 2 pictures which are not same
       let afterUnMatchArr: My_Type_DivImg[] = state.divImgs.map((oneDiv) => {
-        if (oneDiv.classNames.includes("selected_Div_img")) {
+        if (oneDiv.classNames.includes('selected_Div_img')) {
           return {
             ...oneDiv,
             classNames: [
               ...oneDiv.classNames.filter(
-                (className) => className !== "selected_Div_img"
+                (className) => className !== 'selected_Div_img'
               ),
-              "mask", // remove "selected" and add "mask" class
+              'mask', // remove "selected" and add "mask" class
             ],
           }; /*----------------------------------------------------------------change 2 selected img´s to nonselected and hide */
         } else {
@@ -66,7 +69,7 @@ const gameSlice = createSlice({
         }
       });
 
-      if (action.payload === "medium" /*||action.payload==="hardest"*/) {
+      if (action.payload === 'medium' /*||action.payload==="hardest"*/) {
         afterUnMatchArr = _shuffleArray(afterUnMatchArr);
       }
       state.divImgs = afterUnMatchArr;
@@ -75,14 +78,14 @@ const gameSlice = createSlice({
       //-----------------------------------------------------when 2 revealed pictures are same
 
       let afterMatchArr: My_Type_DivImg[] = state.divImgs.map((oneDiv) => {
-        if (oneDiv.classNames.includes("selected_Div_img")) {
+        if (oneDiv.classNames.includes('selected_Div_img')) {
           return {
             ...oneDiv,
             classNames: [
               ...oneDiv.classNames.filter(
-                (className) => className !== "selected_Div_img"
+                (className) => className !== 'selected_Div_img'
               ),
-              "rotate-center",
+              'rotate-center',
             ] as My_Type_ClassNames[],
           }; /*--------------------------------------------------------------- remove selected and add rotate -> change 2 selected img´s to nonselected and hide */
         } else {
@@ -94,7 +97,7 @@ const gameSlice = createSlice({
     },
     remove_after_match: (state) => {
       let afterAfterMatchArr: My_Type_DivImg[] = state.divImgs.filter(
-        (oneDiv) => !oneDiv.classNames.includes("rotate-center")
+        (oneDiv) => !oneDiv.classNames.includes('rotate-center')
       );
 
       state.divImgs = afterAfterMatchArr; //-----------------------------------if all pictures removed -> it´s end of the game
@@ -102,7 +105,8 @@ const gameSlice = createSlice({
     end_game: (state) => {
       //-----------------------------------------------------------------------the game is over after all imgs has been removed
       state.isRunning = false;
-      state.linkName = "Hraj znova";
+      // state.linkName = 'Hraj znova';
+      state.linkName = 'game_page.link_end_game';
       state.isEnd = true;
     },
     after_settings_selected_img_count: (state, action) => {
@@ -111,24 +115,24 @@ const gameSlice = createSlice({
     },
     reset_settings: (state) => {
       //-----------------------------------------------------------------------evrytime we return on settings page
-      state.level = "" as My_Type_Level;
+      state.level = '' as My_Type_Level;
       state.selectedImgCount = 0 as My_Type_ImgCount;
       state.isRunning = false;
       state.isEnd = false;
-      state.theme = "defaultTheme";
+      state.theme = 'defaultTheme';
     },
     settings_and_styling_before_start: (state, action) => {
       //-----------------------------------------------------------------------after set the settings (but before clicking to start button)
 
       const levelChanges: Record<My_Type_Level, My_Type_Theme> = {
         /*----------------------------------------------------------------------using dynamic object properties*/
-        easy: "defaultTheme",
-        medium: "mediumTheme",
-        hard: "hardTheme",
+        easy: 'defaultTheme',
+        medium: 'mediumTheme',
+        hard: 'hardTheme',
       };
 
       //state.isEnd=false;//----------------------------------------------------maybe this could be decommented .. in case of problems in the future
-      state.linkName = "Späť na nastavenia hry.";
+      // state.linkName = 'game_page.link_before_start';
       state.level = action.payload.level;
       state.selectedImgCount = action.payload
         .selectedImgCount as My_Type_ImgCount;

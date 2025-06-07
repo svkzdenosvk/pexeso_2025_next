@@ -1,0 +1,98 @@
+{
+  "shared_main_nav": {
+    "about_link": "Über das Spiel",
+    "game_link": "Spielen"
+  },
+
+  "shared_about_nav": {
+    "rules_link": "Regeln",
+    "images_link": "Bilder"
+  },
+
+  "home_page": {
+    "h1": "Pexeso"
+  },
+
+  "about_page": {
+    "h2": "Über das Pexeso-Spiel"
+  },
+
+  "images_page": {
+    "h2": "Spielbilder",
+    "loading": "Bilder werden geladen"
+  },
+
+  "rules_page": {
+    "h2": "Regeln",
+    "h4": {
+      "principle": "Prinzip",
+      "level": "Schwierigkeitsstufe festlegen"
+    },
+    "content": {
+      "principle": "Finde das passende Bildpaar unter dem Joker-Bild.",
+      "level": {
+        "name": {
+          "easy": "Einfach",
+          "medium": "Mittel",
+          "hard": "Schwer"
+        },
+        "description": {
+          "easy": "Bilder werden nicht gemischt, aber erratene Paare verschwinden und die restlichen rücken zusammen.",
+          "medium": "Die Anordnung der Bilder wird nach jedem Fehlversuch neu gemischt.",
+          "hard": "Die Anordnung der Bilder wird fast jede Sekunde neu gemischt."
+        }
+      }
+    }
+  },
+
+  "single_img_page": {
+    "h2": {
+      "drop": "Tropfen",
+      "vibration": "Vibration",
+      "sea": "Meer",
+      "lightning": "Blitz",
+      "wood": "Holz",
+      "sun": "Sonne",
+      "space": "Weltraum",
+      "wind": "Wind",
+      "not_exist": "Bild existiert nicht"
+    },
+    "btn": {
+      "btn_back": "Zurück zur Bilderseite",
+      "btn_error": "Hier klicken, um zur Bilderseite zu gelangen"
+    },
+    "h3_error": "Fehler, dieses Bild existiert nicht"
+  },
+
+  "settings_page": {
+    "h5": "Spielparameter festlegen",
+    "legend": {
+      "level": "Wählen Sie die Schwierigkeitsstufe:",
+      "img_count": "Wählen Sie die Anzahl der Bilder:"
+    },
+    "level": {
+      "easy": "Einfach",
+      "medium": "Mittel",
+      "hard": "Schwer"
+    },
+    "error_alert": {
+      "level": "Schwierigkeit auswählen!",
+      "img_count": "Anzahl der Bilder auswählen, mit denen du spielen möchtest!"
+    },
+    "btn_play": "Spielen"
+  },
+
+  "game_page": {
+    "h5": "Drücke Start, um das Spiel zu beginnen",
+    "btn_start": "Start",
+    "link_before_start": "Zurück zu den Spiel-Einstellungen",
+    "link_after_start": "Neues Spiel",
+    "link_end_game": "Erneut spielen",
+    "congratulations": "Glückwunsch, du hast gewonnen in "
+  },
+
+  "not_found_page": {
+    "h3": "Fehler, diese Seite existiert nicht",
+    "btn_back": "Hier klicken, um zur Startseite zu gelangen"
+  }
+}

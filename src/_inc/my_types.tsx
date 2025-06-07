@@ -1,15 +1,15 @@
 export type My_Type_Level = "easy" | "medium" | "hard";
-export type My_Type_Level_Svk = "Ľahký" | "Stredný" | "Ťažký";
+// export type My_Type_Level_Svk = "Ľahký" | "Stredný" | "Ťažký";
 
 export type My_Type_Img_Name =
-  | "blesk"
-  | "drevo"
-  | "kvapka"
-  | "more"
-  | "slnko"
-  | "vesmir"
-  | "vibracia"
-  | "vietor";
+  | "lightning"
+  | "wood"
+  | "drop"
+  | "sea"
+  | "sun"
+  | "space"
+  | "vibration"
+  | "wind";
 
 export type My_Type_ImgCount = 5 | 6 | 7 | 8;
 
@@ -33,7 +33,7 @@ export type My_Type_DivImg = My_Type_Image & {
 
 export type My_Type_Svk_Eng_level = {
   value: My_Type_Level;
-  label: My_Type_Level_Svk;
+  label: string;
 };
 
 /*----------------------------------------redux----------------------------------------- */

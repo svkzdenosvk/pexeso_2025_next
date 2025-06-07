@@ -120,7 +120,7 @@ const Game = () => {
       <Box className="welcome" sx={welcomeStyles}>
         {isEnd && (
           <Typography variant="h1" sx={{ marginBottom: '70px' }}>
-            {t('game_page.welcome')} {_myFormatSeconds(seconds)}
+            {t('game_page.congratulations')} {_myFormatSeconds(seconds)}
           </Typography>
         )}
 
@@ -130,7 +130,7 @@ const Game = () => {
           variant="contained"
           sx={gameLinkButtonStyles}
         >
-          {linkName}
+          {t(linkName)}
         </Button>
 
         <Typography variant="h5" component="h5" sx={colorTextThemeStyles}>

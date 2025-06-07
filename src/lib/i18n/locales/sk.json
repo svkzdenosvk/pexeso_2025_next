@@ -47,15 +47,15 @@
 
   "single_img_page": {
     "h2": {
-      "drop": "Kvapka",
-      "vibration": "Vibrácia",
-      "sea": "More",
-      "lightning": "Blesk",
-      "wood": "Drevo",
-      "sun": "Slnko",
-      "space": "Vesmír",
-      "wind": "Vietor",
-      "not_exist": "Neexistujúci obrázok"
+      "drop": "kvapka",
+      "vibration": "vibrácia",
+      "sea": "more",
+      "lightning": "blesk",
+      "wood": "drevo",
+      "sun": "slnko",
+      "space": "vesmír",
+      "wind": "vietor",
+      "not_exist": "neexistujúci obrázok"
     },
     "btn": {
       "btn_back": "Späť na stránku obrázkov",
@@ -65,17 +65,19 @@
   },
 
   "settings_page": {
-    "h4": "Nastavte parametre hry",
+    "h5": "Nastavte parametre hry",
     "legend": {
       "level": "Vyberte úroveň obtiažnosti:",
       "img_count": "Vyberte počet obrázkov:"
     },
-    "value": {
-      "level": {
-        "easy": "Ľahký",
-        "medium": "Stredný",
-        "hard": "Ťažký"
-      }
+    "level": {
+      "easy": "Ľahký",
+      "medium": "Stredný",
+      "hard": "Ťažký"
+    },
+    "error_alert": {
+      "level": "Nastav level obtiažnosti!",
+      "img_count": "Nastav počet obrázkov, s ktorými chceš hrať!"
     },
     "btn_play": "Hraj"
   },

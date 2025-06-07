@@ -14,6 +14,7 @@ import {
   Alert,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   settings_and_styling_before_start,
   reset_settings,
@@ -60,6 +61,8 @@ const alertStyles = {
 // ---------- component
 
 const GameSettingsPage = () => {
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname(); // ekvivalent k useLocation().pathname
@@ -76,9 +79,9 @@ const GameSettingsPage = () => {
 
   const imgCountValues: My_Type_ImgCount[] = [5, 6, 7, 8];
   const levels: My_Type_Svk_Eng_level[] = [
-    { value: 'easy', label: 'Ľahký' },
-    { value: 'medium', label: 'Stredný' },
-    { value: 'hard', label: 'Ťažký' },
+    { value: 'easy', label: t('settings_page.level.easy') },
+    { value: 'medium', label: t('settings_page.level.medium') },
+    { value: 'hard', label: t('settings_page.level.hard') },
   ];
   const levelValues: My_Type_Level[] = ['easy', 'medium', 'hard'];
 
@@ -86,12 +89,12 @@ const GameSettingsPage = () => {
     e.preventDefault();
 
     if (!my_Type_Guard_function(levelChosen, levelValues)) {
-      setError('Nastav level obtiažnosti');
+      setError( t('settings_page.error_alert.level'));
       return;
     }
 
     if (!my_Type_Guard_function_number(imgCountChosen, imgCountValues)) {
-      setError('Nastav počet obrázkov, s ktorými chceš hrať.');
+      setError( t('settings_page.error_alert.img_count'));
       return;
     }
 
@@ -111,11 +114,14 @@ const GameSettingsPage = () => {
   return (
     <Box component="form" ref={formRef} onSubmit={handleSubmit} sx={formStyles}>
       <Typography variant="h5" component="h5" sx={{ mb: 2 }}>
-        Nastavte parametre hry
+        {t('settings_page.h5')}
       </Typography>
 
       <FormControl sx={fieldsetStyles}>
-        <FormLabel component="legend">Vyberte úroveň obtiažnosti:</FormLabel>
+        <FormLabel component="legend">
+          {' '}
+          {t('settings_page.legend.level')}
+        </FormLabel>
         <RadioGroup
           row
           name="level"
@@ -133,7 +139,9 @@ const GameSettingsPage = () => {
       </FormControl>
 
       <FormControl sx={fieldsetStyles}>
-        <FormLabel component="legend">Vyberte počet obrázkov:</FormLabel>
+        <FormLabel component="legend">
+          {t('settings_page.legend.img_count')}
+        </FormLabel>
         <RadioGroup
           row
           name="imageCount"
@@ -159,7 +167,7 @@ const GameSettingsPage = () => {
       )}
 
       <Button sx={pulsatingButtonStyles} type="submit">
-        Hraj
+        {t('settings_page.btn_play')}
       </Button>
     </Box>
   );

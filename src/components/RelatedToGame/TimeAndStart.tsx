@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Box } from "@mui/material";
+import { useTranslation } from 'react-i18next';
 import type { Theme } from "@mui/material/styles";
-
 import { RootState } from "@pexeso/lib/redux/store/store";
 import { seconds_counter } from "@pexeso/lib/redux/store/reducers/secondsSlice";
 import { set_start_game } from "@pexeso/lib/redux/store/reducers/gameSlice";
@@ -27,6 +27,8 @@ const startButtonStyles = {
 // ---------- component
 
 export const TimeAndStart = () => {
+  const { t } = useTranslation();
+  
   const dispatch = useDispatch();
 
   const seconds = useSelector((state: RootState) => state.time.seconds);
@@ -74,7 +76,8 @@ export const TimeAndStart = () => {
         sx={dynamicStartButtonStyles}
         onClick={handleStartClick}
       >
-        START
+        {/* START */}
+        {t('game_page.btn_start')}
       </Button>
     </Box>
   );
