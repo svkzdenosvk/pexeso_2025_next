@@ -2,10 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import Image from 'next/image';
-
 import { My_Type_DivImg } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import {
@@ -41,6 +41,8 @@ const colorTextThemeStyles = (theme: Theme) => ({
 // ---------- component
 
 export const GameDivPictures = () => {
+    const { t } = useTranslation();
+  
   const dispatch = useDispatch();
   const { divImgs, level, isLoading } = useSelector(
     (state: RootState) => state.game
@@ -95,7 +97,7 @@ export const GameDivPictures = () => {
     <Box className="row" id="row" sx={rowStyles}>
       {isLoading ? (
         <Typography variant="h2" component="h2" sx={colorTextThemeStyles}>
-          Načítavajú sa obrázky
+          {t('images_page.loading')}
         </Typography>
       ) : (
         divImgs.map((oneDiv) => (

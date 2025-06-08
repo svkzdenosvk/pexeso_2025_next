@@ -132,7 +132,6 @@ const gameSlice = createSlice({
       };
 
       //state.isEnd=false;//----------------------------------------------------maybe this could be decommented .. in case of problems in the future
-      // state.linkName = 'game_page.link_before_start';
       state.level = action.payload.level;
       state.selectedImgCount = action.payload
         .selectedImgCount as My_Type_ImgCount;

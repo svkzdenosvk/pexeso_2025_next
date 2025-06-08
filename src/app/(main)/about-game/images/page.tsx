@@ -28,6 +28,7 @@ const imgMainContentStyles = {
 };
 
 const btnLinkStyles = {
+  mb:2,
   p: 0,
   backgroundColor: 'white',
   textDecoration: 'none',

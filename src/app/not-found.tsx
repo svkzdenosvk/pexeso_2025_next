@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { I18nextProvider } from 'react-i18next';
@@ -20,8 +20,16 @@ const boxStyles = {
 // ---------- component
 
 export default function NotFoundPage() {
+
+  //set english language for not found page
+ const i18nEnglish = useMemo(() => {
+    const instance = i18n.cloneInstance();
+    instance.changeLanguage('en');
+    return instance;
+  }, []);
+
   return (
-    <I18nextProvider i18n={i18n}>
+    <I18nextProvider i18n={i18nEnglish}>
       <ErrorPage />
     </I18nextProvider>
   );
@@ -48,6 +56,5 @@ function ErrorPage() {
       </Button>
     </Box>
   );
-};
+}
 
-// export default ErrorPage;

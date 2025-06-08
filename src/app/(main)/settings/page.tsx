@@ -65,18 +65,20 @@ const GameSettingsPage = () => {
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const pathname = usePathname(); // ekvivalent k useLocation().pathname
+  const pathname = usePathname(); 
   const formRef = useRef<HTMLFormElement>(null);
 
   const [levelChosen, setLevelChosen] = useState('' as My_Type_Level);
   const [imgCountChosen, setImgCountChosen] = useState(0 as My_Type_ImgCount);
   const [error, setError] = useState('');
 
+  //reset level and img count
   useEffect(() => {
     dispatch(seconds_reset());
     dispatch(reset_settings());
   }, [pathname, dispatch]);
 
+  //variables for automation in form
   const imgCountValues: My_Type_ImgCount[] = [5, 6, 7, 8];
   const levels: My_Type_Svk_Eng_level[] = [
     { value: 'easy', label: t('settings_page.level.easy') },
@@ -85,21 +87,23 @@ const GameSettingsPage = () => {
   ];
   const levelValues: My_Type_Level[] = ['easy', 'medium', 'hard'];
 
+  //on submit function
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    //alert - level was NOT set 
     if (!my_Type_Guard_function(levelChosen, levelValues)) {
-      setError( t('settings_page.error_alert.level'));
+      setError( 'settings_page.error_alert.level');
       return;
     }
-
+    //alert - img count was NOT set 
     if (!my_Type_Guard_function_number(imgCountChosen, imgCountValues)) {
-      setError( t('settings_page.error_alert.img_count'));
+      setError( 'settings_page.error_alert.img_count');
       return;
     }
 
+    //if not error -> set level and img count and styling based on them
     setError('');
-
     dispatch(
       settings_and_styling_before_start({
         level: levelChosen,
@@ -107,6 +111,7 @@ const GameSettingsPage = () => {
       })
     );
 
+    //after successful settings reset form
     formRef.current?.reset();
     router.push('/game'); //redirect
   };
@@ -117,6 +122,7 @@ const GameSettingsPage = () => {
         {t('settings_page.h5')}
       </Typography>
 
+      {/*form to choose level */}
       <FormControl sx={fieldsetStyles}>
         <FormLabel component="legend">
           {' '}
@@ -138,6 +144,7 @@ const GameSettingsPage = () => {
         </RadioGroup>
       </FormControl>
 
+      {/*form to choose img count */}
       <FormControl sx={fieldsetStyles}>
         <FormLabel component="legend">
           {t('settings_page.legend.img_count')}
@@ -154,18 +161,20 @@ const GameSettingsPage = () => {
               key={i}
               value={cnt.toString()}
               control={<Radio />}
-              label={`${cnt * 2}`}
+              label={`${cnt * 2}`} /* *2 -> pair of images */
             />
           ))}
         </RadioGroup>
       </FormControl>
 
+      {/*show error alerts if exist */}
       {error && (
         <Alert severity="error" sx={alertStyles}>
-          {error}
+          {t(error)}
         </Alert>
       )}
 
+      {/*submit button*/}
       <Button sx={pulsatingButtonStyles} type="submit">
         {t('settings_page.btn_play')}
       </Button>
