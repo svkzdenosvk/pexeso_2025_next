@@ -50,6 +50,7 @@ export const TimeAndStart = () => {
     display: isEnd ? "none" : "block",
   });
 
+  //seconds counter
   useEffect(() => {
     if (!isRunning || isLoading || isEnd) return;
 
@@ -60,6 +61,7 @@ export const TimeAndStart = () => {
     return () => clearInterval(interval);
   }, [isRunning, dispatch, isLoading, isEnd]);
 
+  //trigger function to start count of seconds
   const handleStartClick = () => {
     dispatch(set_start_game());
   };

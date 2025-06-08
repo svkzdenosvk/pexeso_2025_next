@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '@pexeso/lib/i18n/i18n'; // tvoj i18n init súbor
+import i18n from '@pexeso/lib/i18n/i18n'; 
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
 

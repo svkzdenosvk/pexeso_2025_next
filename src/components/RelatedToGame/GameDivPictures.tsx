@@ -48,6 +48,7 @@ export const GameDivPictures = () => {
     (state: RootState) => state.game
   );
 
+  //show picture from behind joker picture
   const showImg = (element: HTMLDivElement, divObject: My_Type_DivImg) => {
     const selectedArr = divImgs.filter((oneDiv) =>
       oneDiv.classNames.includes('selected_Div_img')
@@ -65,6 +66,7 @@ export const GameDivPictures = () => {
     }
   };
 
+  //comparing selected images
   useEffect(() => {
     const timeout = setTimeout(() => {
       const selectedArr = divImgs.filter((oneDiv) =>
@@ -82,6 +84,7 @@ export const GameDivPictures = () => {
       document.body.style.pointerEvents = 'auto';
     }, 200);
 
+    // shuffle if level is hard
     if (level === 'hard') {
       const intervalShuffle = setInterval(() => {
         dispatch(hardest_level_shuffle());
@@ -95,11 +98,13 @@ export const GameDivPictures = () => {
 
   return (
     <Box className="row" id="row" sx={rowStyles}>
+      {/* during loading show message */}
       {isLoading ? (
         <Typography variant="h2" component="h2" sx={colorTextThemeStyles}>
           {t('images_page.loading')}
         </Typography>
       ) : (
+        // images to play
         divImgs.map((oneDiv) => (
           <Box
             sx={divOnCliCkBoxStyles}

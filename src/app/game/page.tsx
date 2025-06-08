@@ -89,6 +89,7 @@ const Game = () => {
     display: isRunning || isEnd ? 'none' : 'block',
   });
 
+  //if level or img count is not valid -> redirect back
   useEffect(() => {
     if (
       !my_Type_Guard_function(level, ['easy', 'medium', 'hard']) ||
@@ -98,6 +99,7 @@ const Game = () => {
       return;
     }
 
+    //create array of objects (div > img) to play from img names and img count 
     const createFinalArrayFroGame = async () => {
       try {
         const imgDivs: My_Type_DivImg[] =
@@ -118,12 +120,13 @@ const Game = () => {
   return (
     <>
       <Box className="welcome" sx={welcomeStyles}>
+        {/* if end -> congratulation */}
         {isEnd && (
           <Typography variant="h1" sx={{ marginBottom: '70px' }}>
             {t('game_page.congratulations')} {_myFormatSeconds(seconds)}
           </Typography>
         )}
-
+        {/* button to settings form */}
         <Button
           component={NextLinkComposed}
           to="/settings"
