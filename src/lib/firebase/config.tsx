@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBAeC2YCGHsox-E-CXq1QnRCKsQXjyX9WA",
-  authDomain: "pexeso-project.firebaseapp.com",
-  projectId: "pexeso-project",
-  storageBucket: "pexeso-project.appspot.com",
-  messagingSenderId: "965793257998",
-  appId: "1:965793257998:web:b2405a3c5d2cf93c4bba5f",
+  apiKey: "AIzaSyDd--tE0mkYK68I9TzVsaSBOYA3_Gnf4TY",
+  authDomain: "pexeso-project-en.firebaseapp.com",
+  projectId: "pexeso-project-en",
+  storageBucket: "pexeso-project-en.firebasestorage.app",
+  messagingSenderId: "460497809986",
+  appId: "1:460497809986:web:7d07bee0344ea8e3b7f3db",
 };
 
 const app = initializeApp(firebaseConfig);
