@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import  Providers  from './providers';
+import ButtonLogReg from "@pexeso/components/LoginReg/ButtonLogReg";
 
 export const metadata: Metadata = {
   title: "Pexeso in Next",
@@ -14,7 +15,10 @@ export default function RootLayout({
   return (
      <html lang="sk">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+                <ButtonLogReg />
+
+          {children}</Providers>
       </body>
     </html>
   );

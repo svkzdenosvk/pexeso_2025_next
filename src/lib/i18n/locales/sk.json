@@ -94,5 +94,44 @@
   "not_found_page": {
     "h3": "Error, táto stránka neexistuje",
     "btn_back": "Klikni sem a poď na hlavnú stránku"
+  },
+
+  "reg_log_btn": {
+    "log": "Prihlásenie",
+    "reg": "Registrácia",
+    "log_out": "Odhlásiť sa"
+  },
+
+  "reg_page": {
+    "label": {
+      "name": "Používateľské meno",
+      "email": "Email",
+      "pass": "Heslo",
+      "pass_conf": "Potvrď heslo"
+    },
+    "error_alert": {
+      "name_length_min": "Meno musí byť min 3 znaky dlhé",
+      "name_length_max": "Meno musí byť max 50 znaky dlhé",
+      "email_format": "Email nie je v platnom formáte",
+      "pass_length": "Heslo musí mať 6 až 20 znakov.",
+      "pass_upper": "Heslo musí obsahovať veľké písmeno.",
+      "pass_special": "Heslo musí obsahovať špeciálny znak.",
+      "pass_confirm": "Heslá sa nezhodujú.",
+      "reg_failed": "Registrácia zlyhala, skús to znova.",
+      "email_registered": "Tento email už je zaregistrovaný.",
+      "unexpected": "Počas registrácie nastala neočakávaná chyba."
+    },
+    "btn_reg": "Registrovať"
+  },
+
+  "login_page": {
+    "error_alert":{
+      "invalid_credentials": "Email alebo heslo je nesprávne.",
+      "too_many_req": "Príliš veľa pokusov. Skúste znova neskôr.",
+      "net_req_failed":"Sieťová chyba. Skontrolujte pripojenie.",
+      "unknow_err":"Pri prihlasovaní nastala neznáma chyba."
+    },
+    "success_login":"Registrácia prebehla úspešne. Teraz sa môžete prihlásiť.",
+    "btn_login": " Prihlásiť sa"
   }
 }

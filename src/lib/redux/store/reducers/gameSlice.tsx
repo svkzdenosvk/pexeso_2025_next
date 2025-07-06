@@ -15,7 +15,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const gameSlice = createSlice({
   name: 'game',
   initialState: {
-    imgNames: [] as My_Type_Img_Name[],
+    imgNames: ["drop", "wood", "lightning", "wind", "vibration", "sun" , "space", "sea"] as My_Type_Img_Name[],
     isLoading: true,
     isRunning: false,
     // linkName: "Späť na nastavenia hry.",
@@ -139,10 +139,12 @@ const gameSlice = createSlice({
         action.payload.level as My_Type_Level
       ] as My_Type_Theme;
     },
-    set_img_names: (state, action) => {
-      //------------------------------------------------------------------------after fetching names from db
-      state.imgNames = action.payload;
-    },
+    // set_img_names: (state, action) => {
+    //   //------------------------------------------------------------------------after fetching names from db
+    //   state.imgNames = action.payload;
+    // },
+
+    //after loading imgs (in app.tsx)
     set_loading: (state) => {
       //------------------------------------------------------------------------after loading imgs (in app.tsx)
       state.isLoading = false;
@@ -153,7 +155,7 @@ const gameSlice = createSlice({
 export const {
   set_start_game,
   set_loading,
-  set_img_names,
+  // set_img_names,
   settings_and_styling_before_start,
   after_settings_selected_img_count,
   remove_after_match,

@@ -81,3 +81,21 @@ export type My_Type_Redux_Root_State = {
   };
   time: { seconds: number };
 };
+
+/*----------------------------------------auth----------------------------------------- */
+export type My_Type_User = {
+  uid: string;
+  name: string;
+  email: string;
+}
+
+// interface AuthState {
+//   user: User | null;
+// }
+
+// export type My_Type_AuthState = {
+//   user: My_Type_User | "Guest";
+// }
+export type My_Type_AuthState = {
+  user: My_Type_User | null;
+}

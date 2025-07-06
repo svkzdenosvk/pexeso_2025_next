@@ -1,34 +1,34 @@
-import { projectFirestore } from "../lib/firebase/config";
+// import { projectFirestore } from "../lib/firebase/config";
 import { collection, getDocs } from "firebase/firestore";
 import { _shuffleArray } from "./_inc_functions";
 import { My_Type_Img_Name, My_Type_ImgCount, My_Type_DivImg } from "./my_types";
 
 const uuid = require("uuid");
 
-export async function fetchOnlyImgNames() {
-  //-----------------------------fun. to fetch img names from db
-  let arrImg: My_Type_Img_Name[] = []; //---------------------------------- create empty array -> it will be filled with img´s names
+// export async function fetchOnlyImgNames() {
+//   //-----------------------------fun. to fetch img names from db
+//   let arrImg: My_Type_Img_Name[] = []; //---------------------------------- create empty array -> it will be filled with img´s names
 
-  try {
-    // ---------------------------------------------------------------------loading docs from Firebase
+//   try {
+//     // ---------------------------------------------------------------------loading docs from Firebase
 
-    const snapshot = await getDocs(
-      collection(projectFirestore, "pexeso-img-names"),
-    );
-    snapshot.forEach((doc) => {
-      const name: My_Type_Img_Name = doc.data().name;
+//     const snapshot = await getDocs(
+//       collection(projectFirestore, "pexeso-img-names"),
+//     );
+//     snapshot.forEach((doc) => {
+//       const name: My_Type_Img_Name = doc.data().name;
 
-      if (name) {
-        arrImg.push(name); //-----------------------------------------------add name to array
-      }
-    });
-  } catch (error) {
-    console.error("Chyba pri načítaní dát z Firestore:", error);
-    return []; // ----------------------------------------------------------if error return empty array
-  }
+//       if (name) {
+//         arrImg.push(name); //-----------------------------------------------add name to array
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Chyba pri načítaní dát z Firestore:", error);
+//     return []; // ----------------------------------------------------------if error return empty array
+//   }
 
-  return arrImg;
-}
+//   return arrImg;
+// }
 
 export async function createDivsArrayFromImgNamesAndCountImg(
   selectedCountOfImg: My_Type_ImgCount,

@@ -94,5 +94,44 @@
   "not_found_page": {
     "h3": "Fehler, diese Seite existiert nicht",
     "btn_back": "Hier klicken, um zur Startseite zu gelangen"
+  },
+
+  "reg_log_btn": {
+    "log": "Anmelden",
+    "reg": "Registrieren",
+    "log_out": "Abmelden"
+  },
+
+  "reg_page": {
+    "label": {
+      "name": "Benutzername",
+      "email": "E-Mail",
+      "pass": "Passwort",
+      "pass_conf": "Passwort bestätigen"
+    },
+    "error_alert": {
+      "name_length_min": "Der Name muss mindestens 3 Zeichen lang sein.",
+      "name_length_max": "Der Name darf höchstens 50 Zeichen lang sein.",
+      "email_format": "Die E-Mail-Adresse ist ungültig.",
+      "pass_length": "Das Passwort muss zwischen 6 und 20 Zeichen lang sein.",
+      "pass_upper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
+      "pass_special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
+      "pass_confirm": "Die Passwörter stimmen nicht überein.",
+      "reg_failed": "Registrierung fehlgeschlagen. Bitte versuche es erneut.",
+      "email_registered": "Diese E-Mail-Adresse ist bereits registriert.",
+      "unexpected": "Während der Registrierung ist ein unerwarteter Fehler aufgetreten."
+    },
+    "btn_reg": "Registrieren"
+  },
+
+  "login_page": {
+    "error_alert": {
+      "invalid_credentials": "E-Mail oder Passwort ist falsch.",
+      "too_many_req": "Zu viele Versuche. Bitte später erneut versuchen.",
+      "net_req_failed": "Netzwerkfehler. Bitte Verbindung prüfen.",
+      "unknow_err": "Beim Anmelden ist ein unbekannter Fehler aufgetreten."
+    },
+    "success_login": "Registrierung erfolgreich. Sie können sich jetzt anmelden.",
+    "btn_login": "Anmelden"
   }
 }

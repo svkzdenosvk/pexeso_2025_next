@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOnlyImgNames, preloadImages } from '@pexeso/_inc/data';
+import { /*fetchOnlyImgNames,*/ preloadImages } from '@pexeso/_inc/data';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { set_img_names, set_loading } from '@pexeso/lib/redux/store/reducers/gameSlice';
 
@@ -10,18 +10,18 @@ export default function AppInit() {
   const dispatch = useDispatch();
   const { imgNames, isLoading } = useSelector((state: RootState) => state.game);
 
-  useEffect(() => {
-    const fetchImgNamesFunc = async () => {
-      try {
-        const fetchedImgNames = await fetchOnlyImgNames();
-        dispatch(set_img_names(fetchedImgNames));
-      } catch (error) {
-        console.error('Error fetching names:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchImgNamesFunc = async () => {
+  //     try {
+  //       const fetchedImgNames = await fetchOnlyImgNames();
+  //       dispatch(set_img_names(fetchedImgNames));
+  //     } catch (error) {
+  //       console.error('Error fetching names:', error);
+  //     }
+  //   };
 
-    fetchImgNamesFunc();
-  }, [dispatch]);
+  //   fetchImgNamesFunc();
+  // }, [dispatch]);
 
   useEffect(() => {
     if (!isLoading) return;
