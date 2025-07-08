@@ -99,3 +99,9 @@ export type My_Type_User = {
 export type My_Type_AuthState = {
   user: My_Type_User | null;
 }
+
+// types.ts
+export interface My_Type_Login {
+  email: string;
+  password: string;
+}

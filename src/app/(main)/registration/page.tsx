@@ -28,8 +28,8 @@ const sxStyles = {
 };
 
 export default function RegisterForm() {
+
 const { t } = useTranslation();
-//   const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -59,62 +59,42 @@ const { t } = useTranslation();
     return '';
   };
 
-  const handleRegister = async () => {
-    setIsLoading(true);
-    setError('');
+ const handleRegister = async () => {
+  setIsLoading(true);
+  setError('');
 
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      setIsLoading(false);
+  const validationError = validate();
+  if (validationError) {
+    setError(validationError);
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/registration', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error || 'reg_page.error_alert.unexpected');
       return;
     }
 
-    try {
-      const methods = await fetchSignInMethodsForEmail(auth, form.email);
-      if (methods.length > 0) {
-        return setError('reg_page.error_alert.email_registered');
-      }
-
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        form.email,
-        form.password
-      );
-      const newUser = res.user;
-
-      try {
-        await setDoc(doc(projectUsers, 'users', newUser.uid), {
-          name: form.name,
-          email: form.email,
-          createdAt: serverTimestamp(),
-        });
-
-        await signOut(auth);
-
-        // Clear form and redirect with query param
-        setForm({ name: '', email: '', password: '', confirm: '' });
-        router.push(`/login?fromRegister=true`);
-      } catch (firestoreError) {
-        console.error('User not saved in Firestore:', firestoreError);
-        try {
-          await newUser.delete();
-        } catch (deleteError) {
-          console.error('Failed to delete user from Auth:', deleteError);
-        }
-        setError('reg_page.error_alert.reg_failed');
-      }
-    } catch (e) {
-      const err = e as FirebaseError;
-      if (err.code === 'auth/email-already-in-use') {
-        setError('reg_page.error_alert.email_registered');
-      } else {
-        setError('reg_page.error_alert.unexpected');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setForm({ name: '', email: '', password: '', confirm: '' });
+    router.push('/login?fromRegister=true');
+  } catch (err) {
+    setError('reg_page.error_alert.unexpected');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <Box sx={sxStyles.form}>
