@@ -38,9 +38,14 @@ const ButtonLogReg = () => {
 //   const lang = pathname.split("/")[1] || "en";
 
   const handleLogout = async () => {
-    await signOut(auth);
-    dispatch(clearUser());
-  };
+  try {
+    await fetch("/api/logout"); // Zmazanie cookie na serveri
+    dispatch(clearUser()); // Vyčisti redux
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
+
 
   return (
     <Box sx={styles.wrapper}>

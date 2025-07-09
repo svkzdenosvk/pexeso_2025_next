@@ -87,8 +87,8 @@ const { t } = useTranslation();
       return;
     }
 
-    setForm({ name: '', email: '', password: '', confirm: '' });
     router.push('/login?fromRegister=true');
+    setForm({ name: '', email: '', password: '', confirm: '' });
   } catch (err) {
     setError('reg_page.error_alert.unexpected');
   } finally {
