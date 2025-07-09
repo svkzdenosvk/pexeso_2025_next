@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
 import { My_Type_Login } from '@pexeso/_inc/my_types';
-import { adminDB } from '@pexeso/lib/firebase/firebase-admin'; // admin.firestore() setup
-// import { doc, getDoc } from 'firebase-admin/firestore'; // NIE client SDK
+import { adminDB } from '@pexeso/lib/firebase/firebase-admin'; // Firebase admin SDK for server-side access to Firestore
 
+//POST req handler
 export async function POST(req: Request) {
   try {
+    //choose email and password from rewquest
     const { email, password }: My_Type_Login = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'login_page.error_alert.missing_credentials' },
+        { status: 400 }
+      );
     }
 
-    // Login cez REST API (Firebase Admin to nevie)
+    // call Firebase REST API (no Firebase Admin SDK, because admin SDK doesn´t know how to authenticate be password)
     const res = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
       {
@@ -25,19 +29,25 @@ export async function POST(req: Request) {
       }
     );
 
+    //response from Firebase API
     const data = await res.json();
 
     if (!res.ok) {
-      return NextResponse.json({ error: data.error?.message || 'Login failed' }, { status: 401 });
+      return NextResponse.json(
+        // { error: data.error?.message || 'Login failed' },
+        { error: 'login_page.error_alert.login_failed' },
+
+        { status: 401 }
+      );
     }
 
-    // Získaj meno používateľa z Firestore cez admin SDK
-    const userRef = adminDB.collection('users').doc(data.localId); // alebo 'projectUsers' ak používaš iný názov
+    //load user name from Firestore via admin SDK by UID from Firebase
+    const userRef = adminDB.collection('users').doc(data.localId);
     const userSnap = await userRef.get();
 
-    const name = userSnap.exists ? userSnap.data()?.name ?? '' : '';
+    const name = userSnap.exists ? (userSnap.data()?.name ?? '') : '';
 
-    // Nastav cookie
+    // create response
     const response = NextResponse.json({
       user: {
         uid: data.localId,
@@ -46,16 +56,17 @@ export async function POST(req: Request) {
       name,
     });
 
+    // setup cookie with idToken, idToken is for authentication for next requests
     response.cookies.set('token', data.idToken, {
       httpOnly: true,
       path: '/',
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 1 deň
+      maxAge: 60 * 60 * 24, // 1 day
     });
 
     return response;
   } catch (err) {
     console.error('Login error:', err);
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+    return NextResponse.json({ error: 'login_page.error_alert.unknow_err' }, { status: 500 });
   }
 }

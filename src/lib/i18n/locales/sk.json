@@ -126,6 +126,8 @@
 
   "login_page": {
     "error_alert":{
+      "login_failed":"Prihlasovanie zlyhalo, skúste to znova",
+      "missing_credentials":"Chýba email alebo heslo",
       "invalid_credentials": "Email alebo heslo je nesprávne.",
       "too_many_req": "Príliš veľa pokusov. Skúste znova neskôr.",
       "net_req_failed":"Sieťová chyba. Skontrolujte pripojenie.",

@@ -14,11 +14,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { FirebaseError } from 'firebase/app';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
-import { auth, projectUsers } from '@pexeso/lib/firebase/firestoreConfigUsers';
 // Ak máš wrapper pre PublicOnlyRoute, môžeš ho zachovať, inak odstráň
 
 const sxStyles = {
@@ -64,7 +60,7 @@ const LoginPage = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'login_page.error_alert');
+        setError(data.error || 'login_page.error_alert.unknow_err');
         return;
       }
 

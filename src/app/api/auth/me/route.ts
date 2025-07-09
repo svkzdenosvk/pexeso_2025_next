@@ -2,8 +2,9 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
 
+//checking cookies if user is logged in
 export async function GET() {
-  const cookieStore = await cookies(); // ✅ await je povinný!
+  const cookieStore = await cookies(); 
   const token = cookieStore.get('token')?.value;
 
   if (!token) {
