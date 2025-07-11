@@ -119,6 +119,7 @@
       "pass_confirm": "Heslá sa nezhodujú.",
       "reg_failed": "Registrácia zlyhala, skús to znova.",
       "email_registered": "Tento email už je zaregistrovaný.",
+      "missing_credentials":"Chýba meno, email alebo heslo užívateľa",
       "unexpected": "Počas registrácie nastala neočakávaná chyba."
     },
     "btn_reg": "Registrovať"

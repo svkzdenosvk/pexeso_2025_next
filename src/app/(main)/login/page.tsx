@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
-// Ak máš wrapper pre PublicOnlyRoute, môžeš ho zachovať, inak odstráň
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
@@ -26,31 +25,32 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const params = useParams();
   const dispatch = useDispatch();
 
+  //local state for form, errors, loading and successful log in
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const lang = (params.lang as string) || 'en'; // fallback language if not in URL
-
+  //show success message if we came from registration page
   useEffect(() => {
     if (searchParams.get('fromRegister')) {
       setShowSuccess(true);
       const url = new URL(window.location.href);
       url.searchParams.delete('fromRegister');
-      router.replace(url.toString()); // odstráni query bez reloadu
+      router.replace(url.toString()); // delete query parameter without reloading the page
     }
   }, [searchParams, router]);
 
+  // login handler function
   const handleLogin = async () => {
     setIsLoading(true);
     setError('');
 
     try {
+      //send POST request to API
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -59,12 +59,13 @@ const LoginPage = () => {
 
       const data = await res.json();
 
+      //show error if response not ok
       if (!res.ok) {
         setError(data.error || 'login_page.error_alert.unknow_err');
         return;
       }
 
-      //setup user in redux
+      //setup/save user in redux
       dispatch(
         setUser({
           uid: data.user.uid,
@@ -73,6 +74,7 @@ const LoginPage = () => {
         })
       );
 
+      //redirect to home page
       router.push('/');
     } catch (err) {
       setError('login_page.error_alert');
@@ -82,21 +84,27 @@ const LoginPage = () => {
   };
 
   return (
-    // Prípadne obal do vlastného PublicOnly wrapperu
+    // my wrapper PublicOnly will be added
     <Box sx={{ mx: 'auto' }}>
+      {/* show green success message after registration without problem */}
+
       {showSuccess && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {t('login_page.success_login')}
         </Alert>
       )}
 
+      {/* form */}
       <Box sx={sxStyles.form}>
+        {/* input for email */}
         <TextField
           label={t('reg_page.label.email')}
           sx={sxStyles.input}
           value={form.email}
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
         />
+
+        {/* input for password */}
         <TextField
           label={t('reg_page.label.pass_conf')}
           type={showPassword ? 'text' : 'password'}
@@ -117,11 +125,15 @@ const LoginPage = () => {
             ),
           }}
         />
+
+        {/* error alert */}
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {t(error)}
           </Alert>
         )}
+
+        {/* login button */}
         <Button
           sx={{ px: 1, py: 2, fontWeight: 'bold' }}
           variant="contained"

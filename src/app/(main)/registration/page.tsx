@@ -13,26 +13,27 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { FirebaseError } from 'firebase/app';
-import {
-  createUserWithEmailAndPassword,
-  fetchSignInMethodsForEmail,
-  signOut,
-} from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, projectUsers } from '@pexeso/lib/firebase/firestoreConfigUsers';
+// import { FirebaseError } from 'firebase/app';
+// import {
+//   createUserWithEmailAndPassword,
+//   fetchSignInMethodsForEmail,
+//   signOut,
+// } from 'firebase/auth';
+// import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+// import { auth, projectUsers } from '@pexeso/lib/firebase/firestoreConfigUsers';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
+//----component
 export default function RegisterForm() {
-
-const { t } = useTranslation();
-  const router = useRouter();
+  const { t } = useTranslation();
+  const router = useRouter(); // next.js navigation
   const searchParams = useSearchParams();
 
+  //local state of form
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -41,14 +42,20 @@ const { t } = useTranslation();
   });
 
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); //password visibility
   const [isLoading, setIsLoading] = useState(false);
 
+  //validation of form before post
   const validate = () => {
     const { password, confirm, name, email } = form;
+
+    //min and max length of password
     if (name.length < 3) return 'reg_page.error_alert.name_length_min';
     if (name.length > 50) return 'reg_page.error_alert.name_length_max';
+
+    //emial valid. with regex
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      //password validation (lenght, special character and confirmation)
       return 'reg_page.error_alert.email_format';
     if (password.length < 6 || password.length > 20)
       return 'reg_page.error_alert.pass_length';
@@ -59,55 +66,78 @@ const { t } = useTranslation();
     return '';
   };
 
- const handleRegister = async () => {
-  setIsLoading(true);
-  setError('');
+  // registration handler function
+  const handleRegister = async () => {
+    setIsLoading(true);
+    setError('');
 
-  const validationError = validate();
-  if (validationError) {
-    setError(validationError);
-    setIsLoading(false);
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/registration', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || 'reg_page.error_alert.unexpected');
+    //trigger validation
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      setIsLoading(false);
       return;
     }
 
-    router.push('/login?fromRegister=true');
-    setForm({ name: '', email: '', password: '', confirm: '' });
-  } catch (err) {
-    setError('reg_page.error_alert.unexpected');
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      //call BE api for registration
+      const res = await fetch('/api/registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      //when error occurs
+      // const data = await res.json();
+      // if (!res.ok) {
+      //   setError(data.error || 'reg_page.error_alert.unexpected');
+      //   return;
+      // }
+
+      const errorMap: Record<string, string> = {
+        'email_registered': 'reg_page.error_alert.email_registered',
+        'missing_credentials': 'reg_page.error_alert.missing_credentials',
+        'req_failed': 'reg_page.error_alert.reg_failed',
+      };
+
+      const data = await res.json();
+      if (!res.ok) {
+        const translatedKey =
+          errorMap[data.error] || 'reg_page.error_alert.unexpected';
+        setError(translatedKey);
+        return;
+      }
+
+      //redirect to login page with success message (query parameter)
+      router.push('/login?fromRegister=true');
+      //reset of form inputs
+      setForm({ name: '', email: '', password: '', confirm: '' });
+    } catch (err) {
+      setError('reg_page.error_alert.unexpected');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box sx={sxStyles.form}>
+      {/* Input for user name */}
       <TextField
         label={t('reg_page.label.name')}
         sx={sxStyles.input}
         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
       />
+      {/* Input for email */}
       <TextField
         label={t('reg_page.label.email')}
         sx={sxStyles.input}
         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
       />
+      {/* Input for password with visibility option */}
       <TextField
         label={t('reg_page.label.pass')}
         type={showPassword ? 'text' : 'password'}
@@ -127,17 +157,26 @@ const { t } = useTranslation();
           ),
         }}
       />
+
+      {/* Password confirmation */}
       <TextField
         label={t('reg_page.label.pass_conf')}
         type="password"
         sx={sxStyles.input}
         onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
       />
+
+      {/* Error alert  */}
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {t(error)}
+          {/* {t(error || data.error)} */}
+
+          {/* {t(error)} */}
+          {t(error) !== error ? t(error) : error}
         </Alert>
       )}
+
+      {/* Registration button */}
       <Button
         variant="contained"
         fullWidth

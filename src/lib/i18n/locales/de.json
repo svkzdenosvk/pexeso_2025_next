@@ -119,6 +119,8 @@
       "pass_confirm": "Die Passwörter stimmen nicht überein.",
       "reg_failed": "Registrierung fehlgeschlagen. Bitte versuche es erneut.",
       "email_registered": "Diese E-Mail-Adresse ist bereits registriert.",
+            "missing_credentials":"Chýba meno, email alebo heslo užívateľa",
+
       "unexpected": "Während der Registrierung ist ein unerwarteter Fehler aufgetreten."
     },
     "btn_reg": "Registrieren"
