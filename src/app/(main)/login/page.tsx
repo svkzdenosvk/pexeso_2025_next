@@ -15,6 +15,8 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
+import { verifyClientOrigin } from '@pexeso/_inc/data';
+import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
@@ -46,6 +48,12 @@ const LoginPage = () => {
 
   // login handler function
   const handleLogin = async () => {
+    //origin protection
+    if (!verifyClientOrigin()) {
+      setError('invalid_origin');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
 
@@ -59,9 +67,20 @@ const LoginPage = () => {
 
       const data = await res.json();
 
-      //show error if response not ok
+      // maping error code / alert for i18n
+      const errorMap: Record<string, string> = {
+        invalid_credentials: 'login_page.error_alert.invalid_credentials',
+        missing_credentials: 'login_page.error_alert.missing_credentials',
+        too_many_req: 'login_page.error_alert.too_many_req',
+        login_failed: 'login_page.error_alert.login_failed',
+        unknown_err: 'login_page.error_alert.unknown_err',
+        not_allowed_origin: 'invalid_origin'
+      };
+
       if (!res.ok) {
-        setError(data.error || 'login_page.error_alert.unknow_err');
+        const translatedKey =
+          errorMap[data.error] || 'reg_page.error_alert.unexpected';
+        setError(translatedKey);
         return;
       }
 
@@ -85,67 +104,70 @@ const LoginPage = () => {
 
   return (
     // my wrapper PublicOnly will be added
-    <Box sx={{ mx: 'auto' }}>
-      {/* show green success message after registration without problem */}
-
-      {showSuccess && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {t('login_page.success_login')}
-        </Alert>
-      )}
-
-      {/* form */}
-      <Box sx={sxStyles.form}>
-        {/* input for email */}
-        <TextField
-          label={t('reg_page.label.email')}
-          sx={sxStyles.input}
-          value={form.email}
-          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        />
-
-        {/* input for password */}
-        <TextField
-          label={t('reg_page.label.pass_conf')}
-          type={showPassword ? 'text' : 'password'}
-          sx={sxStyles.input}
-          value={form.password}
-          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((show) => !show)}
-                  edge="end"
-                  aria-label="toggle password visibility"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        {/* error alert */}
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {t(error)}
+    <PublicOnlyRoute>
+      <Box sx={{ mx: 'auto' }}>
+        {/* show green success message after registration without problem */}
+        {showSuccess && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {t('login_page.success_login')}
           </Alert>
         )}
 
-        {/* login button */}
-        <Button
-          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-          variant="contained"
-          fullWidth
-          onClick={handleLogin}
-          disabled={isLoading}
-          startIcon={isLoading && <CircularProgress size={20} />}
-        >
-          {t('login_page.btn_login')}
-        </Button>
+        {/* form */}
+        <Box sx={sxStyles.form}>
+          {/* input for email */}
+          <TextField
+            label={t('reg_page.label.email')}
+            sx={sxStyles.input}
+            value={form.email}
+            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+          />
+
+          {/* input for password */}
+          <TextField
+            label={t('reg_page.label.pass_conf')}
+            type={showPassword ? 'text' : 'password'}
+            sx={sxStyles.input}
+            value={form.password}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, password: e.target.value }))
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((show) => !show)}
+                    edge="end"
+                    aria-label="toggle password visibility"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* error alert */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {t(error)}
+            </Alert>
+          )}
+
+          {/* login button */}
+          <Button
+            sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+            variant="contained"
+            fullWidth
+            onClick={handleLogin}
+            disabled={isLoading}
+            startIcon={isLoading && <CircularProgress size={20} />}
+          >
+            {t('login_page.btn_login')}
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </PublicOnlyRoute>
   );
 };
 

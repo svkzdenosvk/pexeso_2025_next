@@ -81,3 +81,35 @@ export function preloadImages(imgNamesArr: My_Type_Img_Name[]) {
     }),
   );
 }
+
+/*--------------------------------------------------------------------------------------------*/
+// list of allowed origins (pages from POST req came)
+export const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://pexeso-next.netlify.app'
+] as const;
+
+export type AllowedOrigin = typeof ALLOWED_ORIGINS[number];
+
+//version for FE
+export const verifyClientOrigin = (): boolean => {
+  if (typeof window === 'undefined') return true; // Pre SSR
+  
+  const currentOrigin = window.location.origin;
+  const isValid = ALLOWED_ORIGINS.includes(currentOrigin as AllowedOrigin);
+  
+  if (!isValid) {
+    console.error(`Invalid origin: ${currentOrigin}`);
+  }
+  
+  return isValid;
+};
+
+//version for BE (API)
+export const verifyApiOrigin = (origin: string | null):  boolean  => {
+  if (!origin) return  false;
+  
+  const isValid = ALLOWED_ORIGINS.includes(origin as AllowedOrigin);
+
+  return isValid;
+};

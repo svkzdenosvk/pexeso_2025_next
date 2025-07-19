@@ -7,8 +7,6 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@pexeso/lib/redux/store/store";
 import { clearUser } from "@pexeso/lib/redux/store/reducers/authSlice";
-import { signOut } from "firebase/auth";
-import { auth } from "@pexeso/lib/firebase/firestoreConfigUsers";
 
 const styles = {
   wrapper: {
@@ -34,13 +32,11 @@ const ButtonLogReg = () => {
 
   const { user } = useSelector((state: RootState) => state.auth);
 
-  // Extract language prefix from current pathname (/en/login → en)
-//   const lang = pathname.split("/")[1] || "en";
-
+// logout handler function
   const handleLogout = async () => {
   try {
-    await fetch("/api/logout"); // Zmazanie cookie na serveri
-    dispatch(clearUser()); // Vyčisti redux
+    await fetch("/api/logout"); // delete cookies on server
+    dispatch(clearUser()); // clear redux
   } catch (err) {
     console.error("Logout failed:", err);
   }

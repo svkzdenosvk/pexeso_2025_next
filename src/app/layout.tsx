@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import  Providers  from './providers';
-import ButtonLogReg from "@pexeso/components/LoginReg/ButtonLogReg";
+import type { Metadata } from 'next';
+import Providers from './providers';
+import ButtonLogReg from '@pexeso/components/LoginReg/ButtonLogReg';
 
 export const metadata: Metadata = {
-  title: "Pexeso in Next",
-  description: "Pexeso game rewritten in Next",
+  title: 'Pexeso in Next',
+  description: 'Pexeso game rewritten in Next',
 };
 
 export default function RootLayout({
@@ -13,12 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-     <html lang="sk">
+    <html lang="sk">
       <body>
         <Providers>
-                <ButtonLogReg />
+          <ButtonLogReg />
 
-          {children}</Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

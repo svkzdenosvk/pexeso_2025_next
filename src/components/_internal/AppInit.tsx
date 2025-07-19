@@ -6,6 +6,7 @@ import { preloadImages } from '@pexeso/_inc/data';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { set_loading } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import { setUser, clearUser } from "@pexeso/lib/redux/store/reducers/authSlice";
+import {verifyClientOrigin} from '@pexeso/_inc/data'
 
 export default function AppInit() {
   const dispatch = useDispatch();
@@ -15,6 +16,14 @@ export default function AppInit() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
+
+        //protection of origin
+          if (!verifyClientOrigin()) {
+          console.error('Invalid origin detected');
+          dispatch(clearUser());
+          return;
+        }
+
         const res = await fetch('/api/auth/me', {
           method: 'GET',
           credentials: 'include', // cookies must be sent

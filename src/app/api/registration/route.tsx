@@ -1,21 +1,15 @@
 // app/api/register/route.ts
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDB } from '@pexeso/lib/firebase/firebase-admin';
-
-// list of allowed origins (pages from POST req came)
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://pexeso-next.netlify.app',
-];
+import { verifyApiOrigin } from '@pexeso/_inc/data';
 
 //POST API req. handler to register new user
 export async function POST(req: Request) {
   const origin = req.headers.get('origin');
+  // const { valid } = verifyApiOrigin(origin);
 
-  // verification of the origin od request (protection against external POST requests)
-  if (!origin || !allowedOrigins.includes(origin)) {
-    console.error('Domain not allowed:');
-
+  //origin protection
+  if (!verifyApiOrigin(origin)) {
     return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
   }
 

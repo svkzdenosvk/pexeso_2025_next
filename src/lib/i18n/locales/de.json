@@ -110,30 +110,35 @@
       "pass_conf": "Passwort bestätigen"
     },
     "error_alert": {
-      "name_length_min": "Der Name muss mindestens 3 Zeichen lang sein.",
-      "name_length_max": "Der Name darf höchstens 50 Zeichen lang sein.",
-      "email_format": "Die E-Mail-Adresse ist ungültig.",
-      "pass_length": "Das Passwort muss zwischen 6 und 20 Zeichen lang sein.",
-      "pass_upper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
-      "pass_special": "Das Passwort muss mindestens ein Sonderzeichen enthalten.",
-      "pass_confirm": "Die Passwörter stimmen nicht überein.",
-      "reg_failed": "Registrierung fehlgeschlagen. Bitte versuche es erneut.",
-      "email_registered": "Diese E-Mail-Adresse ist bereits registriert.",
-            "missing_credentials":"Chýba meno, email alebo heslo užívateľa",
-
-      "unexpected": "Während der Registrierung ist ein unerwarteter Fehler aufgetreten."
+      "name_length_min": "Name muss mindestens 3 Zeichen lang sein",
+      "name_length_max": "Name darf maximal 50 Zeichen lang sein",
+      "email_format": "E-Mail hat kein gültiges Format",
+      "pass_length": "Passwort muss 6 bis 20 Zeichen lang sein.",
+      "pass_upper": "Passwort muss einen Großbuchstaben enthalten.",
+      "pass_number": "Passwort muss eine Zahl enthalten.",
+      "pass_special": "Passwort muss ein Sonderzeichen enthalten.",
+      "pass_confirm": "Passwörter stimmen nicht überein.",
+      "reg_failed": "Registrierung fehlgeschlagen, bitte versuchen Sie es erneut.",
+      "email_registered": "Diese E-Mail ist bereits registriert.",
+      "missing_credentials": "Name, E-Mail oder Passwort fehlt",
+      "network_error": "Netzwerkfehler aufgetreten, bitte versuchen Sie es später erneut",
+      "unexpected": "Ein unerwarteter Fehler ist während der Registrierung aufgetreten."
     },
     "btn_reg": "Registrieren"
   },
 
   "login_page": {
     "error_alert": {
-      "invalid_credentials": "E-Mail oder Passwort ist falsch.",
+      "login_failed": "Anmeldung fehlgeschlagen, bitte versuchen Sie es erneut",
+      "missing_credentials": "E-Mail oder Passwort fehlt",
+      "invalid_credentials": "Falsche E-Mail oder falsches Passwort.",
       "too_many_req": "Zu viele Versuche. Bitte später erneut versuchen.",
-      "net_req_failed": "Netzwerkfehler. Bitte Verbindung prüfen.",
-      "unknow_err": "Beim Anmelden ist ein unbekannter Fehler aufgetreten."
+      "net_req_failed": "Netzwerkfehler. Überprüfen Sie Ihre Verbindung.",
+      "unknown_err": "Unbekannter Fehler während der Anmeldung aufgetreten."
     },
     "success_login": "Registrierung erfolgreich. Sie können sich jetzt anmelden.",
     "btn_login": "Anmelden"
-  }
+  },
+
+  "invalid_origin": "Anfrage von nicht autorisierter Quelle"
 }

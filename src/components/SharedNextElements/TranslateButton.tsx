@@ -17,7 +17,8 @@ const TranslateButton = () => {
   return (
     <Box
       sx={{
-        mt: 2,
+        mt: 1,
+        mb: 2,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

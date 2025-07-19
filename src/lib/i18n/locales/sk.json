@@ -115,11 +115,13 @@
       "email_format": "Email nie je v platnom formáte",
       "pass_length": "Heslo musí mať 6 až 20 znakov.",
       "pass_upper": "Heslo musí obsahovať veľké písmeno.",
+      "pass_number": "Heslo musí obsahovať číslicu.",
       "pass_special": "Heslo musí obsahovať špeciálny znak.",
       "pass_confirm": "Heslá sa nezhodujú.",
       "reg_failed": "Registrácia zlyhala, skús to znova.",
       "email_registered": "Tento email už je zaregistrovaný.",
       "missing_credentials":"Chýba meno, email alebo heslo užívateľa",
+      "network_error":"Nastala sieťová chyba, skúste to neskôr",
       "unexpected": "Počas registrácie nastala neočakávaná chyba."
     },
     "btn_reg": "Registrovať"
@@ -132,9 +134,11 @@
       "invalid_credentials": "Email alebo heslo je nesprávne.",
       "too_many_req": "Príliš veľa pokusov. Skúste znova neskôr.",
       "net_req_failed":"Sieťová chyba. Skontrolujte pripojenie.",
-      "unknow_err":"Pri prihlasovaní nastala neznáma chyba."
+      "unknown_err":"Pri prihlasovaní nastala neznáma chyba."
     },
     "success_login":"Registrácia prebehla úspešne. Teraz sa môžete prihlásiť.",
     "btn_login": " Prihlásiť sa"
-  }
+  },
+
+  "invalid_origin":"Požiadavka z nepovoleného zdroja"
 }
