@@ -25,7 +25,7 @@ const sxStyles = {
 
 export default function LoginFormWrapper() {
   return (
-    
+
     // my wrapper PublicOnly will be added
     <PublicOnlyRoute>
       <Suspense fallback={<div>Načítavam prihlasovací formulár...</div>}>
@@ -93,6 +93,7 @@ const LoginForm = () => {
         const translatedKey =
           errorMap[data.error] || 'reg_page.error_alert.unexpected';
         setError(translatedKey);
+        console.log('Firebase login error on login page:', data);
         return;
       }
 

@@ -15,15 +15,25 @@ const firebaseErrorMap: Record<string, string> = {
 // POST login handler
 export async function POST(req: Request) {
   const origin = req.headers.get('origin');
-  
+
+  // ----------------------------------------------------Log origin pre kontrolu CORS
+  console.log('Request origin:', origin);
+
   //origin protection
   if (!verifyApiOrigin(origin)) {
+    //------------------------------------------------------------------------------------------
+    console.warn('Blocked origin:', origin);
+
     return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
   }
 
   try {
     // loading credentials from request
     const { email, password }: My_Type_Login = await req.json();
+    console.log('Login body:', { email, password });
+
+    // 🔐 Logni API key – len pre test, potom odstrániť
+    console.log('Firebase API KEY:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 
     // if missing email or password -> error
     if (!email || !password) {
@@ -52,6 +62,8 @@ export async function POST(req: Request) {
 
     // if Firebase return error
     if (!res.ok) {
+      console.warn('Firebase login error on login route:', data); // <- Tu zistíme presnú chybu
+
       const firebaseError = data.error?.message ?? 'UNKNOWN';
       const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
 
