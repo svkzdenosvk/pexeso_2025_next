@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,19 @@ const sxStyles = {
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
-const LoginPage = () => {
+export default function LoginFormWrapper() {
+  return (
+    
+    // my wrapper PublicOnly will be added
+    <PublicOnlyRoute>
+      <Suspense fallback={<div>Načítavam prihlasovací formulár...</div>}>
+        <LoginForm />
+      </Suspense>
+    </PublicOnlyRoute>
+  )
+}
+
+const LoginForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -103,8 +115,6 @@ const LoginPage = () => {
   };
 
   return (
-    // my wrapper PublicOnly will be added
-    <PublicOnlyRoute>
       <Box sx={{ mx: 'auto' }}>
         {/* show green success message after registration without problem */}
         {showSuccess && (
@@ -167,8 +177,6 @@ const LoginPage = () => {
           </Button>
         </Box>
       </Box>
-    </PublicOnlyRoute>
   );
 };
 
-export default LoginPage;

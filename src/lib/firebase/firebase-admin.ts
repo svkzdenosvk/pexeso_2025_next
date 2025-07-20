@@ -4,6 +4,8 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
 const firebaseAdminConfig = {
+
+
   credential: cert({
     projectId: process.env.GOOGLE_PROJECT_ID,
     clientEmail: process.env.GOOGLE_CLIENT_EMAIL,

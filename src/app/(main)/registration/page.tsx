@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import {
   Box,
   TextField,
@@ -21,8 +21,18 @@ const sxStyles = {
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
+export default function RegisterFormWrapper() {
+  return (
+    <PublicOnlyRoute>
+      <Suspense fallback={<div>Načítavam...</div>}>
+        <RegisterForm />
+      </Suspense>
+    </PublicOnlyRoute>
+  );
+}
+
 //----component
-export default function RegisterForm() {
+  function RegisterForm() {
   const { t } = useTranslation();
   const router = useRouter(); // next.js navigation
   const searchParams = useSearchParams();
@@ -123,7 +133,6 @@ export default function RegisterForm() {
   };
 
   return (
-    <PublicOnlyRoute>
       <Box sx={sxStyles.form}>
         {/* Input for user name */}
         <TextField
@@ -188,6 +197,5 @@ export default function RegisterForm() {
           {t('reg_page.btn_reg')}
         </Button>
       </Box>
-    </PublicOnlyRoute>
   );
 }
