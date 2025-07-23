@@ -18,6 +18,32 @@ export function _shuffleArray(arrayIn: any[]) {
   return array;
 }
 
+/*----------------------------------------------------------------------------------------*/
+import type { My_Type_DivImg } from "./my_types";
+
+// shuffle unmatched pexeso cards wth class 'mask'
+export function _shuffleUnMatchedCards(afterUnMatchArr: My_Type_DivImg[]) {
+  // array of 'mask' divs
+  const maskCards = afterUnMatchArr.filter((div) =>
+    div.classNames.includes("mask")
+  );
+
+  // shuffle mask divs
+  const shuffled = _shuffleArray(maskCards);
+
+  // new array where 'mask' divs are replaced with shuffled 'mask'
+  let shuffledIndex = 0;
+  afterUnMatchArr = afterUnMatchArr.map((div) => {
+    if (div.classNames.includes("mask")) {
+      return shuffled[shuffledIndex++];
+    } else {
+      return div;
+    }
+  });
+
+  return afterUnMatchArr;
+}
+
 //  /*-------function for time formating from seconds  */
 
 export function _myFormatSeconds(seconds: number): string {
@@ -41,7 +67,7 @@ export function _myToggle(
   elm.classList.remove(removedClass);
 }
 
-//----------------------------function for typescript
+//----------------------------typeGuard functions for typescript
 export function my_Type_Guard_function<My_Type extends string>(
   value: string,
   arr: readonly My_Type[]

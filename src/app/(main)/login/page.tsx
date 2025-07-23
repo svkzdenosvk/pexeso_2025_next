@@ -93,7 +93,7 @@ const LoginForm = () => {
         const translatedKey =
           errorMap[data.error] || 'reg_page.error_alert.unexpected';
         setError(translatedKey);
-        console.log('Firebase login error on login page:', data);
+        // console.log('Firebase login error on login page:', data);
         return;
       }
 

@@ -3,7 +3,6 @@
 import { ReactNode } from 'react';
 import {
   Provider as ReduxProvider,
-  useDispatch,
   useSelector,
 } from 'react-redux';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';

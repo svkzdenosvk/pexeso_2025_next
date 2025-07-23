@@ -19,7 +19,8 @@ export type My_Type_ClassNames =
   | "mask"
   | "selected_Div_img"
   | "rotate-center"
-  | "div_on_click";
+  | "div_on_click"
+  | "disabled";
 
 export type My_Type_Image = {
   id: string;
@@ -89,18 +90,10 @@ export type My_Type_User = {
   email: string;
 }
 
-// interface AuthState {
-//   user: User | null;
-// }
-
-// export type My_Type_AuthState = {
-//   user: My_Type_User | "Guest";
-// }
 export type My_Type_AuthState = {
   user: My_Type_User | null;
 }
 
-// types.ts
 export interface My_Type_Login {
   email: string;
   password: string;

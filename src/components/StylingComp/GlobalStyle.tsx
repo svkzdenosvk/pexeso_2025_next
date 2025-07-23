@@ -41,16 +41,21 @@ export const GlobalStyle = createGlobalStyle`
   
   .column_content .row .selected_Div_img {
     pointer-events: none;
-
-    img {
-      opacity: 100%;
-    }
   }
+  
+    .column_content .row .selected_Div_img img {
+  opacity: 100%;
+}
 
   .rotate-center {
     animation: rotate-center 0.2s ease-in-out both;
     box-shadow: 0px 0px 28px 29px rgba(255, 255, 0, 0.53);
   }
+
+  .disabled{
+  pointer-events: none;
+  cursor: not-allowed;
+}
 
   @keyframes rotate-center {
     0% {

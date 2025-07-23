@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
-import Image from 'next/image';
 import { My_Type_DivImg } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import {
@@ -16,6 +15,12 @@ import {
 } from '@pexeso/lib/redux/store/reducers/gameSlice';
 
 // ---------- sx styles
+
+const imgStyles = {
+  width: '107px',
+  height: '107px',
+  opacity: '0%',
+} as const;
 
 const divOnCliCkBoxStyles = {
   width: '107px',
@@ -41,8 +46,8 @@ const colorTextThemeStyles = (theme: Theme) => ({
 // ---------- component
 
 export const GameDivPictures = () => {
-    const { t } = useTranslation();
-  
+  const { t } = useTranslation();
+
   const dispatch = useDispatch();
   const { divImgs, level, isLoading } = useSelector(
     (state: RootState) => state.game
@@ -112,11 +117,12 @@ export const GameDivPictures = () => {
             onClick={(e) => showImg(e.currentTarget, oneDiv)}
             className={oneDiv.classNames.join(' ')}
           >
-            <Image
+        
+            <Box
+              component="img"
               src={`/pictures/pexeso/${oneDiv.name}.jpg`}
-              alt={`oneDiv.name`}
-              fill
-              style={{ objectFit: 'cover' }} // this is needed because of "fill"
+              alt="Pexeso img"
+              sx={imgStyles}
             />
           </Box>
         ))
