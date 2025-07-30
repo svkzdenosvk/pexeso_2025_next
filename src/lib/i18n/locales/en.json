@@ -18,8 +18,7 @@
   },
 
   "images_page": {
-    "h2": "Game images",
-    "loading": "Loading images"
+    "h2": "Game images"
   },
 
   "rules_page": {
@@ -120,25 +119,31 @@
       "pass_confirm": "Passwords don't match.",
       "reg_failed": "Registration failed, please try again.",
       "email_registered": "This email is already registered.",
-      "missing_credentials":"Missing name, email or password",
-      "network_error":"Network error occurred, please try again later",
+      "missing_credentials": "Missing name, email or password",
+      "network_error": "Network error occurred, please try again later",
       "unexpected": "An unexpected error occurred during registration."
     },
     "btn_reg": "Register"
   },
 
   "login_page": {
-    "error_alert":{
-      "login_failed":"Login failed, please try again",
-      "missing_credentials":"Missing email or password",
+    "error_alert": {
+      "login_failed": "Login failed, please try again",
+      "missing_credentials": "Missing email or password",
       "invalid_credentials": "Incorrect email or password.",
       "too_many_req": "Too many attempts. Try again later.",
-      "net_req_failed":"Network error. Check your connection.",
-      "unknown_err":"Unknown error occurred during login."
+      "net_req_failed": "Network error. Check your connection.",
+      "unknown_err": "Unknown error occurred during login."
     },
-    "success_login":"Registration successful. You can now log in.",
+    "success_login": "Registration successful. You can now log in.",
     "btn_login": "Login"
   },
 
-  "invalid_origin":"Request from unauthorized source"
+  "invalid_origin": "Request from unauthorized source",
+
+  "loading_alerts": {
+    "images": "Loading images",
+    "login": "Loading login form...",
+    "registration": "Loading registration form..."
+  }
 }

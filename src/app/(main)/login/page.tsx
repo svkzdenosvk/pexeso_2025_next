@@ -17,23 +17,29 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import { verifyClientOrigin } from '@pexeso/_inc/data';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
+import MySuspense from '@pexeso/components/_internal/MySuspense';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
-export default function LoginFormWrapper() {
-  return (
+// ---------- component
 
-    // my wrapper PublicOnly will be added
+export default function LoginFormWrapper() {
+  const { t } = useTranslation();
+
+  return (
     <PublicOnlyRoute>
-      <Suspense fallback={<div>Načítavam prihlasovací formulár...</div>}>
+      {/*suspense during loading  */}
+      <MySuspense loadingText="loading_alerts.login">
         <LoginForm />
-      </Suspense>
+      </MySuspense>
     </PublicOnlyRoute>
-  )
+  );
 }
+
+// ---------- component
 
 const LoginForm = () => {
   const { t } = useTranslation();
@@ -86,7 +92,7 @@ const LoginForm = () => {
         too_many_req: 'login_page.error_alert.too_many_req',
         login_failed: 'login_page.error_alert.login_failed',
         unknown_err: 'login_page.error_alert.unknown_err',
-        not_allowed_origin: 'invalid_origin'
+        not_allowed_origin: 'invalid_origin',
       };
 
       if (!res.ok) {
@@ -116,68 +122,65 @@ const LoginForm = () => {
   };
 
   return (
-      <Box sx={{ mx: 'auto' }}>
-        {/* show green success message after registration without problem */}
-        {showSuccess && (
-          <Alert severity="success" sx={{ mb: 2 }}>
-            {t('login_page.success_login')}
+    <Box sx={{ mx: 'auto' }}>
+      {/* show green success message after registration without problem */}
+      {showSuccess && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {t('login_page.success_login')}
+        </Alert>
+      )}
+
+      {/* form */}
+      <Box sx={sxStyles.form}>
+        {/* input for email */}
+        <TextField
+          label={t('reg_page.label.email')}
+          sx={sxStyles.input}
+          value={form.email}
+          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+        />
+
+        {/* input for password */}
+        <TextField
+          label={t('reg_page.label.pass_conf')}
+          type={showPassword ? 'text' : 'password'}
+          sx={sxStyles.input}
+          value={form.password}
+          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword((show) => !show)}
+                  edge="end"
+                  aria-label="toggle password visibility"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        {/* error alert */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {t(error)}
           </Alert>
         )}
 
-        {/* form */}
-        <Box sx={sxStyles.form}>
-          {/* input for email */}
-          <TextField
-            label={t('reg_page.label.email')}
-            sx={sxStyles.input}
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-          />
-
-          {/* input for password */}
-          <TextField
-            label={t('reg_page.label.pass_conf')}
-            type={showPassword ? 'text' : 'password'}
-            sx={sxStyles.input}
-            value={form.password}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, password: e.target.value }))
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword((show) => !show)}
-                    edge="end"
-                    aria-label="toggle password visibility"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          {/* error alert */}
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {t(error)}
-            </Alert>
-          )}
-
-          {/* login button */}
-          <Button
-            sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-            variant="contained"
-            fullWidth
-            onClick={handleLogin}
-            disabled={isLoading}
-            startIcon={isLoading && <CircularProgress size={20} />}
-          >
-            {t('login_page.btn_login')}
-          </Button>
-        </Box>
+        {/* login button */}
+        <Button
+          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+          variant="contained"
+          fullWidth
+          onClick={handleLogin}
+          disabled={isLoading}
+          startIcon={isLoading && <CircularProgress size={20} />}
+        >
+          {t('login_page.btn_login')}
+        </Button>
       </Box>
+    </Box>
   );
 };
-

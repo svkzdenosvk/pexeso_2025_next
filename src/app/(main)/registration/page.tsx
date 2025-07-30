@@ -15,24 +15,29 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { verifyClientOrigin } from '@pexeso/_inc/data';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
+import MySuspense from '@pexeso/components/_internal/MySuspense';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
+// ---------- component
 export default function RegisterFormWrapper() {
+  const { t } = useTranslation();
+
   return (
     <PublicOnlyRoute>
-      <Suspense fallback={<div>Načítavam...</div>}>
+      {/*suspense during loading  */}
+      <MySuspense loadingText="loading_alerts.registration">
         <RegisterForm />
-      </Suspense>
+      </MySuspense>
     </PublicOnlyRoute>
   );
 }
 
 //----component
-  function RegisterForm() {
+function RegisterForm() {
   const { t } = useTranslation();
   const router = useRouter(); // next.js navigation
   const searchParams = useSearchParams();
@@ -105,7 +110,7 @@ export default function RegisterFormWrapper() {
         email_registered: 'reg_page.error_alert.email_registered',
         missing_credentials: 'reg_page.error_alert.missing_credentials',
         req_failed: 'reg_page.error_alert.reg_failed',
-        not_allowed_origin: 'invalid_origin'
+        not_allowed_origin: 'invalid_origin',
       };
 
       const data = await res.json();
@@ -133,69 +138,66 @@ export default function RegisterFormWrapper() {
   };
 
   return (
-      <Box sx={sxStyles.form}>
-        {/* Input for user name */}
-        <TextField
-          label={t('reg_page.label.name')}
-          sx={sxStyles.input}
-          onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-        />
-        {/* Input for email */}
-        <TextField
-          label={t('reg_page.label.email')}
-          sx={sxStyles.input}
-          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        />
-        {/* Input for password with visibility option */}
-        <TextField
-          label={t('reg_page.label.pass')}
-          type={showPassword ? 'text' : 'password'}
-          sx={sxStyles.input}
-          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  edge="end"
-                  aria-label="toggle password visibility"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+    <Box sx={sxStyles.form}>
+      {/* Input for user name */}
+      <TextField
+        label={t('reg_page.label.name')}
+        sx={sxStyles.input}
+        onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+      />
+      {/* Input for email */}
+      <TextField
+        label={t('reg_page.label.email')}
+        sx={sxStyles.input}
+        onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+      />
+      {/* Input for password with visibility option */}
+      <TextField
+        label={t('reg_page.label.pass')}
+        type={showPassword ? 'text' : 'password'}
+        sx={sxStyles.input}
+        onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword((prev) => !prev)}
+                edge="end"
+                aria-label="toggle password visibility"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
 
-        {/* Password confirmation */}
-        <TextField
-          label={t('reg_page.label.pass_conf')}
-          type="password"
-          sx={sxStyles.input}
-          onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
-        />
+      {/* Password confirmation */}
+      <TextField
+        label={t('reg_page.label.pass_conf')}
+        type="password"
+        sx={sxStyles.input}
+        onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
+      />
 
-        {/* Error alert  */}
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {/* {t(error || data.error)} */}
+      {/* Error alert  */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {t(error) !== error ? t(error) : error}
+        </Alert>
+      )}
 
-            {/* {t(error)} */}
-            {t(error) !== error ? t(error) : error}
-          </Alert>
-        )}
-
-        {/* Registration button */}
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleRegister}
-          disabled={isLoading}
-          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-          startIcon={isLoading && <CircularProgress size={20} />}
-        >
-          {t('reg_page.btn_reg')}
-        </Button>
-      </Box>
+      {/* Registration button */}
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleRegister}
+        disabled={isLoading}
+        sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+        startIcon={isLoading && <CircularProgress size={20} />}
+      >
+        {t('reg_page.btn_reg')}
+      </Button>
+    </Box>
   );
 }

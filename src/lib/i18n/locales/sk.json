@@ -18,8 +18,7 @@
   },
 
   "images_page": {
-    "h2": "Hracie obrázky",
-    "loading": "Načítavajú sa obrázky"
+    "h2": "Hracie obrázky"
   },
 
   "rules_page": {
@@ -140,5 +139,11 @@
     "btn_login": " Prihlásiť sa"
   },
 
-  "invalid_origin":"Požiadavka z nepovoleného zdroja"
+  "invalid_origin":"Požiadavka z nepovoleného zdroja",
+
+  "loading_alerts":{
+    "images":"Načítavajú sa obrázky",
+    "login": "Načítavam prihlasovací formulár...",
+    "registration":"Načítavam registračný formulár..."
+  }
 }

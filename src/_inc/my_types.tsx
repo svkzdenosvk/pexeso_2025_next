@@ -37,6 +37,13 @@ export type My_Type_Svk_Eng_level = {
   label: string;
 };
 
+import { ReactNode } from 'react';
+
+export type My_Type_MySuspenseProp = {
+  children: ReactNode;
+  loadingText?: string;
+};
+
 /*----------------------------------------redux----------------------------------------- */
 
 export type My_Type_Redux_Game_Action =

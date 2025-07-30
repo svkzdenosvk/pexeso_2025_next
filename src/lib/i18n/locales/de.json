@@ -18,8 +18,7 @@
   },
 
   "images_page": {
-    "h2": "Spielbilder",
-    "loading": "Bilder werden geladen"
+    "h2": "Spielbilder"
   },
 
   "rules_page": {
@@ -140,5 +139,11 @@
     "btn_login": "Anmelden"
   },
 
-  "invalid_origin": "Anfrage von nicht autorisierter Quelle"
+  "invalid_origin": "Anfrage von nicht autorisierter Quelle",
+
+  "loading_alerts": {
+    "images": "Bilder werden geladen",
+    "login": "Login-Formular wird geladen...",
+    "registration": "Registrierungsformular wird geladen..."
+  }
 }

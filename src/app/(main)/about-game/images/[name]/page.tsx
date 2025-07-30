@@ -18,6 +18,7 @@ const singleImgContentStyles = {
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
+  height: '70vh',
 } as const;
 
 const singleImgMainContentStyles = {

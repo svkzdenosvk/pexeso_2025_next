@@ -106,7 +106,7 @@ export const GameDivPictures = () => {
       {/* during loading show message */}
       {isLoading ? (
         <Typography variant="h2" component="h2" sx={colorTextThemeStyles}>
-          {t('images_page.loading')}
+          {t('loading_alerts.images')}
         </Typography>
       ) : (
         // images to play
