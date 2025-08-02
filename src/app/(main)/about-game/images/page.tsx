@@ -29,7 +29,7 @@ const imgMainContentStyles = {
 };
 
 const btnLinkStyles = {
-  mb:2,
+  mb: 2,
   p: 0,
   backgroundColor: 'white',
   textDecoration: 'none',
@@ -41,6 +41,7 @@ const btnLinkStyles = {
   },
 } as const;
 
+//individual img styles
 const imgStyles = {
   width: 200,
   height: 200,
@@ -55,44 +56,54 @@ const imgStyles = {
   },
 } as const;
 
-// ---------- component
+// Wrapper component with Suspense comp
 export default function ImagesWrapper() {
   const { t } = useTranslation();
 
   return (
-      // suspense during loading  
-       <MySuspense loadingText="loading_alerts.images">
-        <Images />
-      </MySuspense>
+    //  wrap Images with Suspense during loading state
+    <MySuspense loadingText="loading_alerts.images">
+      <Images />
+    </MySuspense>
   );
 }
 
-// ---------- component
+// Main image gallery component
 const Images = () => {
+  // Translation hook
   const { t } = useTranslation();
 
-  const {  imgNames } = useSelector((state: RootState) => state.game);
+  // Get image names from Redux store
+  const { imgNames } = useSelector((state: RootState) => state.game);
 
   return (
     <Box sx={imgContentStyles}>
+      {/* Page title */}
       <Typography variant="h2" component="h2">
         {t('images_page.h2')}
       </Typography>
 
+      {/* Image grid container */}
       <Box sx={imgMainContentStyles}>
         {/* { imgNames.length === 0 ? (
           <Typography variant="h4" component="h4">
             {t('loading_alerts.images')}
           </Typography>
         ) : ( */}
-           {imgNames.map((oneImgName) => (
+
+        {/* Render each image as clickable link */}
+        {
+          imgNames.map((oneImgName) => (
             <Button
               component={NextLinkComposed}
               key={oneImgName}
               to={`/about-game/images/${oneImgName}`}
               sx={btnLinkStyles}
             >
+              {/* Image container */}
               <Box sx={imgStyles}>
+
+                {/* Optimized Next.js image */}
                 <Image
                   src={`/pictures/pexeso/${oneImgName}.jpg`}
                   alt={`Obrázok ${oneImgName}`}
@@ -102,8 +113,8 @@ const Images = () => {
               </Box>
             </Button>
           ))
-        // )}
-         }
+          // )}
+        }
       </Box>
     </Box>
   );

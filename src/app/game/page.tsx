@@ -44,6 +44,7 @@ const gameLinkButtonStyles = {
   },
 } as const;
 
+// Main container styles
 const welcomeStyles = {
   width: '100%',
   height: '100%',
@@ -59,6 +60,7 @@ const welcomeStyles = {
   },
 } as const;
 
+// Game board styles
 const columnContentStyles = {
   maxWidth: '850px',
   flexDirection: 'column',
@@ -68,15 +70,17 @@ const columnContentStyles = {
 // ---------- component
 
 const Game = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // translation hook
 
   const router = useRouter();
   const dispatch = useDispatch();
 
+  // Get game state from Redux
   const seconds = useSelector((state: RootState) => state.time.seconds);
   const { imgNames, level, selectedImgCount, linkName, isRunning, isEnd } =
     useSelector((state: RootState) => state.game);
 
+  // Dynamic styles based on game state
   const afterStartStyles = isRunning && !isEnd;
 
   const dynamicColumnContentStyles = {
@@ -89,7 +93,7 @@ const Game = () => {
     display: isRunning || isEnd ? 'none' : 'block',
   });
 
-  //if level or img count is not valid -> redirect back
+  // if level or img count is not valid -> redirect back
   useEffect(() => {
     if (
       !my_Type_Guard_function(level, ['easy', 'medium', 'hard']) ||
@@ -99,7 +103,7 @@ const Game = () => {
       return;
     }
 
-    //create array of objects (div > img) to play from img names and img count 
+    //create array of objects (div > img) to play from img names and img count
     const createFinalArrayFroGame = async () => {
       try {
         const imgDivs: My_Type_DivImg[] =
@@ -119,14 +123,16 @@ const Game = () => {
 
   return (
     <>
+      {/* Main game container */}
       <Box className="welcome" sx={welcomeStyles}>
-        {/* if end -> congratulation */}
+        {/* Congratulation message when game ends */}
         {isEnd && (
           <Typography variant="h1" sx={{ marginBottom: '70px' }}>
             {t('game_page.congratulations')} {_myFormatSeconds(seconds)}
           </Typography>
         )}
-        {/* button to settings form */}
+
+        {/* Link to /settings  */}
         <Button
           component={NextLinkComposed}
           to="/settings"
@@ -136,13 +142,16 @@ const Game = () => {
           {t(linkName)}
         </Button>
 
+        {/* Game instructions (hidden during gameplay) */}
         <Typography variant="h5" component="h5" sx={colorTextThemeStyles}>
           {t('game_page.h5')}
         </Typography>
 
+        {/* Timer and Start button component */}
         <TimeAndStart />
       </Box>
 
+      {/* Game board (shown only during gameplay) */}
       <Box
         className="column_content"
         id="content"

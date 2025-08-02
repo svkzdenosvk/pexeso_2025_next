@@ -38,16 +38,18 @@ const imgStyles = {
   borderRadius: 2,
 } as const;
 
-// ---------- component
-
+// Single image page component
 const SingleImagePage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // Translation hook
 
+  // Get image name from URL params
   const params = useParams();
   const name = typeof params?.name === 'string' ? params.name : undefined;
 
+  // Get all image names from Redux store
   const { imgNames } = useSelector((state: RootState) => state.game);
 
+  // State for error handling and display alert
   const [errorImgName, setErrorImgName] = useState(false);
   const [imgNameH3, setNameH3] = useState('');
 
@@ -73,12 +75,12 @@ const SingleImagePage = () => {
 
   return (
     <Box sx={singleImgContentStyles}>
-      {/* //the first letter is capitalized */}
+      {/* Page title with capitalized first letter */}
       <Typography variant="h3" component="h3">
         {imgNameH3.charAt(0).toUpperCase() + imgNameH3.slice(1)}
       </Typography>
       <Box sx={singleImgMainContentStyles}>
-        {/* if error */}
+        {/* if error state - image not found */}
         {errorImgName ? (
           <>
             <Typography variant="h3" component="h3">
@@ -88,13 +90,13 @@ const SingleImagePage = () => {
               component={NextLinkComposed}
               to="/about-game/images"
               variant="contained"
-              sx={pulsatingButtonStyles}
+              sx={pulsatingButtonStyles} // animated button style
             >
               {t('single_img_page.btn.btn_error')}
             </Button>
           </>
         ) : (
-          //  if not error
+          //  else valid image state
           <>
             <Box sx={imgStyles}>
               <Image
@@ -109,7 +111,7 @@ const SingleImagePage = () => {
               component={NextLinkComposed}
               to="/about-game/images"
               variant="contained"
-              sx={pulsatingButtonStyles}
+              sx={pulsatingButtonStyles} // animated button style
             >
               {t('single_img_page.btn.btn_back')}
             </Button>
