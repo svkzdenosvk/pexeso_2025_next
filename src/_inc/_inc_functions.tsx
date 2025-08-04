@@ -19,10 +19,10 @@ export function _shuffleArray(arrayIn: any[]) {
 }
 
 /*----------------------------------------------------------------------------------------*/
-import type { My_Type_DivImg } from "./my_types";
+import type { My_Type_Card_Obj } from "./my_types";
 
 // shuffle unmatched pexeso cards wth class 'mask'
-export function _shuffleUnMatchedCards(afterUnMatchArr: My_Type_DivImg[]) {
+export function _shuffleUnMatchedCards(afterUnMatchArr: My_Type_Card_Obj[]) {
   // array of 'mask' divs
   const maskCards = afterUnMatchArr.filter((div) =>
     div.classNames.includes("mask")

@@ -1,5 +1,5 @@
 import { _shuffleArray } from "./_inc_functions";
-import { My_Type_Img_Name, My_Type_ImgCount, My_Type_DivImg } from "./my_types";
+import { My_Type_Img_Name, My_Type_ImgCount, My_Type_Card_Obj } from "./my_types";
 
 const uuid = require("uuid");
 
@@ -23,14 +23,14 @@ export async function createDivsArrayFromImgNamesAndCountImg(
     pictureName,
   ]);
 
-  let divItems: My_Type_DivImg[] = imgsWithKeys.map(([id, pictureName]) => ({
+  let cards: My_Type_Card_Obj[] = imgsWithKeys.map(([id, pictureName]) => ({
     //-array of objects: img {name,id, classes} -> div>img
     id: id,
     name: pictureName,
     classNames: ["mask", "div_on_click"],
   }));
 
-  return divItems; // ------------------------------------------------------return final array
+  return cards; // ------------------------------------------------------return final array
 }
 
 export function preloadImages(imgNamesArr: My_Type_Img_Name[]) {

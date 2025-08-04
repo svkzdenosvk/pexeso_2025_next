@@ -1,7 +1,7 @@
 import type {
   My_Type_Img_Name,
   My_Type_Level,
-  My_Type_DivImg,
+  My_Type_Card_Obj,
   My_Type_ClassNames,
   My_Type_ImgCount,
   My_Type_Theme,
@@ -21,7 +21,7 @@ const gameSlice = createSlice({
     linkName: "game_page.link_before_start",
     level: "" as My_Type_Level,
     isEnd: false,
-    divImgs: [] as My_Type_DivImg[],
+    cards: [] as My_Type_Card_Obj[],
     selectedImgCount: 0 as My_Type_ImgCount,
     theme: "defaultTheme" as My_Type_Theme,
   },
@@ -33,17 +33,17 @@ const gameSlice = createSlice({
     },
     // when level is the "hardest" shuffle cards every 0.4 sec.
     hardest_level_shuffle: (state) => {
-      const afterUnMatchArr = _shuffleArray(state.divImgs);
+      const afterUnMatchArr = _shuffleArray(state.cards);
       // const afterUnMatchArr = _shuffleUnMatchedCards(state.divImgs);
 
-      state.divImgs = afterUnMatchArr;
+      state.cards = afterUnMatchArr;
     },
     showOne: (state, action) => {
       // show/reveal one picture after click on that
-      state.divImgs.forEach((oneDiv) => {
-        if (oneDiv.id === action.payload.id) {
-          oneDiv.classNames = [
-            ...oneDiv.classNames.filter((className) => className !== "mask"),
+      state.cards.forEach((oneCard) => {
+        if (oneCard.id === action.payload.id) {
+          oneCard.classNames = [
+            ...oneCard.classNames.filter((className) => className !== "mask"),
             "selected_Div_img",
           ];
         }
@@ -51,13 +51,13 @@ const gameSlice = createSlice({
     },
     un_match: (state, action) => {
       //after revealing 2 pictures which are not same
-      const afterUnMatchArr: My_Type_DivImg[] = state.divImgs.map((oneDiv) => {
+      const afterUnMatchArr: My_Type_Card_Obj[] = state.cards.map((oneCard) => {
         //change 2 selected img´s to nonselected and hide
-        if (oneDiv.classNames.includes("selected_Div_img")) {
+        if (oneCard.classNames.includes("selected_Div_img")) {
           return {
-            ...oneDiv,
+            ...oneCard,
             classNames: [
-              ...oneDiv.classNames.filter(
+              ...oneCard.classNames.filter(
                 (className) => className !== "selected_Div_img"
               ),
               "mask", // remove "selected" and add "mask" class
@@ -65,7 +65,7 @@ const gameSlice = createSlice({
           }; 
         } else {
           //if img wasn´t selected -> nothing to change
-          return oneDiv; 
+          return oneCard; 
         }
       });
 
@@ -78,18 +78,18 @@ const gameSlice = createSlice({
        
       }
 
-      state.divImgs = shuffledUnMatchedCards;
+      state.cards = shuffledUnMatchedCards;
     },
     match: (state) => {
 
       // when 2 revealed pictures are same
-      const afterMatchArr: My_Type_DivImg[] = state.divImgs.map((oneDiv) => {
+      const afterMatchArr: My_Type_Card_Obj[] = state.cards.map((oneCard) => {
         //remove selected and add rotate -> change 2 selected img´s to nonselected and hide
-        if (oneDiv.classNames.includes("selected_Div_img")) {
+        if (oneCard.classNames.includes("selected_Div_img")) {
           return {
-            ...oneDiv,
+            ...oneCard,
             classNames: [
-              ...oneDiv.classNames.filter(
+              ...oneCard.classNames.filter(
                 (className) => className !== "selected_Div_img"
               ),
               "rotate-center",
@@ -97,22 +97,22 @@ const gameSlice = createSlice({
           }; 
         } else {
           //if img wasn´t selected -> nothing to change
-          return oneDiv; 
+          return oneCard; 
         }
       });
 
-      state.divImgs = afterMatchArr;
+      state.cards = afterMatchArr;
     },
  
     remove_after_match: (state) => {
-      const afterAnimationMatchArr: My_Type_DivImg[] = state.divImgs.map(
-        (oneDiv) => {
+      const afterAnimationMatchArr: My_Type_Card_Obj[] = state.cards.map(
+        (oneCard) => {
           // remove selected and add rotate class -> change 2 selected img´s to nonselected and hide
-          if (oneDiv.classNames.includes("rotate-center")) {
+          if (oneCard.classNames.includes("rotate-center")) {
             return {
-              ...oneDiv,
+              ...oneCard,
               classNames: [
-                ...oneDiv.classNames.filter(
+                ...oneCard.classNames.filter(
                   (className) => className !== "rotate-center"
                 ),
                 "disabled",
@@ -120,12 +120,12 @@ const gameSlice = createSlice({
             }; 
           } else {
             //if img wasn´t selected -> nothing to change 
-            return oneDiv; 
+            return oneCard; 
           }
         }
       );
       // if all pictures removed -> it´s end of the game
-      state.divImgs = afterAnimationMatchArr; 
+      state.cards = afterAnimationMatchArr; 
     },
     // the game is over after all imgs has been removed
     end_game: (state) => {
@@ -134,8 +134,10 @@ const gameSlice = createSlice({
       state.linkName = "game_page.link_end_game";
       state.isEnd = true;
     },
-    after_settings_selected_img_count: (state, action) => {
-      state.divImgs = action.payload;
+    // after_settings_selected_img_count: (state, action) => {
+    create_cards_arr: (state, action) => {
+
+      state.cards = action.payload;
       // state.isLoading=false; //---------------------------------------------maybe for the future to test this  !!!!!!
     },
     //evrytime we return on settings page
@@ -181,7 +183,7 @@ export const {
   set_loading,
   // set_img_names,
   settings_and_styling_before_start,
-  after_settings_selected_img_count,
+  create_cards_arr,
   remove_after_match,
   match,
   un_match,

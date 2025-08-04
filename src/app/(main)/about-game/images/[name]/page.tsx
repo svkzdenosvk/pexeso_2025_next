@@ -40,7 +40,7 @@ const imgStyles = {
 
 // Single image page component
 const SingleImagePage = () => {
-  const { t } = useTranslation(); // Translation hook
+  const { t } = useTranslation(); // i18n translation hook
 
   // Get image name from URL params
   const params = useParams();

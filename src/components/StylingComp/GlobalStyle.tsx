@@ -1,5 +1,20 @@
 import { createGlobalStyle } from 'styled-components';
 
+/**
+ * GlobalStyle
+ *
+ * Provides global CSS rules for the Pexeso app using styled-components.
+ * Applies transitions, layout defaults, and game-specific visual styles.
+ *
+ * Highlights:
+ * - Smooth background and text color transitions
+ * - Styling for game grid: rows, cards, hover states
+ * - Keyframe animation for rotating matched cards
+ *
+ * @library styled-components
+ * @usage <GlobalStyle /> must be injected at the root of the app (e.g. in _app.tsx or Layout)
+ */
+
 export const GlobalStyle = createGlobalStyle`
   html {
       overflow-x: hidden;
@@ -7,7 +22,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
   
-     transition: background-color 0.5s ease, color 0.5s ease;
+     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
 

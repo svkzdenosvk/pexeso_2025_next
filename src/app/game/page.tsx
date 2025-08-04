@@ -7,16 +7,16 @@ import { useTranslation } from 'react-i18next';
 import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { RootState } from '@pexeso/lib/redux/store/store';
-import { after_settings_selected_img_count } from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { create_cards_arr } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,
   _myFormatSeconds,
 } from '@pexeso/_inc/_inc_functions';
 import { createDivsArrayFromImgNamesAndCountImg } from '@pexeso/_inc/data';
-import { My_Type_DivImg } from '@pexeso/_inc/my_types';
+import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
-import { GameDivPictures } from '@pexeso/components/RelatedToGame/GameDivPictures';
+import  GameBoard  from '@pexeso/components/RelatedToGame/GameBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
 // ---------- sx styles
@@ -106,13 +106,13 @@ const Game = () => {
     //create array of objects (div > img) to play from img names and img count
     const createFinalArrayFroGame = async () => {
       try {
-        const imgDivs: My_Type_DivImg[] =
+        const cards: My_Type_Card_Obj[] =
           await createDivsArrayFromImgNamesAndCountImg(
             selectedImgCount,
             imgNames
           );
 
-        dispatch(after_settings_selected_img_count(imgDivs));
+        dispatch(create_cards_arr(cards));
       } catch (error) {
         console.error('Error fetching items:', error);
       }
@@ -157,7 +157,7 @@ const Game = () => {
         id="content"
         sx={dynamicColumnContentStyles}
       >
-        <GameDivPictures />
+        <GameBoard />
       </Box>
     </>
   );

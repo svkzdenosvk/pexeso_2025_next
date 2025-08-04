@@ -27,7 +27,7 @@ export type My_Type_Image = {
   name: My_Type_Img_Name;
 };
 
-export type My_Type_DivImg = My_Type_Image & {
+export type My_Type_Card_Obj = My_Type_Image & {
   /*------------------------------div above img element  */
   classNames: My_Type_ClassNames[];
 };
@@ -54,11 +54,11 @@ export type My_Type_Redux_Game_Action =
       payload: { level: My_Type_Level; imgCount: My_Type_ImgCount };
     }
   | { type: "HARDEST_LEVEL_SHUFFLE" }
-  | { type: "SHOW_ONE"; payload: My_Type_DivImg }
+  | { type: "SHOW_ONE"; payload: My_Type_Card_Obj }
   | { type: "UN_MATCH"; payload: My_Type_Level }
   | { type: "MATCH" }
   | { type: "REMOVE_AFTER_MATCH" }
-  | { type: "AFTER_SETTINGS_SELECTED_IMG_COUNT"; payload: My_Type_DivImg[] }
+  | { type: "AFTER_SETTINGS_SELECTED_IMG_COUNT"; payload: My_Type_Card_Obj[] }
   | { type: "RESET_SETTINGS" }
   | {
       type: "SETTINGS_AND_STYLING";
@@ -82,7 +82,7 @@ export type My_Type_Redux_Root_State = {
     linkName: string;
     imgNames: My_Type_Img_Name[];
     isEnd: boolean;
-    divImgs: My_Type_DivImg[];
+    cards: My_Type_Card_Obj[];
     selectedImgCount: My_Type_ImgCount;
     level: My_Type_Level;
     theme: My_Type_Theme;
