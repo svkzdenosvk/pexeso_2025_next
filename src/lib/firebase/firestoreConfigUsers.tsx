@@ -1,22 +1,11 @@
-// Import the functions you need from the SDKs you need
+// Core Firebase import (must-have for all Firebase usage)
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
+
+// Firebase Auth and Firestore services
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA3bnLyVXbZWyAUe8gfEoKseDRWjfEYHBA",
-//   authDomain: "pexesousers.firebaseapp.com",
-//   projectId: "pexesousers",
-//   storageBucket: "pexesousers.firebasestorage.app",
-//   messagingSenderId: "1000059706799",
-//   appId: "1:1000059706799:web:59f3d7ad9b18917163a35a",
-//   measurementId: "G-KB4KHDC2V6"
-// };
+// Firebase config using environment variables for security (defined in .env.local or similar)
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -26,8 +15,9 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
+// Initialize the Firebase app instance
 const appUsers = initializeApp(firebaseConfig);
+
+// Export Firebase services to use throughout the app
 export const auth = getAuth(appUsers);
 export const projectUsers = getFirestore(appUsers);
-// const analytics = getAnalytics(appUsers);

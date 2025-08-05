@@ -5,160 +5,204 @@ import type {
   My_Type_ClassNames,
   My_Type_ImgCount,
   My_Type_Theme,
-} from "@pexeso/_inc/my_types";
-import { _shuffleArray,_shuffleUnMatchedCards } from "@pexeso/_inc/_inc_functions";
+} from '@pexeso/_inc/my_types';
+import {
+  _shuffleArray,
+  _shuffleUnMatchedCards,
+} from '@pexeso/_inc/_inc_functions';
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+
+/**
+ * This slice handles all logic related to the core gameplay of the Pexeso (Memory) game.
+ *
+ * State includes:
+ * - Available image names
+ * - Game level (easy, medium, hard)
+ * - Current game status (isRunning, isEnd)
+ * - The card objects in play
+ * - Selected image count
+ * - Theme applied to the game (affects styling)
+ * - Link name for routing or i18n display purposes
+ */
 
 //----------------------------------------------------------------------------redux toolkit
 
 const gameSlice = createSlice({
-  name: "game",
+  name: 'game',
   initialState: {
-    imgNames: ["drop", "wood", "lightning", "wind", "vibration", "sun" , "space", "sea"] as My_Type_Img_Name[],
+    imgNames: [
+      'drop',
+      'wood',
+      'lightning',
+      'wind',
+      'vibration',
+      'sun',
+      'space',
+      'sea',
+    ] as My_Type_Img_Name[],
     isLoading: true,
     isRunning: false,
-    linkName: "game_page.link_before_start",
-    level: "" as My_Type_Level,
+    linkName: 'game_page.link_before_start',
+    level: '' as My_Type_Level,
     isEnd: false,
     cards: [] as My_Type_Card_Obj[],
     selectedImgCount: 0 as My_Type_ImgCount,
-    theme: "defaultTheme" as My_Type_Theme,
+    theme: 'defaultTheme' as My_Type_Theme,
   },
   reducers: {
-    // start the game
+    // Start the game
     set_start_game: (state) => {
       state.isRunning = true;
-      state.linkName = "game_page.link_after_start";
+      state.linkName = 'game_page.link_after_start';
     },
-    // when level is the "hardest" shuffle cards every 0.4 sec.
+
+    // Only for "hard" level – randomly reshuffles all cards periodically
     hardest_level_shuffle: (state) => {
       const afterUnMatchArr = _shuffleArray(state.cards);
-      // const afterUnMatchArr = _shuffleUnMatchedCards(state.divImgs);
 
       state.cards = afterUnMatchArr;
     },
+
+    //Reveals one selected card (adds 'selected_Div_img' class, removes 'mask').
     showOne: (state, action) => {
-      // show/reveal one picture after click on that
       state.cards.forEach((oneCard) => {
         if (oneCard.id === action.payload.id) {
           oneCard.classNames = [
-            ...oneCard.classNames.filter((className) => className !== "mask"),
-            "selected_Div_img",
+            ...oneCard.classNames.filter((className) => className !== 'mask'),
+            'selected_Div_img',
           ];
         }
       });
     },
+
+    /**
+     * When two selected cards do not match:
+     * - Removes 'selected' class
+     * - Reapplies 'mask' class (hides them again)
+     * - Optionally reshuffles cards (only in 'medium' level)
+     */
     un_match: (state, action) => {
-      //after revealing 2 pictures which are not same
       const afterUnMatchArr: My_Type_Card_Obj[] = state.cards.map((oneCard) => {
         //change 2 selected img´s to nonselected and hide
-        if (oneCard.classNames.includes("selected_Div_img")) {
+        if (oneCard.classNames.includes('selected_Div_img')) {
           return {
             ...oneCard,
             classNames: [
               ...oneCard.classNames.filter(
-                (className) => className !== "selected_Div_img"
+                (className) => className !== 'selected_Div_img'
               ),
-              "mask", // remove "selected" and add "mask" class
+              'mask', // remove "selected" and add "mask" class
             ],
-          }; 
+          };
         } else {
-          //if img wasn´t selected -> nothing to change
-          return oneCard; 
+          // if img wasn´t selected -> nothing to change
+          return oneCard;
         }
       });
 
       let shuffledUnMatchedCards = afterUnMatchArr;
-      
-      //  if level is medium, shuffle only divs with class 'mask'
 
-      if (action.payload === "medium") {
+      // If medium difficulty – shuffle only unmatched (masked) cards
+      if (action.payload === 'medium') {
         shuffledUnMatchedCards = _shuffleUnMatchedCards(afterUnMatchArr);
-       
       }
 
       state.cards = shuffledUnMatchedCards;
     },
-    match: (state) => {
 
-      // when 2 revealed pictures are same
+    /**
+     * When two selected cards match:
+     * - Removes 'selected' class
+     * - Adds 'rotate-center' class for animation
+     */
+    match: (state) => {
       const afterMatchArr: My_Type_Card_Obj[] = state.cards.map((oneCard) => {
         //remove selected and add rotate -> change 2 selected img´s to nonselected and hide
-        if (oneCard.classNames.includes("selected_Div_img")) {
+        if (oneCard.classNames.includes('selected_Div_img')) {
           return {
             ...oneCard,
             classNames: [
               ...oneCard.classNames.filter(
-                (className) => className !== "selected_Div_img"
+                (className) => className !== 'selected_Div_img'
               ),
-              "rotate-center",
+              'rotate-center',
             ] as My_Type_ClassNames[],
-          }; 
+          };
         } else {
           //if img wasn´t selected -> nothing to change
-          return oneCard; 
+          return oneCard;
         }
       });
 
       state.cards = afterMatchArr;
     },
- 
+
+    /**
+     * After match animation finishes, remove matched cards visually by:
+     * - Removing 'rotate-center'
+     * - Adding 'disabled' class
+     */
     remove_after_match: (state) => {
       const afterAnimationMatchArr: My_Type_Card_Obj[] = state.cards.map(
         (oneCard) => {
-          // remove selected and add rotate class -> change 2 selected img´s to nonselected and hide
-          if (oneCard.classNames.includes("rotate-center")) {
+          // remove rotate-center and add disabled class
+          if (oneCard.classNames.includes('rotate-center')) {
             return {
               ...oneCard,
               classNames: [
                 ...oneCard.classNames.filter(
-                  (className) => className !== "rotate-center"
+                  (className) => className !== 'rotate-center'
                 ),
-                "disabled",
+                'disabled',
               ] as My_Type_ClassNames[],
-            }; 
+            };
           } else {
-            //if img wasn´t selected -> nothing to change 
-            return oneCard; 
+            //if img wasn´t selected -> nothing to change
+            return oneCard;
           }
         }
       );
       // if all pictures removed -> it´s end of the game
-      state.cards = afterAnimationMatchArr; 
+      state.cards = afterAnimationMatchArr;
     },
-    // the game is over after all imgs has been removed
+
+    // The game is over after all imgs has been removed
     end_game: (state) => {
-      
       state.isRunning = false;
-      state.linkName = "game_page.link_end_game";
+      state.linkName = 'game_page.link_end_game';
       state.isEnd = true;
     },
-    // after_settings_selected_img_count: (state, action) => {
-    create_cards_arr: (state, action) => {
 
+    /**
+     * Creates the card array after user selects settings (before start).
+     * Payload should be an array of card objects.
+     */
+    create_cards_arr: (state, action) => {
       state.cards = action.payload;
       // state.isLoading=false; //---------------------------------------------maybe for the future to test this  !!!!!!
     },
-    //evrytime we return on settings page
+    // Resets settings to initial (used when going back to settings page).
     reset_settings: (state) => {
-      state.level = "" as My_Type_Level;
+      state.level = '' as My_Type_Level;
       state.selectedImgCount = 0 as My_Type_ImgCount;
       state.isRunning = false;
       state.isEnd = false;
-      state.theme = "defaultTheme";
+      state.theme = 'defaultTheme';
     },
-    //after set the settings (but before clicking to start button)
-    settings_and_styling_before_start: (state, action) => {
 
+    /**
+     * Applies settings and assigns the theme based on difficulty level.
+     * After settings but before clicking to start button
+     */
+    settings_and_styling_before_start: (state, action) => {
       /*using dynamic object properties*/
       const levelChanges: Record<My_Type_Level, My_Type_Theme> = {
-        easy: "defaultTheme",
-        medium: "mediumTheme",
-        hard: "hardTheme",
+        easy: 'defaultTheme',
+        medium: 'mediumTheme',
+        hard: 'hardTheme',
       };
 
-      //state.isEnd=false;//----------------------------------------------------maybe this could be decommented .. in case of problems in the future
       state.level = action.payload.level;
       state.selectedImgCount = action.payload
         .selectedImgCount as My_Type_ImgCount;
@@ -166,12 +210,8 @@ const gameSlice = createSlice({
         action.payload.level as My_Type_Level
       ] as My_Type_Theme;
     },
-    //after fetching names from db
-    // set_img_names: (state, action) => {
-    //   state.imgNames = action.payload;
-    // },
-    
-    //after loading imgs (in app.tsx)
+ 
+    // Indicates that loading (e.g. image preloading) is done.
     set_loading: (state) => {
       state.isLoading = false;
     },
@@ -181,7 +221,6 @@ const gameSlice = createSlice({
 export const {
   set_start_game,
   set_loading,
-  // set_img_names,
   settings_and_styling_before_start,
   create_cards_arr,
   remove_after_match,

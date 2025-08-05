@@ -16,10 +16,28 @@ import {
 import { createDivsArrayFromImgNamesAndCountImg } from '@pexeso/_inc/data';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
-import  GameBoard  from '@pexeso/components/RelatedToGame/GameBoard';
+import GameBoard from '@pexeso/components/RelatedToGame/GameBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
-// ---------- sx styles
+/**
+ * Game page responsible for rendering the Pexeso game board,
+ * initializing the game based on selected settings, and handling user interaction.
+ *
+ * Features:
+ * - Initializes card set based on Redux state (level + images)
+ * - Redirects to `/settings` if game setup is invalid
+ * - Shows start button and timer
+ * - Renders game board only during active play
+ * - Displays win message and elapsed time on completion
+ *
+ * @component
+ * @route /game
+ * @dependencies Redux (state management), MUI (layout), i18next (translations)
+ */
+
+// ---------- Sx styles
+
+// Button linking back to settings
 const gameLinkButtonStyles = {
   backgroundColor: 'grey',
   maxWidth: '300px',
@@ -44,7 +62,7 @@ const gameLinkButtonStyles = {
   },
 } as const;
 
-// Main container styles
+// Main welcome/start container styles
 const welcomeStyles = {
   width: '100%',
   height: '100%',
@@ -60,7 +78,7 @@ const welcomeStyles = {
   },
 } as const;
 
-// Game board styles
+// Styles for game board wrapper
 const columnContentStyles = {
   maxWidth: '850px',
   flexDirection: 'column',
@@ -70,7 +88,7 @@ const columnContentStyles = {
 // ---------- component
 
 const Game = () => {
-  const { t } = useTranslation(); // translation hook
+  const { t } = useTranslation(); // i18n translation hook
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -81,19 +99,28 @@ const Game = () => {
     useSelector((state: RootState) => state.game);
 
   // Dynamic styles based on game state
+
+  // Determine if the game has started and not yet ended
   const afterStartStyles = isRunning && !isEnd;
 
+  // Game board is only visible after game starts
   const dynamicColumnContentStyles = {
     ...columnContentStyles,
     display: afterStartStyles ? 'flex' : 'none',
   };
 
+  // Conditionally styled instruction text (hidden during gameplay)
   const colorTextThemeStyles = (theme: Theme) => ({
     color: theme.palette.text.primary,
     display: isRunning || isEnd ? 'none' : 'block',
   });
 
-  // if level or img count is not valid -> redirect back
+  /**
+   * On component mount:
+   * - Validate selected game level and image count
+   * - Redirect to `/settings` if invalid
+   * - Otherwise, build card array and dispatch to Redux
+   */
   useEffect(() => {
     if (
       !my_Type_Guard_function(level, ['easy', 'medium', 'hard']) ||
@@ -103,8 +130,8 @@ const Game = () => {
       return;
     }
 
-    //create array of objects (div > img) to play from img names and img count
-    const createFinalArrayFroGame = async () => {
+    //Create array of cards [objects (div > img)] to play from img names and img count
+    const createFinalCardArray = async () => {
       try {
         const cards: My_Type_Card_Obj[] =
           await createDivsArrayFromImgNamesAndCountImg(
@@ -118,7 +145,7 @@ const Game = () => {
       }
     };
 
-    createFinalArrayFroGame();
+    createFinalCardArray();
   }, [level, selectedImgCount, router, dispatch, imgNames]);
 
   return (
@@ -151,7 +178,7 @@ const Game = () => {
         <TimeAndStart />
       </Box>
 
-      {/* Game board (shown only during gameplay) */}
+      {/* Game board: appears only when game is running */}
       <Box
         className="column_content"
         id="content"
