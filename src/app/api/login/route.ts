@@ -3,7 +3,25 @@ import { My_Type_Login } from '@pexeso/_inc/my_types';
 import { adminDB } from '@pexeso/lib/firebase/firebase-admin';
 import { verifyApiOrigin } from '@pexeso/_inc/data';
 
-// maping error code / alert for i18n
+/**
+ * Login API Route Handler
+ *
+ * Flow:
+ * 1. Validate request origin (basic CORS protection)
+ * 2. Parse login credentials from request body
+ * 3. Authenticate user via Firebase Auth REST API
+ * 4. Fetch user's name from Firestore
+ * 5. Set auth token in cookie
+ * 6. Return user details
+ *
+ * @method POST
+ * @returns JSON with user data + authentication cookie
+ */
+
+/**
+ * Mapping of Firebase error codes to custom i18n-friendly keys.
+ * These keys can be used on the frontend for displaying localized error messages.
+ */
 const firebaseErrorMap: Record<string, string> = {
   INVALID_PASSWORD: 'invalid_credentials',
   EMAIL_NOT_FOUND: 'invalid_credentials',
@@ -14,28 +32,20 @@ const firebaseErrorMap: Record<string, string> = {
 
 // POST login handler
 export async function POST(req: Request) {
+  // ---------- 1. Validate origin to prevent unauthorized requests (CORS)
   const origin = req.headers.get('origin');
 
-  // ----------------------------------------------------Log origin pre kontrolu CORS
-  console.log('Request origin:', origin);
-
-  //origin protection
   if (!verifyApiOrigin(origin)) {
-    //------------------------------------------------------------------------------------------
     console.warn('Blocked origin:', origin);
-
     return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
   }
 
   try {
-    // loading credentials from request
+
+    // ---------- 2. Parse email and password from request body
     const { email, password }: My_Type_Login = await req.json();
-    console.log('Login body:', { email, password });
 
-    // 🔐 Logni API key – len pre test, potom odstrániť
-    console.log('Firebase API KEY:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-
-    // if missing email or password -> error
+    // ---------- 3. Validate presence of credentials
     if (!email || !password) {
       return NextResponse.json(
         { error: 'missing_credentials' },
@@ -43,7 +53,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // call Firebase Identity Toolkit REST API for login verification
+    // ---------- 4. Authenticate user via Firebase Identity Toolkit REST API
     const res = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
       {
@@ -57,10 +67,10 @@ export async function POST(req: Request) {
       }
     );
 
-    // decoding response from Firebase
+    // ---------- 5. Decode response from Firebase
     const data = await res.json();
 
-    // if Firebase return error
+    // Handle failed login attempts
     if (!res.ok) {
       console.warn('Firebase login error on login route:', data); // <- Tu zistíme presnú chybu
 
@@ -70,13 +80,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: mappedError }, { status: 401 });
     }
 
-    // get user name from Firestore by UID
+    // ---------- 6. Fetch user's name from Firestore (optional enhancement)
     const userRef = adminDB.collection('users').doc(data.localId);
     const userSnap = await userRef.get();
 
     const name = userSnap.exists ? (userSnap.data()?.name ?? '') : '';
 
-    // create response with user INFO
+    // ---------- 7. Construct response with user details
     const response = NextResponse.json({
       user: {
         uid: data.localId,
@@ -85,24 +95,24 @@ export async function POST(req: Request) {
       name,
     });
 
-    // setup cookies with token for authentication
+    // ---------- 8. Setup cookies with token for authentication
     response.cookies.set('token', data.idToken, {
-      httpOnly: true,
-      path: '/',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 1 day
+      httpOnly: true, // Cookie not accessible via JS
+      path: '/',  // Applies to entire site
+      secure: process.env.NODE_ENV === 'production', // Only HTTPS in production
+      maxAge: 60 * 60 * 24,  // 1 day (in seconds)
     });
 
     return response;
   } catch (err: any) {
     console.error('Login error:', err);
 
-    // if network error, request failed at all
+    // ---------- 9. Network or fetch-related error
     if (err instanceof TypeError && err.message.includes('fetch')) {
       return NextResponse.json({ error: 'net_req_failed' }, { status: 503 });
     }
 
-    //unknown error
+    // ---------- 10. Unknown server error
     return NextResponse.json({ error: 'unknown_err' }, { status: 500 });
   }
 }
