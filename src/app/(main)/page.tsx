@@ -3,7 +3,24 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-// ---------- sx styles
+/**
+ * Home Page Component
+ *
+ * This is the default landing page of the application.
+ * It displays a localized heading in a centered layout.
+ *
+ * Features:
+ * - Uses i18n for multilingual support
+ * - Applies MUI styling via `sx` prop
+ * - Centered layout with serif-styled heading
+ *
+ * @component
+ * @route /
+ * @client
+ * @dependencies React, MUI, i18next
+ */
+
+// ---------- Sx styles
 
 const divStyles = {
   m: 'auto',
@@ -22,6 +39,7 @@ const Home = () => {
 
   return (
     <Box sx={divStyles}>
+      {/* Translated headline text */}
       <Typography variant="h1" component="h1" sx={h1Styles}>
         {t('home_page.h1')}
       </Typography>
