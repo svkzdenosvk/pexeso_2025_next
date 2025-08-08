@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@pexeso/lib/i18n/i18n';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
+import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 
 /**
  * NotFoundPage handles rendering a user-friendly 404 page.

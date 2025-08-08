@@ -3,9 +3,9 @@
 import React from 'react';
 import { Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
+import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import { sharedNavLinkStyles } from '@pexeso/components/StylingComp/SharedStyles';
-import TranslateButton from '@pexeso/components/SharedNextElements/TranslateButton';
+import TranslateButton from '@pexeso/components/SharedComponents/TranslateButton';
 
 /**
  * SharedLayout Component
@@ -25,6 +25,10 @@ import TranslateButton from '@pexeso/components/SharedNextElements/TranslateButt
  * @layout
  * @client
  * @dependencies React, MUI, i18next, NextLinkComposed
+ * @example
+ * Used in:
+ * `app/about-game/layout.tsx`
+ * `app/settings/layout.tsx`
  */
 
 // ---------- sx styles

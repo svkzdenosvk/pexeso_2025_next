@@ -5,12 +5,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import Image from 'next/image';
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
+import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
+import ReusableImageBox from '@pexeso/components/SharedComponents/ReusableImageBox';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 
-// ---------- sx styles
+// ---------- Sx styles
 
+// Main container for the gallery page
 const imgContentStyles = {
   display: 'flex',
   flexDirection: 'column',
@@ -28,6 +29,7 @@ const imgMainContentStyles = {
   gap: '1%',
 };
 
+// Styles for the image link buttons
 const btnLinkStyles = {
   mb: 2,
   p: 0,
@@ -41,7 +43,7 @@ const btnLinkStyles = {
   },
 } as const;
 
-//individual img styles
+// Individual img styles with hover effect
 const imgStyles = {
   width: 200,
   height: 200,
@@ -56,21 +58,42 @@ const imgStyles = {
   },
 } as const;
 
-// Wrapper component with Suspense comp
+/**
+ * ImagesWrapper
+ *
+ * Wrapper component for the image gallery.
+ * Wraps the <Images /> component with a loading fallback using `MySuspense`
+ *
+ * @component
+ * @route /about-game/images
+ * @client
+ * @dependencies React, MUI, Redux, Next.js, i18next
+ */
 export default function ImagesWrapper() {
   const { t } = useTranslation();
 
   return (
-    //  wrap Images with Suspense during loading state
     <MySuspense loadingText="loading_alerts.images">
       <Images />
     </MySuspense>
   );
 }
 
-// Main image gallery component
+/**
+ * Images
+ *
+ * Main image gallery component that:
+ * - Retrieves image names from Redux store
+ * - Displays a responsive grid of images
+ * - Wraps each image in a link to its detailed page
+ * - Uses Next.js <Image> for optimized image rendering
+ *
+ * @component
+ * @client
+ * @dependencies React, Redux, MUI, i18next, Next.js
+ */
+
 const Images = () => {
-  // Translation hook
   const { t } = useTranslation();
 
   // Get image names from Redux store
@@ -100,17 +123,8 @@ const Images = () => {
               to={`/about-game/images/${oneImgName}`}
               sx={btnLinkStyles}
             >
-              {/* Image container */}
-              <Box sx={imgStyles}>
-
-                {/* Optimized Next.js image */}
-                <Image
-                  src={`/pictures/pexeso/${oneImgName}.jpg`}
-                  alt={`Obrázok ${oneImgName}`}
-                  fill
-                  style={{ objectFit: 'cover' }} // this is needed because of "fill"
-                />
-              </Box>
+              {/* Individual image box */}
+              * <ReusableImageBox sx={imgStyles} imageName={oneImgName} />
             </Button>
           ))
           // )}
@@ -119,3 +133,4 @@ const Images = () => {
     </Box>
   );
 };
+

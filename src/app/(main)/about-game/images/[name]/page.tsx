@@ -9,9 +9,10 @@ import { RootState } from '@pexeso/lib/redux/store/store';
 import Image from 'next/image';
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
+import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
+import ReusableImageBox from '@pexeso/components/SharedComponents/ReusableImageBox';
 
-// ---------- sx styles
+// ---------- Sx styles
 
 const singleImgContentStyles = {
   display: 'flex',
@@ -30,6 +31,7 @@ const singleImgMainContentStyles = {
   alignItems: 'center',
 } as const;
 
+// Individual image box
 const imgStyles = {
   width: '200px',
   height: '200px',
@@ -38,22 +40,35 @@ const imgStyles = {
   borderRadius: 2,
 } as const;
 
-// Single image page component
+/**
+ * SingleImagePage
+ *
+ * Component for displaying a single image based on the URL parameter.
+ * - Uses Next.js dynamic routing via `useParams()` to get image name
+ * - Validates the image name against Redux store using a type guard function
+ * - If image exists, displays it along with localized title and back button
+ * - If image does not exist, shows an error message and a back button
+ *
+ * @component
+ * @route /about-game/images/[name]
+ * @client
+ * @dependencies React, Next.js, Redux, i18next, MUI
+ */
 const SingleImagePage = () => {
   const { t } = useTranslation(); // i18n translation hook
 
-  // Get image name from URL params
+  // Get image name from dynamic route param
   const params = useParams();
   const name = typeof params?.name === 'string' ? params.name : undefined;
 
-  // Get all image names from Redux store
+  // Get list of valid image names from Redux store
   const { imgNames } = useSelector((state: RootState) => state.game);
 
   // State for error handling and display alert
   const [errorImgName, setErrorImgName] = useState(false);
   const [imgNameH3, setNameH3] = useState('');
 
-  //error if img doesn´t exist
+  // Validate image name and set display name or error
   useEffect(() => {
     if (!name || typeof name !== 'string') {
       setErrorImgName(true);
@@ -65,7 +80,7 @@ const SingleImagePage = () => {
       setErrorImgName(true);
       setNameH3(t('single_img_page.h2.not_exist'));
     } else {
-      // if not error set H3 from param (name of picture)
+      // If no error
       setErrorImgName(false);
       let displayName: string = name;
 
@@ -80,7 +95,7 @@ const SingleImagePage = () => {
         {imgNameH3.charAt(0).toUpperCase() + imgNameH3.slice(1)}
       </Typography>
       <Box sx={singleImgMainContentStyles}>
-        {/* if error state - image not found */}
+        {/* Error case: image not found */}
         {errorImgName ? (
           <>
             <Typography variant="h3" component="h3">
@@ -96,16 +111,12 @@ const SingleImagePage = () => {
             </Button>
           </>
         ) : (
-          //  else valid image state
+          //  Success case: valid image
           <>
-            <Box sx={imgStyles}>
-              <Image
-                src={`/pictures/pexeso/${name}.jpg`}
-                alt={`Obrázok ${name}`}
-                fill
-                style={{ objectFit: 'cover' }} // this is neededbecause of "fill"
-              />
-            </Box>
+          {/* Solving problem with potential undefined name  */}
+            {!errorImgName && name && (
+              <ReusableImageBox sx={imgStyles} imageName={name} />
+            )}
 
             <Button
               component={NextLinkComposed}

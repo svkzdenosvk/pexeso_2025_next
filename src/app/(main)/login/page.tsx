@@ -19,19 +19,34 @@ import { verifyClientOrigin } from '@pexeso/_inc/data';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 
+// ---------- Sx styles
+
 const sxStyles = {
   input: { mb: 2, width: '100%' },
   form: { maxWidth: 400, mx: 'auto', mt: 4 },
 };
 
-// ---------- component
+/**
+ * Login Page Wrapper
+ *
+ * LoginFormWrapper is a protected wrapper for the login page.
+ * - Ensures route is only accessible to unauthenticated users (`PublicOnlyRoute`)
+ * - Uses Suspense with fallback UI while loading (`MySuspense`)
+ *
+ * @component
+ * @route /login
+ * @client
+ * @dependencies React, MUI, i18next, Next.js, Redux
+ */
+
+// ---------- Component
 
 export default function LoginFormWrapper() {
   const { t } = useTranslation();
 
   return (
     <PublicOnlyRoute>
-      {/*suspense during loading  */}
+      {/* Fallback loading alert while content is resolving */}
       <MySuspense loadingText="loading_alerts.login">
         <LoginForm />
       </MySuspense>
@@ -39,7 +54,24 @@ export default function LoginFormWrapper() {
   );
 }
 
-// ---------- component
+/**
+ * LoginForm
+ *
+ * This is the main login component responsible for:
+ * - Handling email and password input
+ * - Showing/hiding password
+ * - Validating origin
+ * - Sending POST request to login API
+ * - Handling login errors
+ * - Displaying success alert if redirected from registration
+ * - Saving user to Redux and navigating to home
+ *
+ * @component
+ * @client
+ * @dependencies React, MUI, i18next, Redux, Next.js
+ */
+
+// ---------- Component
 
 const LoginForm = () => {
   const { t } = useTranslation();
@@ -47,26 +79,37 @@ const LoginForm = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
 
-  //local state for form, errors, loading and successful log in
+  // Local state for form data, visibility, errors, loading and success alert
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  //show success message if we came from registration page
+  /**
+   * Show success alert after redirect from registration page
+   */
   useEffect(() => {
     if (searchParams.get('fromRegister')) {
       setShowSuccess(true);
       const url = new URL(window.location.href);
       url.searchParams.delete('fromRegister');
-      router.replace(url.toString()); // delete query parameter without reloading the page
+      router.replace(url.toString()); // Remove query parameter without reloading the page
     }
   }, [searchParams, router]);
 
-  // login handler function
+  /**
+   * Handle login logic
+   *
+   * Steps:
+   * - Check origin
+   * - Send login credentials to API
+   * - Handle and map errors using i18n keys
+   * - On success, save user to Redux store
+   * - Redirect to home page
+   */
   const handleLogin = async () => {
-    //origin protection
+    // Validate origin to prevent unauthorized requests
     if (!verifyClientOrigin()) {
       setError('invalid_origin');
       return;
@@ -76,7 +119,7 @@ const LoginForm = () => {
     setError('');
 
     try {
-      //send POST request to API
+      // Send POST request to API
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,7 +128,7 @@ const LoginForm = () => {
 
       const data = await res.json();
 
-      // maping error code / alert for i18n
+      // Mapping error code / alert for i18n
       const errorMap: Record<string, string> = {
         invalid_credentials: 'login_page.error_alert.invalid_credentials',
         missing_credentials: 'login_page.error_alert.missing_credentials',
@@ -99,11 +142,10 @@ const LoginForm = () => {
         const translatedKey =
           errorMap[data.error] || 'reg_page.error_alert.unexpected';
         setError(translatedKey);
-        // console.log('Firebase login error on login page:', data);
         return;
       }
 
-      //setup/save user in redux
+      // Save authenticated user to Redux
       dispatch(
         setUser({
           uid: data.user.uid,
@@ -112,7 +154,7 @@ const LoginForm = () => {
         })
       );
 
-      //redirect to home page
+      // Redirect to home page
       router.push('/');
     } catch (err) {
       setError('login_page.error_alert');
@@ -123,16 +165,16 @@ const LoginForm = () => {
 
   return (
     <Box sx={{ mx: 'auto' }}>
-      {/* show green success message after registration without problem */}
+      {/* Show green success message after registration without problem */}
       {showSuccess && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {t('login_page.success_login')}
         </Alert>
       )}
 
-      {/* form */}
+      {/* Login form UI */}
       <Box sx={sxStyles.form}>
-        {/* input for email */}
+        {/* Input for email */}
         <TextField
           label={t('reg_page.label.email')}
           sx={sxStyles.input}
@@ -140,7 +182,7 @@ const LoginForm = () => {
           onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
         />
 
-        {/* input for password */}
+        {/* Input for password with toggle visibility */}
         <TextField
           label={t('reg_page.label.pass_conf')}
           type={showPassword ? 'text' : 'password'}
@@ -162,14 +204,14 @@ const LoginForm = () => {
           }}
         />
 
-        {/* error alert */}
+        {/* Error alert */}
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {t(error)}
           </Alert>
         )}
 
-        {/* login button */}
+        {/* Login button with loader */}
         <Button
           sx={{ px: 1, py: 2, fontWeight: 'bold' }}
           variant="contained"

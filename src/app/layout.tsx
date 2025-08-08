@@ -12,14 +12,13 @@ import ButtonLogReg from '@pexeso/components/LoginReg/ButtonLogReg'; // Top righ
  * - Sets up HTML structure with `<html>` and `<body>` tags
  *
  * @component
- * @example
- * Used as the base layout in `app/layout.tsx`
- *
+ * @layout
  * @remarks
  * All children passed to this component will be rendered inside the global context
- *
  * @dependencies
  * Providers, ButtonLogReg, next/Metadata
+ * @example
+ * Used as the base layout in `app/layout.tsx`
  */
 
 // ---------- Metadata
@@ -28,12 +27,12 @@ export const metadata: Metadata = {
   description: 'Pexeso game rewritten in Next',
 };
 
-// ---------- Component
 
 /**
  * RootLayout defines the outermost HTML structure and wraps children
  * in application-wide context (Redux, i18n, theme).
- */
+*/
+// ---------- Component
 
 export default function RootLayout({
   children,

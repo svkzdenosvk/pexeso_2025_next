@@ -15,7 +15,7 @@ import {
 } from '@pexeso/_inc/_inc_functions';
 import { createDivsArrayFromImgNamesAndCountImg } from '@pexeso/_inc/data';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
-import NextLinkComposed from '@pexeso/components/SharedNextElements/NextLinkComposed';
+import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import GameBoard from '@pexeso/components/RelatedToGame/GameBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
