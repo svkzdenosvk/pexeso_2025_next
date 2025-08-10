@@ -11,28 +11,25 @@ import { create_cards_arr } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,
-  _myFormatSeconds,
+  _myFormatSeconds, createCardsArray
 } from '@pexeso/_inc/_inc_functions';
-import { createDivsArrayFromImgNamesAndCountImg } from '@pexeso/_inc/data';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import GameBoard from '@pexeso/components/RelatedToGame/GameBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
 /**
- * Game page responsible for rendering the Pexeso game board,
- * initializing the game based on selected settings, and handling user interaction.
+ * Game page
  *
- * Features:
- * - Initializes card set based on Redux state (level + images)
- * - Redirects to `/settings` if game setup is invalid
- * - Shows start button and timer
- * - Renders game board only during active play
- * - Displays win message and elapsed time on completion
+ * Main page that initializes and runs the Pexeso game.
+ * Handles:
+ * - Game setup validation (redirect if invalid settings)
+ * - Card array creation & dispatch to Redux
+ * - Conditional rendering of instructions, timer, and game board
+ * - Win message with elapsed time
  *
- * @component
  * @route /game
- * @dependencies Redux (state management), MUI (layout), i18next (translations)
+ * @dependencies Redux, MUI, i18next, Next.js Router
  */
 
 // ---------- Sx styles
@@ -88,7 +85,7 @@ const columnContentStyles = {
 // ---------- component
 
 const Game = () => {
-  const { t } = useTranslation(); // i18n translation hook
+  const { t } = useTranslation(); 
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -117,9 +114,9 @@ const Game = () => {
 
   /**
    * On component mount:
-   * - Validate selected game level and image count
-   * - Redirect to `/settings` if invalid
-   * - Otherwise, build card array and dispatch to Redux
+   * 1. Validate game settings (level + image count)
+   * 2. If invalid → redirect to /settings
+   * 3. If valid → create shuffled card array & store in Redux
    */
   useEffect(() => {
     if (
@@ -130,22 +127,14 @@ const Game = () => {
       return;
     }
 
-    //Create array of cards [objects (div > img)] to play from img names and img count
-    const createFinalCardArray = async () => {
-      try {
-        const cards: My_Type_Card_Obj[] =
-          await createDivsArrayFromImgNamesAndCountImg(
-            selectedImgCount,
-            imgNames
-          );
+    // Create array of cards [objects (div > img)] to play from img names and img count
+    const cards: My_Type_Card_Obj[] = createCardsArray(
+      selectedImgCount,
+      imgNames
+    );
 
-        dispatch(create_cards_arr(cards));
-      } catch (error) {
-        console.error('Error fetching items:', error);
-      }
-    };
-
-    createFinalCardArray();
+    // Store cards in redux
+    dispatch(create_cards_arr(cards));
   }, [level, selectedImgCount, router, dispatch, imgNames]);
 
   return (

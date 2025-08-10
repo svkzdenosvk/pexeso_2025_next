@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { List, ListItem, ListItemText, Typography, Box } from '@mui/material';
-import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import ReusableImageBox from '@pexeso/components/SharedComponents/ReusableImageBox';
 
@@ -170,7 +169,7 @@ const Rules = () => {
           </Typography>
 
           {/* Illustrative image (Joker card) */}
-          <ReusableImageBox sx={imgStyles} imageName="joker" />
+          <ReusableImageBox sx={imgStyles} imageName="../joker" />
 
         </Box>
 

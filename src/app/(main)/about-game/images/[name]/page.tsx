@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '@pexeso/lib/redux/store/store';
-import Image from 'next/image';
 import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
-import { verifyApiOrigin } from '@pexeso/_inc/data';
+import { verifyApiOrigin } from '@pexeso/_inc/_inc_functions';
 
 /**
  * Auth Check API Route Handler

@@ -2,11 +2,10 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { preloadImages } from '@pexeso/_inc/data';
+import { preloadImages, verifyClientOrigin } from '@pexeso/_inc/_inc_functions';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { set_loading } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
-import { verifyClientOrigin } from '@pexeso/_inc/data';
 
 /**
  * AppInit is a headless (UI-less) component used to initialize core app logic on mount.
