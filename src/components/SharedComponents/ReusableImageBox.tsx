@@ -33,7 +33,7 @@ const ReusableImageBox = ({ sx, imageName }: Props) => {
       
       {/* Optimized Next.js image */}
       <Image
-        src={`/pictures/pexeso/${imageName}.jpg`}
+        src={`/pictures/${imageName}.jpg`}
         alt={`Obrázok ${imageName}`}
         fill
         style={{ objectFit: 'cover' }} // this is needed because of "fill"

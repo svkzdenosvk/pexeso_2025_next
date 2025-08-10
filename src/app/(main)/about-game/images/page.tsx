@@ -124,7 +124,7 @@ const Images = () => {
               sx={btnLinkStyles}
             >
               {/* Individual image box */}
-              * <ReusableImageBox sx={imgStyles} imageName={oneImgName} />
+              * <ReusableImageBox sx={imgStyles} imageName={`pexeso/${oneImgName}`} />
             </Button>
           ))
           // )}

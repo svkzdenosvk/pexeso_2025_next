@@ -169,7 +169,7 @@ const Rules = () => {
           </Typography>
 
           {/* Illustrative image (Joker card) */}
-          <ReusableImageBox sx={imgStyles} imageName="../joker" />
+          <ReusableImageBox sx={imgStyles} imageName="joker" />
 
         </Box>
 

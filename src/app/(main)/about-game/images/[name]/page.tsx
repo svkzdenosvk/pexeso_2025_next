@@ -114,7 +114,7 @@ const SingleImagePage = () => {
           <>
           {/* Solving problem with potential undefined name  */}
             {!errorImgName && name && (
-              <ReusableImageBox sx={imgStyles} imageName={name} />
+              <ReusableImageBox sx={imgStyles} imageName={`pexeso/${name}`} />
             )}
 
             <Button
