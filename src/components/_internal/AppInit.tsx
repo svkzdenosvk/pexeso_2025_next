@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { preloadImages, verifyClientOrigin } from '@pexeso/_inc/_inc_functions';
+import { preloadImages } from '@pexeso/_inc/functions/gameRelated';
+import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { set_loading } from '@pexeso/lib/redux/store/reducers/gameSlice';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';

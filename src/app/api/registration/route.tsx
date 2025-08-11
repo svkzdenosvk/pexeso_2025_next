@@ -1,7 +1,7 @@
 // app/api/register/route.ts
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDB } from '@pexeso/lib/firebase/firebase-admin';
-import { verifyApiOrigin } from '@pexeso/_inc/_inc_functions';
+import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Handles user registration via POST API.

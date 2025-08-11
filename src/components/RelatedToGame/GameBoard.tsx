@@ -1,7 +1,7 @@
 'use client';
 
 // Core React imports
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -10,14 +10,13 @@ import { Typography, Box } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 // Types and store
-import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import {
   match,
   un_match,
   hardest_level_shuffle,
 } from '@pexeso/lib/redux/store/reducers/gameSlice';
-import { showImg } from '@pexeso/_inc/_inc_functions';
+import { showImg } from '@pexeso/_inc/functions/gameRelated';
 
 import Card from './Card';
 
@@ -108,7 +107,7 @@ const GameBoard = () => {
           <Card
             key={oneCard.id}
             card={oneCard}
-            onClick={(e) => showImg(e.currentTarget, oneCard, cards)}
+            onClick={(e) => showImg(e.currentTarget, oneCard, cards, dispatch )}
           />
         ))
       )}

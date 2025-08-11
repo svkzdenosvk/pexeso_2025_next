@@ -1,131 +1,34 @@
-// ========================================================================
-// utils.ts – Shared Utility Functions
-//
-// Purpose:
-// This file consolidates helper functions into one place for better
-// maintainability and organization. It includes:
-//
-// 1) Generic utilities – reusable across the project
-// 2) Game-specific utilities – functions tailored to the Pexeso game logic
-// 3) Origin validation – security checks for allowed origins
-//
-// Benefits:
-// - All helper logic in a single, structured file
-// - Clear separation between generic and game-specific code
-// - Easier imports and code readability
-// ========================================================================
+/**
+ * Game-Specific Utility Functions
+ * -------------------------------
+ * Helper functions used exclusively for the Pexeso game logic and setup.
+ *
+ * Purpose:
+ *   - Encapsulate reusable game mechanics.
+ *   - Keep core gameplay logic separate from UI components.
+ *
+ * Contents:
+ *   - _shuffleUnMatchedCards() → Shuffles only unmatched (face-down) cards.
+ *   - createCardsArray()       → Generates the complete set of cards for a game round.
+ *   - showImg()                → Reveals a card based on game rules.
+ *   - preloadImages()          → Preloads all game images for smooth gameplay.
+ *
+ * Usage:
+ *   - Import these functions only in game-related components or services.
+ *   - Not intended for generic utility use outside the game context.
+ *
+ */
 
 import type {
   My_Type_Card_Obj,
   My_Type_Img_Name,
   My_Type_ImgCount,
-} from './my_types';
+} from '../my_types';
+import { _shuffleArray } from './general';
 import { showOne } from '@pexeso/lib/redux/store/reducers/gameSlice';
-import { useDispatch } from 'react-redux';
-const dispatch = useDispatch();
+import type { AppDispatch } from '@pexeso/lib/redux/store/store';
 
 const uuid = require('uuid');
-
-/* ========================================================================
- * 1) GENERIC UTILITIES – Reusable across the project
- * ======================================================================*/
-
-/**
- * Randomly shuffles the elements of an array using the Fisher–Yates algorithm.
- *
- * @param arrayIn - The input array to shuffle.
- * @returns A new array with the elements in randomized order.
- *
- */
-
-export function _shuffleArray(arrayIn: any[]) {
-  // Copy array to avoid mutating the original
-  let array = [...arrayIn];
-
-  // Iterate from the last element backwards
-  for (let i = array.length - 1; i > 0; i--) {
-    // Pick a random index from 0 to i
-    const j = Math.floor(Math.random() * (i + 1));
-    // Swap elements at positions i and j
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-
-  return array;
-}
-
-/*--------------------------------------------------------------------------*/
-
-/**
- * Formats a duration (in seconds) into a human-readable string.
- *
- * @param seconds - The total number of seconds.
- * @returns A string in the format "Xm Ys" or "Ys" if minutes are zero.
- */
-
-export function _myFormatSeconds(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  const minPart = minutes > 0 ? `${minutes}m ` : '';
-  const secPart = `${remainingSeconds}s`;
-
-  return minPart + secPart;
-}
-
-/*--------------------------------------------------------------------------*/
-
-/**
- * Toggles CSS classes on a DOM element.
- *
- * @param elm - The target HTML element.
- * @param removedClass - The class name to remove.
- * @param addedClass - The class name to add.
- */
-
-export function _myToggle(
-  elm: HTMLElement,
-  removedClass: string,
-  addedClass: string
-) {
-  elm.classList.add(addedClass);
-  elm.classList.remove(removedClass);
-}
-
-/*--------------------------------------------------------------------------*/
-
-/**
- * Type guard for narrowing down string values to a specific string literal type.
- *
- * @param value - The string value to check.
- * @param arr - The readonly array of allowed string literal values.
- * @returns True if the value is included in the allowed list, false otherwise.
- */
-export function my_Type_Guard_function<My_Type extends string>(
-  value: string,
-  arr: readonly My_Type[]
-): value is My_Type {
-  return arr.includes(value as My_Type);
-}
-
-/*--------------------------------------------------------------------------*/
-
-/**
- * Type guard for narrowing down numeric values to a specific numeric literal type.
- *
- * @param value - The numeric value to check.
- * @param arr - The readonly array of allowed numeric literal values.
- * @returns True if the value is included in the allowed list, false otherwise.
- */
-export function my_Type_Guard_function_number<My_Type extends number>(
-  value: number,
-  arr: readonly My_Type[]
-): value is My_Type {
-  return arr.includes(value as My_Type);
-}
-
-/* ========================================================================
- * 2) GAME-SPECIFIC UTILITIES – Tailored for Pexeso game logic
- * ======================================================================*/
 
 /**
  * Shuffles only the unmatched (face-down) cards in the current game state.
@@ -223,11 +126,14 @@ export function createCardsArray(
  * @param element - The clicked card's HTML container.
  * @param objectLikeCard - Card object containing ID, name, and CSS classes.
  * @param cards - Current array of all cards in the game.
+ * @param dispatch - Dispatch from Redux
+
  */
 export const showImg = (
   element: HTMLDivElement,
   objectLikeCard: My_Type_Card_Obj,
-  cards: My_Type_Card_Obj[]
+  cards: My_Type_Card_Obj[],
+  dispatch: AppDispatch
 ) => {
   // Step 1: Find all selected (flipped) cards
   const selectedArr = cards.filter((oneCard) =>
@@ -287,48 +193,3 @@ export function preloadImages(imgNamesArr: My_Type_Img_Name[]) {
 /* ========================================================================
  * 3) ORIGIN VALIDATION – Security checks for allowed origins
  * ======================================================================*/
-
-/**
- * List of allowed origins (domains) from which POST requests can be accepted.
- * This is used both in the frontend and backend for security checks.
- */
-export const ALLOWED_ORIGINS = [
-  'http://localhost:3000',
-  'https://pexeso-next.netlify.app',
-] as const;
-
-export type AllowedOrigin = (typeof ALLOWED_ORIGINS)[number];
-
-/**
- * Frontend origin verification.
- * Checks whether the current browser origin is in the allowed list.
- *
- * @returns True if the origin is allowed, otherwise false.
- */
-export const verifyClientOrigin = (): boolean => {
-  if (typeof window === 'undefined') return true; // Allow during SSR (Server-Side Rendering)
-
-  const currentOrigin = window.location.origin;
-  const isValid = ALLOWED_ORIGINS.includes(currentOrigin as AllowedOrigin);
-
-  if (!isValid) {
-    console.error(`Invalid origin: ${currentOrigin}`);
-  }
-
-  return isValid;
-};
-
-/**
- * Backend (API) origin verification.
- * Checks if the provided origin header is in the allowed list.
- *
- * @param origin - The request origin (or null if not provided).
- * @returns True if the origin is allowed, otherwise false.
- */
-export const verifyApiOrigin = (origin: string | null): boolean => {
-  if (!origin) return false;
-
-  const isValid = ALLOWED_ORIGINS.includes(origin as AllowedOrigin);
-
-  return isValid;
-};

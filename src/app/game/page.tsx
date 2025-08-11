@@ -8,11 +8,12 @@ import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import { create_cards_arr } from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { createCardsArray } from '@pexeso/_inc/functions/gameRelated';
 import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,
-  _myFormatSeconds, createCardsArray
-} from '@pexeso/_inc/_inc_functions';
+  _myFormatSeconds,
+} from '@pexeso/_inc/functions/general';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import GameBoard from '@pexeso/components/RelatedToGame/GameBoard';
@@ -85,7 +86,7 @@ const columnContentStyles = {
 // ---------- component
 
 const Game = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const router = useRouter();
   const dispatch = useDispatch();

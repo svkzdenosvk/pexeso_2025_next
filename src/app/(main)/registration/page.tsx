@@ -13,7 +13,7 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { verifyClientOrigin } from '@pexeso/_inc/_inc_functions';
+import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 

@@ -28,7 +28,7 @@ import {
 import {
   my_Type_Guard_function,
   my_Type_Guard_function_number,
-} from '@pexeso/_inc/_inc_functions';
+} from '@pexeso/_inc/functions/general';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 
 /**

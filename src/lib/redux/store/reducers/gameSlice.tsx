@@ -6,11 +6,8 @@ import type {
   My_Type_ImgCount,
   My_Type_Theme,
 } from '@pexeso/_inc/my_types';
-import {
-  _shuffleArray,
-  _shuffleUnMatchedCards,
-} from '@pexeso/_inc/_inc_functions';
-
+import { _shuffleUnMatchedCards } from '@pexeso/_inc/functions/gameRelated';
+import { _shuffleArray } from '@pexeso/_inc/functions/general';
 import { createSlice } from '@reduxjs/toolkit';
 
 /**
@@ -210,7 +207,7 @@ const gameSlice = createSlice({
         action.payload.level as My_Type_Level
       ] as My_Type_Theme;
     },
- 
+
     // Indicates that loading (e.g. image preloading) is done.
     set_loading: (state) => {
       state.isLoading = false;

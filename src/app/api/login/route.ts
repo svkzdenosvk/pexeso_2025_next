@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { My_Type_Login } from '@pexeso/_inc/my_types';
 import { adminDB } from '@pexeso/lib/firebase/firebase-admin';
-import { verifyApiOrigin } from '@pexeso/_inc/_inc_functions';
+import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Login API Route Handler
@@ -41,7 +41,6 @@ export async function POST(req: Request) {
   }
 
   try {
-
     // ---------- 2. Parse email and password from request body
     const { email, password }: My_Type_Login = await req.json();
 
@@ -98,9 +97,9 @@ export async function POST(req: Request) {
     // ---------- 8. Setup cookies with token for authentication
     response.cookies.set('token', data.idToken, {
       httpOnly: true, // Cookie not accessible via JS
-      path: '/',  // Applies to entire site
+      path: '/', // Applies to entire site
       secure: process.env.NODE_ENV === 'production', // Only HTTPS in production
-      maxAge: 60 * 60 * 24,  // 1 day (in seconds)
+      maxAge: 60 * 60 * 24, // 1 day (in seconds)
     });
 
     return response;

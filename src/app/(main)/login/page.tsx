@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
-import { verifyClientOrigin } from '@pexeso/_inc/_inc_functions';
+import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 

@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
-import { verifyApiOrigin } from '@pexeso/_inc/_inc_functions';
+import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Auth Check API Route Handler
@@ -50,7 +50,6 @@ export async function GET(req: Request) {
       name: user.displayName || '',
     });
   } catch (err) {
-    
     // ---------- 6. Token verification failed (expired, invalid, etc.)
     console.error('Auth check error:', err);
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });

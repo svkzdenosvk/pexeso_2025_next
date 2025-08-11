@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '@pexeso/lib/redux/store/store';
-import { my_Type_Guard_function } from '@pexeso/_inc/_inc_functions';
+import { my_Type_Guard_function } from '@pexeso/_inc/functions/general';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import ReusableImageBox from '@pexeso/components/SharedComponents/ReusableImageBox';
@@ -112,7 +112,7 @@ const SingleImagePage = () => {
         ) : (
           //  Success case: valid image
           <>
-          {/* Solving problem with potential undefined name  */}
+            {/* Solving problem with potential undefined name  */}
             {!errorImgName && name && (
               <ReusableImageBox sx={imgStyles} imageName={`pexeso/${name}`} />
             )}
