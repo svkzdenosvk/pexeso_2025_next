@@ -13,11 +13,11 @@ import type { Theme } from '@mui/material/styles';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import { RootState } from '@pexeso/lib/redux/store/store';
 import {
-  showOne,
   match,
   un_match,
   hardest_level_shuffle,
 } from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { showImg } from '@pexeso/_inc/_inc_functions';
 
 import Card from './Card';
 
@@ -65,27 +65,6 @@ const GameBoard = () => {
     (state: RootState) => state.game
   );
 
-  // Show picture behind joker picture
-  const showImg = (
-    element: HTMLDivElement,
-    objectLikeCard: My_Type_Card_Obj
-  ) => {
-    const selectedArr = cards.filter((oneCard) =>
-      oneCard.classNames.includes('selected_Div_img')
-    );
-    const rotatedArr = cards.filter((oneCard) =>
-      oneCard.classNames.includes('rotate-center')
-    );
-
-    if (
-      element.classList.contains('mask') &&
-      selectedArr.length <= 1 &&
-      rotatedArr.length === 0
-    ) {
-      dispatch(showOne(objectLikeCard));
-    }
-  };
-
   // Game logic for comparing selected images
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -129,7 +108,7 @@ const GameBoard = () => {
           <Card
             key={oneCard.id}
             card={oneCard}
-            onClick={(e) => showImg(e.currentTarget, oneCard)}
+            onClick={(e) => showImg(e.currentTarget, oneCard, cards)}
           />
         ))
       )}

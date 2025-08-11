@@ -1,10 +1,10 @@
 // ========================================================================
 // utils.ts – Shared Utility Functions
-// 
+//
 // Purpose:
 // This file consolidates helper functions into one place for better
 // maintainability and organization. It includes:
-// 
+//
 // 1) Generic utilities – reusable across the project
 // 2) Game-specific utilities – functions tailored to the Pexeso game logic
 // 3) Origin validation – security checks for allowed origins
@@ -15,8 +15,16 @@
 // - Easier imports and code readability
 // ========================================================================
 
-import type { My_Type_Card_Obj, My_Type_Img_Name, My_Type_ImgCount } from "./my_types";
-const uuid = require("uuid");
+import type {
+  My_Type_Card_Obj,
+  My_Type_Img_Name,
+  My_Type_ImgCount,
+} from './my_types';
+import { showOne } from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { useDispatch } from 'react-redux';
+const dispatch = useDispatch();
+
+const uuid = require('uuid');
 
 /* ========================================================================
  * 1) GENERIC UTILITIES – Reusable across the project
@@ -198,6 +206,49 @@ export function createCardsArray(
   // Return the final array of card objects
   return cards;
 }
+
+/*--------------------------------------------------------------------------*/
+/**
+ * Reveals a hidden card if the game rules allow it.
+ *
+ * Steps:
+ * 1. Identify currently selected cards (flipped but not yet matched).
+ * 2. Identify cards currently rotating (in animation state).
+ * 3. Check conditions:
+ *    - Clicked card must still be masked (hidden).
+ *    - There can be at most one already selected card.
+ *    - No cards should currently be rotating.
+ * 4. If all conditions pass, dispatch an action to reveal the clicked card.
+ *
+ * @param element - The clicked card's HTML container.
+ * @param objectLikeCard - Card object containing ID, name, and CSS classes.
+ * @param cards - Current array of all cards in the game.
+ */
+export const showImg = (
+  element: HTMLDivElement,
+  objectLikeCard: My_Type_Card_Obj,
+  cards: My_Type_Card_Obj[]
+) => {
+  // Step 1: Find all selected (flipped) cards
+  const selectedArr = cards.filter((oneCard) =>
+    oneCard.classNames.includes('selected_Div_img')
+  );
+
+  // Step 2: Find all cards in rotation animation
+  const rotatedArr = cards.filter((oneCard) =>
+    oneCard.classNames.includes('rotate-center')
+  );
+
+  // Step 3: Only reveal if the card is masked, there is max 1 selected card, and no card is rotating
+  if (
+    element.classList.contains('mask') &&
+    selectedArr.length <= 1 &&
+    rotatedArr.length === 0
+  ) {
+    // Step 4: Dispatch action to reveal the clicked card
+    dispatch(showOne(objectLikeCard));
+  }
+};
 
 /*--------------------------------------------------------------------------*/
 
