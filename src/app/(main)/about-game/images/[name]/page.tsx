@@ -1,26 +1,26 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import React from 'react';
 import { Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { RootState } from '@pexeso/lib/redux/store/store';
-import { my_Type_Guard_function } from '@pexeso/_inc/functions/general';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import ReusableImageBox from '@pexeso/components/SharedComponents/ReusableImageBox';
+import { useImgValidation } from '@pexeso/_inc/hooks/UseImgValidation';
 
 // ---------- Sx styles
 
+// Container for the whole single image page
 const singleImgContentStyles = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
-  height: '70vh',
+  // height: '70vh',
+  height: '60vh',
 } as const;
 
+// Main content area for image and button
 const singleImgMainContentStyles = {
   height: '100%',
   width: '100%',
@@ -42,11 +42,10 @@ const imgStyles = {
 /**
  * SingleImagePage
  *
- * Component for displaying a single image based on the URL parameter.
- * - Uses Next.js dynamic routing via `useParams()` to get image name
- * - Validates the image name against Redux store using a type guard function
- * - If image exists, displays it along with localized title and back button
- * - If image does not exist, shows an error message and a back button
+ * Page for displaying a single image detail.
+ * - Validates image name from the route param using `useImgValidation`
+ * - Shows either an error message + back button or the image + back button
+ * - Localized text via i18next
  *
  * @component
  * @route /about-game/images/[name]
@@ -56,36 +55,8 @@ const imgStyles = {
 const SingleImagePage = () => {
   const { t } = useTranslation(); // i18n translation hook
 
-  // Get image name from dynamic route param
-  const params = useParams();
-  const name = typeof params?.name === 'string' ? params.name : undefined;
-
-  // Get list of valid image names from Redux store
-  const { imgNames } = useSelector((state: RootState) => state.game);
-
-  // State for error handling and display alert
-  const [errorImgName, setErrorImgName] = useState(false);
-  const [imgNameH3, setNameH3] = useState('');
-
   // Validate image name and set display name or error
-  useEffect(() => {
-    if (!name || typeof name !== 'string') {
-      setErrorImgName(true);
-      setNameH3(t('single_img_page.h2.not_exist'));
-      return;
-    }
-
-    if (!my_Type_Guard_function(name, imgNames)) {
-      setErrorImgName(true);
-      setNameH3(t('single_img_page.h2.not_exist'));
-    } else {
-      // If no error
-      setErrorImgName(false);
-      let displayName: string = name;
-
-      setNameH3(t(`single_img_page.h2.${displayName}`));
-    }
-  }, [name, imgNames]);
+   const { errorImgName, imgNameH3, imageName } = useImgValidation();
 
   return (
     <Box sx={singleImgContentStyles}>
@@ -97,9 +68,12 @@ const SingleImagePage = () => {
         {/* Error case: image not found */}
         {errorImgName ? (
           <>
+            {/* Error message if image is not found */}
             <Typography variant="h3" component="h3">
               {t('single_img_page.h3_error')}
             </Typography>
+
+            {/* Button to go back to images page */}
             <Button
               component={NextLinkComposed}
               to="/about-game/images"
@@ -112,11 +86,12 @@ const SingleImagePage = () => {
         ) : (
           //  Success case: valid image
           <>
-            {/* Solving problem with potential undefined name  */}
-            {!errorImgName && name && (
-              <ReusableImageBox sx={imgStyles} imageName={`pexeso/${name}`} />
+            {/* Display the image */}
+            {!errorImgName && imageName && (
+              <ReusableImageBox sx={imgStyles} imageName={`pexeso/${imageName}`} />
             )}
-
+            
+            {/* Button to go back to images page */}
             <Button
               component={NextLinkComposed}
               to="/about-game/images"
