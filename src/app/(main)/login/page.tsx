@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,7 @@ import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
+import { useResetSettings } from "@pexeso/_inc/hooks/UseResetSettings";
 
 // ---------- Sx styles
 
@@ -86,6 +87,9 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Reset settings from the game by own hook
+  useResetSettings();
+
   /**
    * Show success alert after redirect from registration page
    */
@@ -124,6 +128,7 @@ const LoginForm = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.email, password: form.password }),
+        credentials: 'include',
       });
 
       const data = await res.json();

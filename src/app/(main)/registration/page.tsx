@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
+import { useResetSettings } from "@pexeso/_inc/hooks/UseResetSettings";
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
@@ -81,6 +82,9 @@ function RegisterForm() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false); //password visibility
   const [isLoading, setIsLoading] = useState(false);
+
+  // Reset settings from the game by own hook
+  useResetSettings();
 
   /**
    * Input Validation

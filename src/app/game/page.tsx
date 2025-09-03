@@ -16,7 +16,7 @@ import {
 } from '@pexeso/_inc/functions/general';
 import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
-import GameBoard from '@pexeso/components/RelatedToGame/GameBoard';
+import PlayBoard from '@pexeso/components/RelatedToGame/PlayBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
 
 /**
@@ -174,7 +174,7 @@ const Game = () => {
         id="content"
         sx={dynamicColumnContentStyles}
       >
-        <GameBoard />
+        <PlayBoard />
       </Box>
     </>
   );

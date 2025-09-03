@@ -37,8 +37,6 @@ const AboutGame = () => {
         {t('about_page.h2')}
       </Typography>
 
-      {/* Decorative or illustrative image section (styled via CSS) */}
-      {/* <div className="img"></div> */}
     </Box>
   );
 };

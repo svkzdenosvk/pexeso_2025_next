@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
-import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
+// import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Auth Check API Route Handler
@@ -18,13 +18,14 @@ import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
  */
 
 // GET handler -> checking if user is logged in from cookies
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
+
   // ---------- 1. Validate request origin (basic CORS protection)
   const origin = req.headers.get('origin');
 
-  if (!verifyApiOrigin(origin)) {
-    return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
-  }
+  // if (!verifyApiOrigin(origin)) { // this caused problem vith auth check
+  //   return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
+  // }
 
   // ---------- 2. Load cookies and extract token
   const cookieStore = await cookies();

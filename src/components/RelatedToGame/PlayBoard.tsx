@@ -1,7 +1,7 @@
 'use client';
 
 // Core React imports
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -11,12 +11,10 @@ import type { Theme } from '@mui/material/styles';
 
 // Types and store
 import { RootState } from '@pexeso/lib/redux/store/store';
-import {
-  match,
-  un_match,
-  hardest_level_shuffle,
-} from '@pexeso/lib/redux/store/reducers/gameSlice';
+
 import { showImg } from '@pexeso/_inc/functions/gameRelated';
+import { usePlayBoardLogic } from '@pexeso/_inc/hooks/UsePlayBoardLogic';
+import type { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 
 import Card from './Card';
 
@@ -55,44 +53,22 @@ const colorTextThemeStyles = (theme: Theme) => ({
 
 // ---------- Component
 
-const GameBoard = () => {
+const PlayBoard = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
 
   // Select game state from Redux
   const { cards, level, isLoading } = useSelector(
     (state: RootState) => state.game
   );
 
-  // Game logic for comparing selected images
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const selectedArr = cards.filter((oneCard) =>
-        oneCard.classNames.includes('selected_Div_img')
-      );
+  // Hook: encapsulates card match/unmatch + shuffle logic
+  const { revealCard } = usePlayBoardLogic(cards, level);
 
-      if (selectedArr.length === 2) {
-        if (selectedArr[0].name === selectedArr[1].name) {
-          dispatch(match());
-        } else {
-          dispatch(un_match(level));
-        }
-      }
-
-      document.body.style.pointerEvents = 'auto';
-    }, 200);
-
-    // shuffle if level is hard
-    if (level === 'hard') {
-      const intervalShuffle = setInterval(() => {
-        dispatch(hardest_level_shuffle());
-      }, 400);
-
-      return () => clearInterval(intervalShuffle);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [dispatch, cards, level]);
+  // Handle click on single card → delegate to hook
+  const handleCardClick = (e: React.MouseEvent, card: My_Type_Card_Obj) => {
+    const element = e.currentTarget as HTMLDivElement;
+    revealCard(element, card);
+  };
 
   return (
     <Box className="row" id="row" sx={rowStyles}>
@@ -107,7 +83,7 @@ const GameBoard = () => {
           <Card
             key={oneCard.id}
             card={oneCard}
-            onClick={(e) => showImg(e.currentTarget, oneCard, cards, dispatch )}
+            onClick={(e) => handleCardClick(e, oneCard)}
           />
         ))
       )}
@@ -115,4 +91,4 @@ const GameBoard = () => {
   );
 };
 
-export default GameBoard;
+export default PlayBoard;

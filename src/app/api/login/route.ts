@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
     // Handle failed login attempts
     if (!res.ok) {
-      console.warn('Firebase login error on login route:', data); // <- Tu zistíme presnú chybu
+      console.warn('Firebase login error on login route:', data); // 
 
       const firebaseError = data.error?.message ?? 'UNKNOWN';
       const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
@@ -96,10 +96,11 @@ export async function POST(req: Request) {
 
     // ---------- 8. Setup cookies with token for authentication
     response.cookies.set('token', data.idToken, {
-      httpOnly: true, // Cookie not accessible via JS
+      httpOnly: false, // Cookie is accessible via JS
       path: '/', // Applies to entire site
-      secure: process.env.NODE_ENV === 'production', // Only HTTPS in production
+      secure: process.env.NODE_ENV !== 'development',
       maxAge: 60 * 60 * 24, // 1 day (in seconds)
+      sameSite: 'lax',
     });
 
     return response;

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import {
   Box,
@@ -17,9 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
   settings_and_styling_before_start,
-  reset_settings,
 } from '@pexeso/lib/redux/store/reducers/gameSlice';
-import { seconds_reset } from '@pexeso/lib/redux/store/reducers/secondsSlice';
 import {
   My_Type_ImgCount,
   My_Type_Level,
@@ -30,6 +28,7 @@ import {
   my_Type_Guard_function_number,
 } from '@pexeso/_inc/functions/general';
 import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyles';
+import { useResetSettings } from "@pexeso/_inc/hooks/UseResetSettings";
 
 /**
  * Game Settings Page
@@ -42,7 +41,7 @@ import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyl
  * - Form with radio buttons to select level (easy/medium/hard)
  * - Form with radio buttons to select image count (5–8 pairs)
  * - Error handling for missing selections
- * - Automatic reset of previous settings and timer
+ * - Automatic reset of previous settings and timer with hook
  * - On valid submission, dispatches game settings and redirects to game page
  *
  * @route /settings
@@ -56,12 +55,14 @@ import { pulsatingButtonStyles } from '@pexeso/components/StylingComp/SharedStyl
 
 // ---------- Sx styles
 
+// Style for the form container
 const formStyles = {
   textAlign: 'center',
   mx: 'auto',
   mt: 2,
 };
 
+// Style for each fieldset (group of radio buttons)
 const fieldsetStyles = {
   display: 'flex',
   flexDirection: 'column',
@@ -69,6 +70,7 @@ const fieldsetStyles = {
   textAlign: 'center',
 };
 
+// Style for the alert
 const alertStyles = {
   borderRadius: '25px',
   padding: '15px 25px',
@@ -88,27 +90,27 @@ const GameSettingsPage = () => {
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
 
   const [levelChosen, setLevelChosen] = useState('' as My_Type_Level);
   const [imgCountChosen, setImgCountChosen] = useState(0 as My_Type_ImgCount);
   const [error, setError] = useState('');
 
-  // Reset level, image count, and timer on mount
-  useEffect(() => {
-    dispatch(seconds_reset());
-    dispatch(reset_settings());
-  }, [pathname, dispatch]);
+ // Reset settings from the game by own hook
+  useResetSettings();
 
-  // Predefined option values
-  // variables for automation in form
+   // Possible image count options
   const imgCountValues: My_Type_ImgCount[] = [5, 6, 7, 8];
+
+  // Possible game levels (labels are translated)
   const levels: My_Type_Svk_Eng_level[] = [
     { value: 'easy', label: t('settings_page.level.easy') },
     { value: 'medium', label: t('settings_page.level.medium') },
     { value: 'hard', label: t('settings_page.level.hard') },
   ];
+
+  // Level values for validation
   const levelValues: My_Type_Level[] = ['easy', 'medium', 'hard'];
 
   // Handle form submission
@@ -149,7 +151,7 @@ const GameSettingsPage = () => {
         {t('settings_page.h5')}
       </Typography>
 
-      {/* ---------------------- LEVEL SELECTOR ---------------------- */}
+      {/* Level selection */}
       <FormControl sx={fieldsetStyles}>
         <FormLabel component="legend">
           {' '}
@@ -178,7 +180,7 @@ const GameSettingsPage = () => {
         </RadioGroup>
       </FormControl>
 
-      {/* ------------------- IMAGE COUNT SELECTOR ------------------- */}
+      {/* Image count selection */}
       <FormControl sx={fieldsetStyles}>
         <FormLabel component="legend">
           {t('settings_page.legend.img_count')}
@@ -202,21 +204,20 @@ const GameSettingsPage = () => {
               key={i}
               value={cnt.toString()}
               control={<Radio />}
-              label={`${cnt * 2}`} /* *2 -> pair of images */
+              label={`${cnt * 2}`} // multiply by 2 because images come in pairs
             />
           ))}
         </RadioGroup>
       </FormControl>
 
-      {/* ------------------- ERROR MESSAGE ------------------- */}
-      {/* If level or image count is not selected, an error message will be displayed */}
+      {/* Show error message if present */}
       {error && (
         <Alert severity="error" sx={alertStyles}>
           {t(error)}
         </Alert>
       )}
 
-      {/* ------------------- SUBMIT BUTTON ------------------- */}
+      {/* Submit button */}
       <Button sx={pulsatingButtonStyles} type="submit">
         {t('settings_page.btn_play')}
       </Button>

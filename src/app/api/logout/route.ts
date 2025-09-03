@@ -32,8 +32,8 @@ export async function GET(req: Request) {
    */
   response.cookies.set('token', '', {
     httpOnly: true, // Prevent JS access to cookie (security best practice)
-    secure: true, // Transmit only over HTTPS
-    sameSite: 'strict', // Disallow cross-site requests
+    secure: process.env.NODE_ENV !== 'development', 
+    sameSite: 'lax', 
     path: '/', // Applies for entire domain
     expires: new Date(0), // Expire immediately
   });

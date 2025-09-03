@@ -1,26 +1,26 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { Theme } from '@mui/material/styles';
 import { RootState } from '@pexeso/lib/redux/store/store';
-import { seconds_counter } from '@pexeso/lib/redux/store/reducers/secondsSlice';
 import { set_start_game } from '@pexeso/lib/redux/store/reducers/gameSlice';
+import { useGameTimer } from "@pexeso/_inc/hooks/UseGameTimer";
 
 /**
  * TimeAndStart Component
  *
- * Displays an interactive game timer and a start button.
- * Manages game state via Redux: timer, loading, running, and end status.
+ * Displays the current game time and a "Start" button.
+ * Relies on Redux state for timer values and game status.
  *
  * @component
  * @example
  * <TimeAndStart />
  *
  * @remarks
- * This component does not receive props; it relies on Redux state.
+ * - Timer logic is handled by the `useGameTimer` hook.
  *
  * @dependencies
  * react-i18next, Redux, MUI
@@ -70,17 +70,9 @@ export const TimeAndStart = () => {
     display: isEnd ? 'none' : 'block', // hide timer when game ends
   });
 
-  // Seconds counter
-  useEffect(() => {
-    if (!isRunning || isLoading || isEnd) return; // only runs when game is active
-
-    const interval = setInterval(() => {
-      dispatch(seconds_counter()); // increment seconds
-    }, 1000);
-
-    return () => clearInterval(interval); // cleanup on unmount
-  }, [isRunning, dispatch, isLoading, isEnd]);
-
+  // Seconds counter logic in own hook
+  useGameTimer();
+ 
   // Start game handler -> start count of seconds
   const handleStartClick = () => {
     dispatch(set_start_game());
