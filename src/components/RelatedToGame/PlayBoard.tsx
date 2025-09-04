@@ -12,7 +12,6 @@ import type { Theme } from '@mui/material/styles';
 // Types and store
 import { RootState } from '@pexeso/lib/redux/store/store';
 
-import { showImg } from '@pexeso/_inc/functions/gameRelated';
 import { usePlayBoardLogic } from '@pexeso/_inc/hooks/UsePlayBoardLogic';
 import type { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
 

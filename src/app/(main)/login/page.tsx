@@ -19,6 +19,7 @@ import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from "@pexeso/_inc/hooks/UseResetSettings";
+import { useRegistrationSuccess } from "@pexeso/_inc/hooks/UseRegistrationSuccess";
 
 // ---------- Sx styles
 
@@ -85,7 +86,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  // const [showSuccess, setShowSuccess] = useState(false);
 
   // Reset settings from the game by own hook
   useResetSettings();
@@ -93,14 +94,16 @@ const LoginForm = () => {
   /**
    * Show success alert after redirect from registration page
    */
-  useEffect(() => {
-    if (searchParams.get('fromRegister')) {
-      setShowSuccess(true);
-      const url = new URL(window.location.href);
-      url.searchParams.delete('fromRegister');
-      router.replace(url.toString()); // Remove query parameter without reloading the page
-    }
-  }, [searchParams, router]);
+    const showSuccess = useRegistrationSuccess();
+
+  // useEffect(() => {
+  //   if (searchParams.get('fromRegister')) {
+  //     setShowSuccess(true);
+  //     const url = new URL(window.location.href);
+  //     url.searchParams.delete('fromRegister');
+  //     router.replace(url.toString()); // Remove query parameter without reloading the page
+  //   }
+  // }, [searchParams, router]);
 
   /**
    * Handle login logic

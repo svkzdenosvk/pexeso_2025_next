@@ -43,13 +43,13 @@ export const useAuthCheck = () => {
           return;
         }
 
-        // Read token from cookies
-        const token = Cookies.get('token');
+        // // Read token from cookies .. this works on localhost 
+        // const token = Cookies.get('token');
 
-        if (!token) {
-          dispatch(clearUser());
-          return;
-        }
+        // if (!token) {
+        //   dispatch(clearUser());
+        //   return;
+        // }
 
         // Validate session with backend
         const res = await fetch('/api/auth/me', {

@@ -1,31 +1,24 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 import { RootState } from '@pexeso/lib/redux/store/store';
-import { create_cards_arr } from '@pexeso/lib/redux/store/reducers/gameSlice';
-import { createCardsArray } from '@pexeso/_inc/functions/gameRelated';
-import {
-  my_Type_Guard_function,
-  my_Type_Guard_function_number,
-  _myFormatSeconds,
-} from '@pexeso/_inc/functions/general';
-import { My_Type_Card_Obj } from '@pexeso/_inc/my_types';
+import { _myFormatSeconds } from '@pexeso/_inc/functions/general';
 import NextLinkComposed from '@pexeso/components/SharedComponents/NextLinkComposed';
 import PlayBoard from '@pexeso/components/RelatedToGame/PlayBoard';
 import { TimeAndStart } from '@pexeso/components/RelatedToGame/TimeAndStart';
+import { useGameInit } from '@pexeso/_inc/hooks/UseGameInit';
 
 /**
  * Game page
  *
  * Main page that initializes and runs the Pexeso game.
  * Handles:
- * - Game setup validation (redirect if invalid settings)
- * - Card array creation & dispatch to Redux
+ * - Initialization via `useGameInit` hook (validation, redirect, card creation)
  * - Conditional rendering of instructions, timer, and game board
  * - Win message with elapsed time
  *
@@ -88,13 +81,11 @@ const columnContentStyles = {
 const Game = () => {
   const { t } = useTranslation();
 
-  const router = useRouter();
-  const dispatch = useDispatch();
-
   // Get game state from Redux
   const seconds = useSelector((state: RootState) => state.time.seconds);
-  const { imgNames, level, selectedImgCount, linkName, isRunning, isEnd } =
-    useSelector((state: RootState) => state.game);
+  const { linkName, isRunning, isEnd } = useSelector(
+    (state: RootState) => state.game
+  );
 
   // Dynamic styles based on game state
 
@@ -114,29 +105,12 @@ const Game = () => {
   });
 
   /**
-   * On component mount:
+   * UseEffect hook:
    * 1. Validate game settings (level + image count)
    * 2. If invalid → redirect to /settings
    * 3. If valid → create shuffled card array & store in Redux
    */
-  useEffect(() => {
-    if (
-      !my_Type_Guard_function(level, ['easy', 'medium', 'hard']) ||
-      !my_Type_Guard_function_number(selectedImgCount, [5, 6, 7, 8])
-    ) {
-      router.push('/settings');
-      return;
-    }
-
-    // Create array of cards [objects (div > img)] to play from img names and img count
-    const cards: My_Type_Card_Obj[] = createCardsArray(
-      selectedImgCount,
-      imgNames
-    );
-
-    // Store cards in redux
-    dispatch(create_cards_arr(cards));
-  }, [level, selectedImgCount, router, dispatch, imgNames]);
+    useGameInit();
 
   return (
     <>
