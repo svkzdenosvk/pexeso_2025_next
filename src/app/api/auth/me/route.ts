@@ -1,7 +1,6 @@
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
-// import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
+//  import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Auth Check API Route Handler
@@ -20,7 +19,7 @@ import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
 // GET handler -> checking if user is logged in from cookies
 export async function GET(req: NextRequest) {
 
-  // ---------- 1. Validate request origin (basic CORS protection)
+  // // ---------- 1. Validate request origin (basic CORS protection)
   // const origin = req.headers.get('origin');
 
   // if (!verifyApiOrigin(origin)) { // this caused problem vith auth check
@@ -28,7 +27,7 @@ export async function GET(req: NextRequest) {
   // }
 
   // ---------- 2. Load cookies and extract token
-  // const cookieStore = await cookies();
+  // const cookieStore = await cookies(); //this way not working correctly -  user is not logged in after refresh
   // const token = cookieStore.get('token')?.value;
   const token = req.cookies.get('token')?.value;
 

@@ -32,7 +32,8 @@ export async function GET(req: Request) {
    */
   response.cookies.set('token', '', {
     httpOnly: true, // Prevent JS access to cookie (security best practice)
-    secure: process.env.NODE_ENV !== 'development', 
+    // secure: process.env.NODE_ENV !== 'development', //this working on deploy and localhost
+    secure: true, 
     sameSite: 'lax', 
     path: '/', // Applies for entire domain
     expires: new Date(0), // Expire immediately

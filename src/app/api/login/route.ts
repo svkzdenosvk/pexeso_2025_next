@@ -96,11 +96,10 @@ export async function POST(req: Request) {
 
     // ---------- 8. Setup cookies with token for authentication
 response.cookies.set('token', data.idToken, {
- //     httpOnly: false, // Cookie is accessible via JS -this version works on localhost
  httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
-      // secure: process.env.NODE_ENV !== 'development', or secure:false for local version
-      // secure: true, 
+      // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
+      secure: true, 
       maxAge: 60 * 60 * 24, // 1 day (in seconds)
       sameSite: 'lax',
     });

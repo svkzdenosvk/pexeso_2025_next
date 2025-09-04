@@ -3,7 +3,6 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
@@ -19,7 +18,6 @@ import type { AppDispatch } from '@pexeso/lib/redux/store/store';
  *
  * @dependencies
  * - Redux (dispatch for `setUser`, `clearUser`)
- * - Cookies (`js-cookie` for reading token)
  * - Custom utils (`verifyClientOrigin`)
  * - API endpoint `/api/auth/me`
  *
@@ -42,14 +40,6 @@ export const useAuthCheck = () => {
           dispatch(clearUser());
           return;
         }
-
-        // // Read token from cookies .. this works on localhost 
-        // const token = Cookies.get('token');
-
-        // if (!token) {
-        //   dispatch(clearUser());
-        //   return;
-        // }
 
         // Validate session with backend
         const res = await fetch('/api/auth/me', {
