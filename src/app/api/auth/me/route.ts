@@ -21,15 +21,16 @@ import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
 export async function GET(req: NextRequest) {
 
   // ---------- 1. Validate request origin (basic CORS protection)
-  const origin = req.headers.get('origin');
+  // const origin = req.headers.get('origin');
 
   // if (!verifyApiOrigin(origin)) { // this caused problem vith auth check
   //   return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
   // }
 
   // ---------- 2. Load cookies and extract token
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  // const cookieStore = await cookies();
+  // const token = cookieStore.get('token')?.value;
+  const token = req.cookies.get('token')?.value;
 
   // if token not exists -> user is not logged in
   if (!token) {

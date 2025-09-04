@@ -100,7 +100,7 @@ response.cookies.set('token', data.idToken, {
  httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
       // secure: process.env.NODE_ENV !== 'development', or secure:false for local version
-      secure: true, 
+      // secure: true, 
       maxAge: 60 * 60 * 24, // 1 day (in seconds)
       sameSite: 'lax',
     });
