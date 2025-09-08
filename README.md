@@ -21,21 +21,25 @@ The game features interactive cards, multiple difficulty levels, smooth animatio
 
 ## 📂 Project Structure
 ```plaintext
-components/              # UI components by feature
-├── LogReg/              # Login & Registration
-├── OutsideTheGame/      # Non-game pages (Home, Rules, About, Images, Error)
-├── RelatedToGame/       # Game pages (Board, Settings)
-└── StylingComp/         # Theming & styles
 
-lib/                     # Core libraries & setup
-├── firebase/            # Firebase config
-├── i18n/                # i18n setup + translation files
-└── redux/               # Redux store, reducers, middlewares
+public/                      # Static files served as-is
+└── pictures/pexeso/         # Game images (cards, assets for memory game)
 
-_inc/                    # Internal logic
-├── functions/           # Business logic (login, register, helpers)
-└── hooks/               # Custom React hooks
-
+src/                     
+├── components/              # UI components by feature
+│   ├── LogReg/              # Login & Registration
+│   ├── OutsideTheGame/      # Non-game pages (Home, Rules, About, Images, Error)
+│   ├── RelatedToGame/       # Game pages (Board, Settings)
+│   └── StylingComp/         # Theming & styles
+│
+├── lib/                     # Core libraries & setup
+│   ├── firebase/            # Firebase config
+│   ├── i18n/                # i18n setup + translation files
+│   └── redux/               # Redux store, reducers, middlewares
+│
+└── _inc/                    # Internal logic
+    ├── functions/           # Business logic (login, register, helpers)
+    └── hooks/               # Custom React hooks
 ```
 
 ---
