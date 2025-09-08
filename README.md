@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎮 Pexeso Game
 
-## Getting Started
+A memory matching game (Pexeso) built with **Next.js** and **React**.  
+The game features interactive cards, multiple difficulty levels, smooth animations, and state management powered by **Redux Toolkit**.
 
-First, run the development server:
+👉 **[Live Demo](https://pexeso-next.netlify.app/)** – try the game online without installing anything!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ✨ Features
+
+- 🃏 Classic memory card matching (Pexeso)
+- ⚡ Multiple difficulty levels (**easy**, **hard**)
+- 🎞️ Animated card flipping
+- 🔀 Shuffle mechanic on *hard* level
+- 🌍 Localization support with **react-i18next**
+- 📦 State management using **Redux Toolkit**
+- 📱 Responsive design with **Material UI (MUI)**
+
+---
+
+## 📂 Project Structure
+```plaintext
+/app → Next.js app folder with main pages
+/components → React components (GameBoard, Card, etc.)
+/lib/redux → Redux store and slices for game logic
+/public/pictures/pexeso → Game images used as cards
+/styles → Global and component styles
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🕹️ How to Play
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Click on cards to reveal hidden images.  
+2. Match pairs of identical cards.  
+3. On **hard** level, cards shuffle periodically for an extra challenge.  
+4. The game ends when all pairs are matched. 🎉  
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📖 Learn More
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [React i18next](https://react.i18next.com/)
+- [Material UI](https://mui.com/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🚀 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy this app is using **Vercel**, the platform created by the Next.js team.  
+For more details, see the [Next.js deployment docs](https://nextjs.org/docs/deployment).  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🤝 Contributing
+
+Found an issue or want to contribute?  
+Feel free to open an **issue** or **pull request** – contributions are welcome!  
+
+---
+
+## ⚡ Getting Started
+
+Install dependencies and run the development server:
+
+```bash
+# with npm
+npm install
+npm run dev
+
+```
+Enjoy the game! 🎮
