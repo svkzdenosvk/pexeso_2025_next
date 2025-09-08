@@ -21,7 +21,6 @@ The game features interactive cards, multiple difficulty levels, smooth animatio
 
 ## 📂 Project Structure
 ```plaintext
-
 public/                      # Static files served as-is
 └── pictures/pexeso/         # Game images (cards, assets for memory game)
 
