@@ -21,8 +21,6 @@ The game features interactive cards, multiple difficulty levels, smooth animatio
 
 ## 📂 Project Structure
 ```plaintext
-assets/                  # Global static assets (icons, fonts, images)
-
 components/              # UI components by feature
 ├── LogReg/              # Login & Registration
 ├── OutsideTheGame/      # Non-game pages (Home, Rules, About, Images, Error)
