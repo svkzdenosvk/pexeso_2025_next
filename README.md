@@ -21,24 +21,25 @@ The game features interactive cards, multiple difficulty levels, smooth animatio
 
 ## 📂 Project Structure
 ```plaintext
-public/                      # Static files served as-is
-└── pictures/pexeso/         # Game images (cards, assets for memory game)
+public/             # Static files
+└── pictures/pexeso # Game image
 
-src/                     
-├── components/              # UI components by feature
-│   ├── LogReg/              # Login & Registration
-│   ├── OutsideTheGame/      # Non-game pages (Home, Rules, About, Images, Error)
-│   ├── RelatedToGame/       # Game pages (Board, Settings)
-│   └── StylingComp/         # Theming & styles
+src/
+├── app/            # Next.js App Router – pages & API routes
+│   ├── (main)/     # Main user pages (home, login, registration, game, about…)
+│   └── api/        # Server API routes (auth, login, logout, registration)
 │
-├── lib/                     # Core libraries & setup
-│   ├── firebase/            # Firebase config
-│   ├── i18n/                # i18n setup + translation files
-│   └── redux/               # Redux store, reducers, middlewares
+├── components/     # UI components
+│   ├── LoginReg/   # Login & Registration
+│   ├── RelatedToGame/ # Game UI (board, settings…)
+│   └── Shared...   # Shared layouts & components
 │
-└── _inc/                    # Internal logic
-    ├── functions/           # Business logic (login, register, helpers)
-    └── hooks/               # Custom React hooks
+├── lib/            # Core setup (firebase, i18n, redux)
+├── themes/         # Theme configs
+└── _inc/           # Internal helpers
+    ├── functions/  # Business logic (auth, validation…)
+    └── hooks/      # Custom React hooks
+
 ```
 
 ---
