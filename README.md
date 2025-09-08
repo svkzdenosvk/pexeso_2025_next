@@ -21,11 +21,23 @@ The game features interactive cards, multiple difficulty levels, smooth animatio
 
 ## 📂 Project Structure
 ```plaintext
-/app → Next.js app folder with main pages
-/components → React components (GameBoard, Card, etc.)
-/lib/redux → Redux store and slices for game logic
-/public/pictures/pexeso → Game images used as cards
-/styles → Global and component styles
+assets/                  # Global static assets (icons, fonts, images)
+
+components/              # UI components by feature
+├── LogReg/              # Login & Registration
+├── OutsideTheGame/      # Non-game pages (Home, Rules, About, Images, Error)
+├── RelatedToGame/       # Game pages (Board, Settings)
+└── StylingComp/         # Theming & styles
+
+lib/                     # Core libraries & setup
+├── firebase/            # Firebase config
+├── i18n/                # i18n setup + translation files
+└── redux/               # Redux store, reducers, middlewares
+
+_inc/                    # Internal logic
+├── functions/           # Business logic (login, register, helpers)
+└── hooks/               # Custom React hooks
+
 ```
 
 ---
