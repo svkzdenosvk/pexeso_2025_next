@@ -1,6 +1,6 @@
 /**
- * Origin Validation Utilities
- * ---------------------------
+ * Origin validation functions
+ *
  * Provides both frontend and backend helpers for validating request origins.
  *
  * Purpose:

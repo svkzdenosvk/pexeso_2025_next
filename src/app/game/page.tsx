@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Typography, Box, Button } from '@mui/material';
 import type { Theme } from '@mui/material/styles';

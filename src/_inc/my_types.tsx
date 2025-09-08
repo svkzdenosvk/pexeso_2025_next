@@ -131,8 +131,38 @@ export type My_Type_AuthState = {
   user: My_Type_User | null;
 };
 
+// -------------------- Login Types --------------------
+
+import type { AppDispatch } from "@pexeso/lib/redux/store/store";
+
+export type My_Type_LoginParams = {
+  email: string;
+  password: string;
+  dispatch: AppDispatch;
+  setError: (error: string) => void;
+  setIsLoading: (loading: boolean) => void;
+  navigation: () => void; // e.g., router.push('/')
+};
+
 // Login form credentials
 export interface My_Type_Login {
   email: string;
   password: string;
 }
+
+// -------------------- Register Types --------------------
+
+export type My_Type_RegistrationForm  = {
+  name: string;
+  email: string;
+  password: string;
+  confirm: string;
+};
+
+export type My_Type_RegisterParams  = {
+  form: My_Type_RegistrationForm;
+  setError: (msg: string) => void;
+  setIsLoading: (state: boolean) => void;
+  resetForm: () => void;
+  router: any; // Next.js router
+};

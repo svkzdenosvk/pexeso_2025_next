@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -14,12 +14,20 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
-import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
-import { useResetSettings } from "@pexeso/_inc/hooks/UseResetSettings";
-import { useRegistrationSuccess } from "@pexeso/_inc/hooks/UseRegistrationSuccess";
+import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
+import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
+
+/**
+ * Imported handleLogin function
+ *
+ * - Validates client origin
+ * - Sends login credentials to backend API
+ * - Maps backend errors to i18n keys
+ * - On success → saves user in Redux & navigates home
+ */
+import { handleLogin } from '@pexeso/_inc/functions/loginRelated';
 
 // ---------- Sx styles
 
@@ -29,7 +37,7 @@ const sxStyles = {
 };
 
 /**
- * Login Page Wrapper
+ * LoginFormWrapper
  *
  * LoginFormWrapper is a protected wrapper for the login page.
  * - Ensures route is only accessible to unauthenticated users (`PublicOnlyRoute`)
@@ -59,14 +67,13 @@ export default function LoginFormWrapper() {
 /**
  * LoginForm
  *
- * This is the main login component responsible for:
- * - Handling email and password input
- * - Showing/hiding password
- * - Validating origin
- * - Sending POST request to login API
- * - Handling login errors
- * - Displaying success alert if redirected from registration
- * - Saving user to Redux and navigating to home
+ * Main component handling login flow:
+ * - Manages local state (form, visibility, errors, loading)
+ * - Renders inputs for email & password (with toggle visibility)
+ * - Displays error or success alerts
+ * - Resets game settings via hook
+ * - Calls handleLogin() to authenticate user
+ * - On success → stores user & redirects home
  *
  * @component
  * @client
@@ -78,102 +85,23 @@ export default function LoginFormWrapper() {
 const LoginForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const dispatch = useDispatch();
 
-  // Local state for form data, visibility, errors, loading and success alert
+  // Local state for form inputs, visibility, error, loading
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // const [showSuccess, setShowSuccess] = useState(false);
 
-  // Reset settings from the game by own hook
+  // Reset game settings by own hook
   useResetSettings();
 
-  /**
-   * Show success alert after redirect from registration page
-   */
-    const showSuccess = useRegistrationSuccess();
-
-  // useEffect(() => {
-  //   if (searchParams.get('fromRegister')) {
-  //     setShowSuccess(true);
-  //     const url = new URL(window.location.href);
-  //     url.searchParams.delete('fromRegister');
-  //     router.replace(url.toString()); // Remove query parameter without reloading the page
-  //   }
-  // }, [searchParams, router]);
-
-  /**
-   * Handle login logic
-   *
-   * Steps:
-   * - Check origin
-   * - Send login credentials to API
-   * - Handle and map errors using i18n keys
-   * - On success, save user to Redux store
-   * - Redirect to home page
-   */
-  const handleLogin = async () => {
-    // Validate origin to prevent unauthorized requests
-    if (!verifyClientOrigin()) {
-      setError('invalid_origin');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // Send POST request to API
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, password: form.password }),
-        credentials: 'include',
-      });
-
-      const data = await res.json();
-
-      // Mapping error code / alert for i18n
-      const errorMap: Record<string, string> = {
-        invalid_credentials: 'login_page.error_alert.invalid_credentials',
-        missing_credentials: 'login_page.error_alert.missing_credentials',
-        too_many_req: 'login_page.error_alert.too_many_req',
-        login_failed: 'login_page.error_alert.login_failed',
-        unknown_err: 'login_page.error_alert.unknown_err',
-        not_allowed_origin: 'invalid_origin',
-      };
-
-      if (!res.ok) {
-        const translatedKey =
-          errorMap[data.error] || 'reg_page.error_alert.unexpected';
-        setError(translatedKey);
-        return;
-      }
-
-      // Save authenticated user to Redux
-      dispatch(
-        setUser({
-          uid: data.user.uid,
-          name: data?.name ?? '',
-          email: data.user.email ?? '',
-        })
-      );
-
-      // Redirect to home page
-      router.push('/');
-    } catch (err) {
-      setError('login_page.error_alert');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Show success alert after redirect from registration
+  const showSuccess = useRegistrationSuccess();
 
   return (
     <Box sx={{ mx: 'auto' }}>
-      {/* Show green success message after registration without problem */}
+      {/* Success alert after registration redirect */}
       {showSuccess && (
         <Alert severity="success" sx={{ mb: 2 }}>
           {t('login_page.success_login')}
@@ -224,10 +152,20 @@ const LoginForm = () => {
           sx={{ px: 1, py: 2, fontWeight: 'bold' }}
           variant="contained"
           fullWidth
-          onClick={handleLogin}
           disabled={isLoading}
           startIcon={isLoading && <CircularProgress size={20} />}
+          onClick={() =>
+            handleLogin({
+              email: form.email,
+              password: form.password,
+              dispatch,
+              setError,
+              setIsLoading,
+              navigation: () => router.push('/'),
+            })
+          }
         >
+          {' '}
           {t('login_page.btn_login')}
         </Button>
       </Box>
