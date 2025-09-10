@@ -16,11 +16,11 @@ import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 // GET handler for logout user -> after click on log out buttton -> user´s cookie will be deleted
 export async function GET(req: Request) {
   // ---------- 1. Verify origin to prevent unauthorized cross-origin access
-  const origin = req.headers.get('origin');
+  // const origin = req.headers.get('origin');
 
-  if (!verifyApiOrigin(origin)) {
-    return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
-  }
+  // if (!verifyApiOrigin(origin)) {
+  //   return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
+  // }
 
   // ---------- 2. Create response object
   const response = NextResponse.json({ success: true });

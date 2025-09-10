@@ -2,6 +2,8 @@
 
 import { Box, Button, Typography } from '@mui/material';
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
+
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@pexeso/lib/redux/store/store';
@@ -52,6 +54,7 @@ const styles = {
 const ButtonLogReg = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const router = useRouter(); 
 
   // Access user data from Redux
   const { user } = useSelector((state: RootState) => state.auth);
@@ -59,11 +62,24 @@ const ButtonLogReg = () => {
   // Handle logout by clearing both cookies (server) and Redux (client)
   const handleLogout = async () => {
     try {
-      await fetch('/api/logout'); // Delete cookies on server
-      dispatch(clearUser()); // Clear user from Redux store
+      const res = await fetch('/api/logout', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        dispatch(clearUser()); // vyčisti Redux
+        router.refresh(); // donúti server znova načítať layout a auth stav
+      } else {
+        console.error('Logout API failed:', await res.json());
+      }
     } catch (err) {
       console.error('Logout failed:', err);
     }
+    //   await fetch('/api/logout'); // Delete cookies on server
+    //   dispatch(clearUser()); // Clear user from Redux store
+    // } catch (err) {
+    //   console.error('Logout failed:', err);
+    // }
   };
 
   return (
@@ -92,7 +108,6 @@ const ButtonLogReg = () => {
           </Button>
         </>
       ) : (
-      
         // If user is logged in, show logout button
         <Button
           variant="contained"

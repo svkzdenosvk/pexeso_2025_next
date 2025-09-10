@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -18,16 +17,7 @@ import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
-
-/**
- * Imported handleLogin function
- *
- * - Validates client origin
- * - Sends login credentials to backend API
- * - Maps backend errors to i18n keys
- * - On success → saves user in Redux & navigates home
- */
-import { handleLogin } from '@pexeso/_inc/functions/loginRelated';
+import { handleLoginSubmit } from '@pexeso/_inc/functions/loginRelated';
 
 // ---------- Sx styles
 
@@ -72,8 +62,7 @@ export default function LoginFormWrapper() {
  * - Renders inputs for email & password (with toggle visibility)
  * - Displays error or success alerts
  * - Resets game settings via hook
- * - Calls handleLogin() to authenticate user
- * - On success → stores user & redirects home
+ * - Delegates login workflow to `handleLoginSubmit` (validates, calls server, updates Redux, redirects)
  *
  * @component
  * @client
@@ -84,7 +73,6 @@ export default function LoginFormWrapper() {
 
 const LoginForm = () => {
   const { t } = useTranslation();
-  const router = useRouter();
   const dispatch = useDispatch();
 
   // Local state for form inputs, visibility, error, loading
@@ -99,6 +87,31 @@ const LoginForm = () => {
   // Show success alert after redirect from registration
   const showSuccess = useRegistrationSuccess();
 
+  /**
+   * handleSubmit
+   *
+   * Local wrapper for the shared login handler:
+   * - Clears error state and shows loading indicator
+   * - Calls `handleLoginSubmit` with form data and Redux dispatch
+   * - Applies returned error key to local state (if any)
+   * - Always resets loading state after execution
+   */
+  async function handleSubmit() {
+    setError('');
+    setIsLoading(true);
+
+    const errorKey = await handleLoginSubmit({
+      email: form.email,
+      password: form.password,
+      dispatch,
+    });
+
+    if (errorKey) {
+      setError(errorKey);
+    }
+
+    setIsLoading(false);
+  }
   return (
     <Box sx={{ mx: 'auto' }}>
       {/* Success alert after registration redirect */}
@@ -154,16 +167,7 @@ const LoginForm = () => {
           fullWidth
           disabled={isLoading}
           startIcon={isLoading && <CircularProgress size={20} />}
-          onClick={() =>
-            handleLogin({
-              email: form.email,
-              password: form.password,
-              dispatch,
-              setError,
-              setIsLoading,
-              navigation: () => router.push('/'),
-            })
-          }
+          onClick={handleSubmit}
         >
           {' '}
           {t('login_page.btn_login')}
