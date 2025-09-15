@@ -1,41 +1,25 @@
 /**
  * Registration functions
  *
- * This file centralizes helper functions for handling user registration flow.
- * Unlike the Firebase variant, this version delegates user creation to
- * a custom Next.js API route (`/api/registration`) instead of Firebase SDK.
+ * This file centralizes helper functions related to the user registration flow.
  *
- * 1. validateRegistration()
- *    - Validates form fields before submission
- *    - Returns translation keys used for localized error messages
- *
- * 2. handleRegister()
- *    - Verifies request origin (anti-CSRF)
- *    - Sends registration data to `/api/registration`
- *    - Maps backend error codes to translated keys
- *    - On success → resets form and redirects to login page
- *
- * Goal:
- *   - Keep async API logic outside UI components
- *   - Provide reusable form validation logic
+ * Currently contains:
+ * 1. validateRegistration() – client-side validation of form fields
  */
-import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
-import type {
-  My_Type_RegistrationForm,
-  My_Type_RegisterParams,
-} from '@pexeso/_inc/my_types';
+
+import type { My_Type_RegistrationForm } from '@pexeso/_inc/my_types';
 
 /**
- * Validates registration form fields before sending data to the API.
+ * validateRegistration
  *
- * Rules:
- * - Name: min 3, max 50 chars
- * - Email: must match simple regex pattern
- * - Password: 6–20 chars, at least one uppercase, at least one special char
- * - Confirm: must match password
+ * Validates registration form fields before sending data to the server:
+ * 1. Name – 3–50 chars
+ * 2. Email – must be valid format
+ * 3. Password – 6–20 chars, with uppercase, number, and special char
+ * 4. Confirm – must match password
  *
- * @param {My_Type_RegistrationForm} form - Registration form values
- * @returns {string} translation key of validation error, or empty string if valid
+ * @param {My_Type_RegistrationForm} form - User input from registration form
+ * @returns {string} Translation key for error, or empty string if valid
  */
 export const validateRegistration = (
   form: My_Type_RegistrationForm
@@ -58,80 +42,6 @@ export const validateRegistration = (
   return '';
 };
 
-/**
- * Handles registration process using custom Next.js API route.
- *
- * Flow:
- * 1. Validate client origin (CSRF protection)
- * 2. POST form data to `/api/registration`
- * 3. Handle backend error codes by mapping them to translation keys
- * 4. On success → reset form and redirect to `/login?fromRegister=true`
- *
- * @param {Object} params
- * @param {My_Type_RegistrationForm} params.form - Registration form values
- * @param {(error: string) => void} params.setError - Sets translated error key
- * @param {(loading: boolean) => void} params.setIsLoading - Toggles loading spinner
- * @param {() => void} params.resetForm - Clears form fields after success
- * @param {any} params.router - Next.js router instance (for navigation)
- */
-export const handleRegister = async ({
-  form,
-  setError,
-  setIsLoading,
-  resetForm,
-  router,
-}: My_Type_RegisterParams) => {
-  // 1. CSRF protection: ensure request is from allowed origin
-  if (!verifyClientOrigin()) {
-    setError('invalid_origin');
-    return;
-  }
 
-  setIsLoading(true);
-  setError('');
 
-  try {
-    // 2. Call backend registration API
-    const res = await fetch('/api/registration', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      }),
-    });
 
-    const data = await res.json();
-
-    // Map server error codes to translation keys
-    const errorMap: Record<string, string> = {
-      email_registered: 'reg_page.error_alert.email_registered',
-      missing_credentials: 'reg_page.error_alert.missing_credentials',
-      req_failed: 'reg_page.error_alert.reg_failed',
-      not_allowed_origin: 'invalid_origin',
-    };
-
-    if (!res.ok) {
-      const translatedKey =
-        errorMap[data.error] || 'reg_page.error_alert.unexpected';
-      setError(translatedKey);
-      return;
-    }
-
-    // ✅ Success: reset form & redirect to login
-    router.push('/login?fromRegister=true');
-    resetForm();
-  } catch (err) {
-
-    // Handle network errors (fetch failed, offline, etc.)
-    if (err instanceof TypeError) {
-      setError('reg_page.error_alert.network_error');
-    } else {
-      setError('reg_page.error_alert.unexpected');
-    }
-    console.error('Registration error:', err);
-  } finally {
-    setIsLoading(false);
-  }
-};

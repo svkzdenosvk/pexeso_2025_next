@@ -17,7 +17,7 @@ import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
-import { handleLoginSubmit } from '@pexeso/_inc/functions/loginRelated';
+import { loginSubmit } from '@pexeso/_inc/functions/loginRelated';
 
 // ---------- Sx styles
 
@@ -96,11 +96,11 @@ const LoginForm = () => {
    * - Applies returned error key to local state (if any)
    * - Always resets loading state after execution
    */
-  async function handleSubmit() {
+  async function handleLoginSubmit() {
     setError('');
     setIsLoading(true);
 
-    const errorKey = await handleLoginSubmit({
+    const errorKey = await loginSubmit({
       email: form.email,
       password: form.password,
       dispatch,
@@ -108,9 +108,9 @@ const LoginForm = () => {
 
     if (errorKey) {
       setError(errorKey);
+      setIsLoading(false);
     }
 
-    setIsLoading(false);
   }
   return (
     <Box sx={{ mx: 'auto' }}>
@@ -123,55 +123,62 @@ const LoginForm = () => {
 
       {/* Login form UI */}
       <Box sx={sxStyles.form}>
-        {/* Input for email */}
-        <TextField
-          label={t('reg_page.label.email')}
-          sx={sxStyles.input}
-          value={form.email}
-          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        />
-
-        {/* Input for password with toggle visibility */}
-        <TextField
-          label={t('reg_page.label.pass_conf')}
-          type={showPassword ? 'text' : 'password'}
-          sx={sxStyles.input}
-          value={form.password}
-          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((show) => !show)}
-                  edge="end"
-                  aria-label="toggle password visibility"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        {/* Error alert */}
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {t(error)}
-          </Alert>
-        )}
-
-        {/* Login button with loader */}
-        <Button
-          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-          variant="contained"
-          fullWidth
+        <fieldset
           disabled={isLoading}
-          startIcon={isLoading && <CircularProgress size={20} />}
-          onClick={handleSubmit}
+          style={{ border: 0, padding: 0, margin: 0 }}
         >
-          {' '}
-          {t('login_page.btn_login')}
-        </Button>
+          {/* Input for email */}
+          <TextField
+            label={t('reg_page.label.email')}
+            sx={sxStyles.input}
+            value={form.email}
+            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+          />
+
+          {/* Input for password with toggle visibility */}
+          <TextField
+            label={t('reg_page.label.pass_conf')}
+            type={showPassword ? 'text' : 'password'}
+            sx={sxStyles.input}
+            value={form.password}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, password: e.target.value }))
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((show) => !show)}
+                    edge="end"
+                    aria-label="toggle password visibility"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Error alert */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {t(error)}
+            </Alert>
+          )}
+
+          {/* Login button with loader */}
+          <Button
+            sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+            variant="contained"
+            fullWidth
+            disabled={isLoading}
+            startIcon={isLoading && <CircularProgress size={20} />}
+            onClick={handleLoginSubmit}
+          >
+            {' '}
+            {t('login_page.btn_login')}
+          </Button>
+        </fieldset>
       </Box>
     </Box>
   );

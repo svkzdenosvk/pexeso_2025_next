@@ -12,19 +12,8 @@ import { AppDispatch } from '@pexeso/lib/redux/store/store';
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import { loginAction } from '@pexeso/app/actions/loginAction';
 import { redirect } from 'next/navigation';
+import { loginErrorMap } from '@pexeso/_inc/constants';
 
-/**
- * Mapping of backend error codes to i18n translation keys.
- * Used to display localized error messages in the UI.
- */
-const errorMap: Record<string, string> = {
-  invalid_credentials: 'login_page.error_alert.invalid_credentials',
-  missing_credentials: 'login_page.error_alert.missing_credentials',
-  too_many_req: 'login_page.error_alert.too_many_req',
-  login_failed: 'login_page.error_alert.login_failed',
-  unknown_err: 'login_page.error_alert.unknown_err',
-  not_allowed_origin: 'invalid_origin',
-};
 
 /**
  * handleLoginSubmit
@@ -43,7 +32,7 @@ const errorMap: Record<string, string> = {
  * @param {AppDispatch} params.dispatch - Redux dispatch function
  * @returns {Promise<string | null>} Error key for translation, or null on success
  */
-export async function handleLoginSubmit({
+export async function loginSubmit({
   email,
   password,
   dispatch,
@@ -64,7 +53,7 @@ export async function handleLoginSubmit({
     // --- Step 3: Handle backend error response
     if ('error' in res) {
       const rawError = res.error ?? 'login_failed';
-      return errorMap[rawError] ?? 'reg_page.error_alert.unexpected';
+      return loginErrorMap[rawError] ?? 'reg_page.error_alert.unexpected';
     }
 
     // --- Step 4: Successful login
