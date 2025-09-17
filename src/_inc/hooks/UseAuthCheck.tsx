@@ -1,72 +1,73 @@
-// hooks/useAuthCheck.ts
 'use client';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
+import { authAction } from '@pexeso/app/actions/authAction';
+import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * useAuthCheck Hook
  *
- * Verifies user authentication on app initialization.
- * Replaces Firebase `onAuthStateChanged` with a custom API + cookie based check.
+ * Handles user authentication check on app initialization:
+ * - Validates request origin (basic client-side protection).
+ * - Calls `authAction` server action to check current session.
+ * - On success → sets authenticated user in Redux.
+ * - On failure → clears user state.
  *
  * @hook
- * @returns void (side effects only)
+ * @returns {void} (side effects only, no direct return value)
  *
  * @dependencies
- * - Redux (dispatch for `setUser`, `clearUser`)
- * - Custom utils (`verifyClientOrigin`)
- * - API endpoint `/api/auth/me`
+ * - Redux (`dispatch`, `authSlice` actions)
+ * - Server action (`authAction`)
+ * - Utility (`verifyClientOrigin`)
  *
  * @remarks
- * - Rejects requests from unverified client origins.
- * - Clears user if no token is found or API validation fails.
- * - On success, stores authenticated user info in Redux.
+ * - Runs once on mount.
+ * - Rejects unknown client origins early.
+ * - Validates server response strictly (non-empty uid, email, name).
+ * - Falls back to clearing user on any failure.
  */
 export const useAuthCheck = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-
     const checkLogin = async () => {
       try {
-
-        // Protect against unknown client origins
+        // --- Step 1: Protect against unknown client origins ---
         if (!verifyClientOrigin()) {
           console.error('Invalid origin detected');
           dispatch(clearUser());
           return;
         }
 
-        // Validate session with backend
-        const res = await fetch('/api/auth/me', {
-          method: 'GET',
-          credentials: 'include', // Send cookies with request
-        });
+        // --- Step 2: Validate session with server action ---
+        const data = await authAction();
 
-        if (!res.ok) {
-          console.warn('API auth check failed, status:', res.status);
-          throw new Error('Not logged in');
-        }
+        // --- Step 3: Strict response validation ---
+        const isValid =
+          data.isLoggedIn === true &&
+          typeof data.uid === 'string' &&
+          data.uid.trim().length > 0 &&
+          typeof data.email === 'string' &&
+          data.email.trim().length > 0 &&
+          typeof data.name === 'string' &&
+          data.name.trim().length > 0;
 
-        const data = await res.json();
-
-        // If user is authenticated, store their data in Redux
-        if (data?.isLoggedIn) {
+        // --- Step 4: Update Redux store based on validation ---
+        if (isValid) {
           dispatch(
             setUser({
               uid: data.uid,
-              name: data.name,
-              email: data.email,
+              name: data.name!,
+              email: data.email!,
             })
           );
-
         } else {
-
-          // API responded but no valid session
+          // --- Not valid session
+          console.warn('Auth response failed validation:');
           dispatch(clearUser());
         }
       } catch (err) {
@@ -75,7 +76,7 @@ export const useAuthCheck = () => {
       }
     };
 
-    // Run check once on mount
-    checkLogin(); 
+    // --- Run check once on mount
+    checkLogin();
   }, [dispatch]);
 };

@@ -135,9 +135,7 @@ export type My_Type_AuthState = {
 
 import type { AppDispatch } from "@pexeso/lib/redux/store/store";
 
-export type My_Type_LoginParams = {
-  email: string;
-  password: string;
+export type My_Type_LoginParams = My_Type_Login & {
   dispatch: AppDispatch;
   setError: (error: string) => void;
   setIsLoading: (loading: boolean) => void;
@@ -145,17 +143,15 @@ export type My_Type_LoginParams = {
 };
 
 // Login form credentials
-export interface My_Type_Login {
+export type My_Type_Login = {
   email: string;
   password: string;
 }
 
 // -------------------- Register Types --------------------
 
-export type My_Type_RegistrationForm  = {
+export type My_Type_RegistrationForm  = My_Type_Login & {
   name: string;
-  email: string;
-  password: string;
   confirm: string;
 };
 

@@ -1,8 +1,7 @@
 'use client';
 
-import { useImagePreloading } from "@pexeso/_inc/hooks/UseImagePreloading";
-import { useAuthCheck } from "@pexeso/_inc/hooks/UseAuthCheck";
-
+import { useImagePreloading } from '@pexeso/_inc/hooks/UseImagePreloading';
+import { useAuthCheck } from '@pexeso/_inc/hooks/UseAuthCheck';
 
 /**
  * AppInit Component
@@ -10,11 +9,8 @@ import { useAuthCheck } from "@pexeso/_inc/hooks/UseAuthCheck";
  * A headless (UI-less) component used to initialize core app logic on mount.
  *
  * @responsibilities
- * - Runs client-side authentication check (`useAuthCheck`)
- *   - Verifies login status via `/api/auth/me`
- *   - Applies origin protection against unauthorized domains
- * - Preloads game assets at startup (`useImagePreloading`)
- *   - Ensures all required images are cached before gameplay
+ * - Executes authentication check via `useAuthCheck`.
+ * - Preloads game images via `useImagePreloading`.
  *
  * @component
  * @example
@@ -25,18 +21,17 @@ import { useAuthCheck } from "@pexeso/_inc/hooks/UseAuthCheck";
  * - Runs on the client side only (`'use client'` directive).
  *
  * @dependencies
- * React, Redux, fetch API, custom hooks (`useAuthCheck`, `useImagePreloading`)
+ * React, Redux, custom hooks (`useAuthCheck`, `useImagePreloading`)
  */
 
 // ---------- Component
 
 export default function AppInit() {
- 
-    // Run auth check once on mount
-    useAuthCheck();
- 
-    // Preload game images while loading flag is active
-    useImagePreloading();
+  // --- Step 1: Run authentication check on mount ---
+  useAuthCheck();
 
-  return null; // This component renders nothing
+  // --- Step 2: Preload required game images ---
+  useImagePreloading();
+
+  return null; // Component has no render output
 }
