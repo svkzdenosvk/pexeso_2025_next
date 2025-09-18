@@ -44,7 +44,7 @@ export async function authAction() {
   } catch (err) {
 
     // --- Step 5: Token verification failed (expired, invalid, revoked, etc.)
-    console.error('Auth check error:', err);
+    // console.error('Auth check error:', err);
     return { isLoggedIn: false };
   }
 }

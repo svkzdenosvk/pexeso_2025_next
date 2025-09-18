@@ -57,7 +57,7 @@ export async function loginAction({ email, password }: My_Type_Login) {
 
     // --- Step 3: Handle Firebase error response
     if (!res.ok) {
-      console.warn('Firebase login error:', data);
+      // console.warn('Firebase login error:', data);
       const firebaseError = data.error?.message ?? 'unknown_err';
       const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
       return { error: mappedError };
