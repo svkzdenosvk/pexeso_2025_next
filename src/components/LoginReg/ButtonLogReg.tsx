@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@pexeso/lib/redux/store/store';
 import { clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
+import { logoutAction } from '@pexeso/app/actions/logoutAction';
 
 /**
  * A responsive button group component for handling user login,
@@ -24,7 +25,8 @@ import { clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
  * <ButtonLogReg />
  *
  * @remarks
- * Relies on Redux for `auth.user` state, and calls `/api/logout` for session cleanup.
+ * Relies on Redux for `auth.user` state, and uses a server action (`logoutAction`) 
+ * to clear the authentication cookie.
  *
  * @dependencies
  * @mui/material, next/navigation, react-i18next, react-redux
@@ -60,26 +62,15 @@ const ButtonLogReg = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   // Handle logout by clearing both cookies (server) and Redux (client)
-  const handleLogout = async () => {
-    try {
-      const res = await fetch('/api/logout', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (res.ok) {
-        dispatch(clearUser()); // vyčisti Redux
-        router.refresh(); // donúti server znova načítať layout a auth stav
-      } else {
-        console.error('Logout API failed:', await res.json());
-      }
-    } catch (err) {
-      console.error('Logout failed:', err);
+   const handleLogout = async () => {
+    const res = await logoutAction();
+
+    if (res.success) {
+      dispatch(clearUser()); // Clear Redux state
+      router.refresh();  // Re-render app with logged-out state
+    } else {
+      console.error('Logout failed');
     }
-    //   await fetch('/api/logout'); // Delete cookies on server
-    //   dispatch(clearUser()); // Clear user from Redux store
-    // } catch (err) {
-    //   console.error('Logout failed:', err);
-    // }
   };
 
   return (

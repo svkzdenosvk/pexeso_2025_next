@@ -27,7 +27,7 @@ public/             # Static files
 src/
 ├── app/            # Next.js App Router – pages & API routes
 │   ├── (main)/     # Main user pages (home, login, registration, game, about…)
-│   └── api/        # Server API routes (auth, login, logout, registration)
+│   └── actions/    # Server actions (auth, login, logout, registration)
 │
 ├── components/     # UI components
 │   ├── LoginReg/   # Login & Registration
