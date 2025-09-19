@@ -114,65 +114,70 @@ function RegisterForm() {
 
   return (
     <Box sx={sxStyles.form}>
-      {/* Input for user name */}
-      <TextField
-        label={t('reg_page.label.name')}
-        sx={sxStyles.input}
-        onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-      />
-      {/* Input for email */}
-      <TextField
-        label={t('reg_page.label.email')}
-        sx={sxStyles.input}
-        onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-      />
-      {/* Input for password with toggle visibility */}
-      <TextField
-        label={t('reg_page.label.pass')}
-        type={showPassword ? 'text' : 'password'}
-        sx={sxStyles.input}
-        onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword((prev) => !prev)}
-                edge="end"
-                aria-label="toggle password visibility"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-
-      {/* Password confirmation */}
-      <TextField
-        label={t('reg_page.label.pass_conf')}
-        type="password"
-        sx={sxStyles.input}
-        onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
-      />
-
-      {/* Error alert  */}
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {t(error) !== error ? t(error) : error}
-        </Alert>
-      )}
-
-      {/* Registration/Submit button with loader*/}
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={onRegister}
+      <fieldset
         disabled={isLoading}
-        sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-        startIcon={isLoading && <CircularProgress size={20} />}
+        style={{ border: 0, padding: 0, margin: 0 }}
       >
-        {t('reg_page.btn_reg')}
-      </Button>
+        {/* Input for user name */}
+        <TextField
+          label={t('reg_page.label.name')}
+          sx={sxStyles.input}
+          onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+        />
+        {/* Input for email */}
+        <TextField
+          label={t('reg_page.label.email')}
+          sx={sxStyles.input}
+          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+        />
+        {/* Input for password with toggle visibility */}
+        <TextField
+          label={t('reg_page.label.pass')}
+          type={showPassword ? 'text' : 'password'}
+          sx={sxStyles.input}
+          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  edge="end"
+                  aria-label="toggle password visibility"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        {/* Password confirmation */}
+        <TextField
+          label={t('reg_page.label.pass_conf')}
+          type="password"
+          sx={sxStyles.input}
+          onChange={(e) => setForm((f) => ({ ...f, confirm: e.target.value }))}
+        />
+
+        {/* Error alert  */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {t(error) !== error ? t(error) : error}
+          </Alert>
+        )}
+
+        {/* Registration/Submit button with loader*/}
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={onRegister}
+          disabled={isLoading}
+          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+          startIcon={isLoading && <CircularProgress size={20} />}
+        >
+          {t('reg_page.btn_reg')}
+        </Button>
+      </fieldset>
     </Box>
   );
 }

@@ -101,74 +101,81 @@ const LoginForm = () => {
 
   return (
     <Box sx={{ mx: 'auto' }}>
-      {/* Success alert after registration redirect */}
-      {showSuccess && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {t('login_page.success_login')}
-        </Alert>
-      )}
-
-      {/* Login form UI */}
-      <Box sx={sxStyles.form}>
-        {/* Input for email */}
-        <TextField
-          label={t('reg_page.label.email')}
-          sx={sxStyles.input}
-          value={form.email}
-          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        />
-
-        {/* Input for password with toggle visibility */}
-        <TextField
-          label={t('reg_page.label.pass_conf')}
-          type={showPassword ? 'text' : 'password'}
-          sx={sxStyles.input}
-          value={form.password}
-          onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((show) => !show)}
-                  edge="end"
-                  aria-label="toggle password visibility"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        {/* Error alert */}
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {t(error)}
+      <fieldset
+        disabled={isLoading}
+        style={{ border: 0, padding: 0, margin: 0 }}
+      >
+        {/* Success alert after registration redirect */}
+        {showSuccess && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {t('login_page.success_login')}
           </Alert>
         )}
 
-        {/* Login button with loader */}
-        <Button
-          sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-          variant="contained"
-          fullWidth
-          disabled={isLoading}
-          startIcon={isLoading && <CircularProgress size={20} />}
-          onClick={() =>
-            handleLogin({
-              email: form.email,
-              password: form.password,
-              dispatch,
-              setError,
-              setIsLoading,
-              navigation: () => router.push('/'),
-            })
-          }
-        >
-          {' '}
-          {t('login_page.btn_login')}
-        </Button>
-      </Box>
+        {/* Login form UI */}
+        <Box sx={sxStyles.form}>
+          {/* Input for email */}
+          <TextField
+            label={t('reg_page.label.email')}
+            sx={sxStyles.input}
+            value={form.email}
+            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+          />
+
+          {/* Input for password with toggle visibility */}
+          <TextField
+            label={t('reg_page.label.pass_conf')}
+            type={showPassword ? 'text' : 'password'}
+            sx={sxStyles.input}
+            value={form.password}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, password: e.target.value }))
+            }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword((show) => !show)}
+                    edge="end"
+                    aria-label="toggle password visibility"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Error alert */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {t(error)}
+            </Alert>
+          )}
+
+          {/* Login button with loader */}
+          <Button
+            sx={{ px: 1, py: 2, fontWeight: 'bold' }}
+            variant="contained"
+            fullWidth
+            disabled={isLoading}
+            startIcon={isLoading && <CircularProgress size={20} />}
+            onClick={() =>
+              handleLogin({
+                email: form.email,
+                password: form.password,
+                dispatch,
+                setError,
+                setIsLoading,
+                navigation: () => router.push('/'),
+              })
+            }
+          >
+            {' '}
+            {t('login_page.btn_login')}
+          </Button>
+        </Box>
+      </fieldset>
     </Box>
   );
 };
