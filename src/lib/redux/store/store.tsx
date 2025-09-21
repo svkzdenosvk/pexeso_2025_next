@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { apiSlice } from '../services/apiSlice';
 import gameReducer from './reducers/gameSlice';
 import secondsReducer from './reducers/secondsSlice';
 import authReducer from './reducers/authSlice';
@@ -21,10 +22,13 @@ export const store = configureStore({
     game: gameReducer,
     time: secondsReducer,
     auth: authReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer, // 👈 RTK Query reducer
   },
   middleware: (getDefaultMiddleware) =>
     // Extend default middleware with custom logic
-    getDefaultMiddleware().concat(matchRemovalMiddleware),
+    getDefaultMiddleware()
+      .concat(apiSlice.middleware) // 👈 RTK Query middleware
+      .concat(matchRemovalMiddleware),
 });
 
 // Types for use throughout the app
