@@ -32,8 +32,11 @@ export const authApi = apiSlice.injectEndpoints({
       },
     }),
 
-        // ✅ Registration endpoint
-    register: builder.mutation<any, { name: string; email: string; password: string }>({
+    // Registration endpoint
+    register: builder.mutation<
+      any,
+      { name: string; email: string; password: string }
+    >({
       query: (formData) => ({
         url: '/registration',
         method: 'POST',
@@ -41,6 +44,12 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    logout: builder.mutation<{ success: boolean }, void>({
+      query: () => ({
+        url: '/logout',
+        method: 'GET',
+      }),
+    }),
 
     me: builder.query<{ isLoggedIn: boolean; user?: My_Type_User }, void>({
       query: () => '/auth/me',
@@ -62,19 +71,13 @@ export const authApi = apiSlice.injectEndpoints({
     //   }),
     // }),
 
-    logout: builder.mutation<{ success: boolean }, void>({
-      query: () => ({
-        url: '/auth/logout',
-        method: 'POST',
-      }),
-    }),
   }),
 });
 
 // RTK Query automaticky generuje hooky:
 export const {
   useLoginMutation,
-  useRegisterMutation
+  useRegisterMutation,
+  useLogoutMutation,
   //   useMeQuery,
-  //   useLogoutMutation,
 } = authApi;

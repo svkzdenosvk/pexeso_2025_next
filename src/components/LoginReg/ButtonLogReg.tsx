@@ -6,26 +6,28 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@pexeso/lib/redux/store/store';
 import { clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
+import { useLogoutMutation } from '@pexeso/lib/redux/services/authApi';
 
 /**
- * A responsive button group component for handling user login,
- * registration, and logout actions based on authentication status.
+ *  A responsive button group component that handles user authentication actions
+ * (login, registration, and logout) based on the current authentication state.
  *
  * Features:
- * - Shows login and registration buttons if user is not logged in
- * - Shows logout button (and user's name) if logged in
- * - Uses i18n translation support via `react-i18next`
- * - Clears Redux store and server-side cookies on logout
+ * - Displays login and registration buttons when the user is not authenticated
+ * - Displays the logged-in user's name and a logout button when authenticated
+ * - Integrates with i18n for translations
+ * - Logs the user out by calling the RTK Query `logout` mutation (clears cookies on the server)
+ * - Clears user data from the Redux store on successful logout
  *
  * @component
  * @example
  * <ButtonLogReg />
  *
  * @remarks
- * Relies on Redux for `auth.user` state, and calls `/api/logout` for session cleanup.
+ * Depends on Redux for `auth.user` state and RTK Query for logout API calls.
  *
  * @dependencies
- * @mui/material, next/navigation, react-i18next, react-redux
+ * @mui/material, next/link, react-i18next, react-redux, RTK Query
  */
 
 // ---------- Sx styles
@@ -53,14 +55,21 @@ const ButtonLogReg = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
+  // RTK Query logout mutation hook
+  const [logout] = useLogoutMutation();
+
   // Access user data from Redux
   const { user } = useSelector((state: RootState) => state.auth);
 
-  // Handle logout by clearing both cookies (server) and Redux (client)
+  /**
+   * Handles user logout:
+   * - Calls the `logout` RTK mutation to clear the authentication cookie on the server
+   * - Dispatches `clearUser()` to remove user data from Redux state
+   */
   const handleLogout = async () => {
     try {
-      await fetch('/api/logout'); // Delete cookies on server
-      dispatch(clearUser()); // Clear user from Redux store
+      await logout().unwrap(); // Clear cookies on server via API
+      dispatch(clearUser()); // Clear Redux auth state on client
     } catch (err) {
       console.error('Logout failed:', err);
     }
@@ -92,7 +101,6 @@ const ButtonLogReg = () => {
           </Button>
         </>
       ) : (
-      
         // If user is logged in, show logout button
         <Button
           variant="contained"
