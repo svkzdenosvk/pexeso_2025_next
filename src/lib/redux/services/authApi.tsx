@@ -35,7 +35,7 @@ export const authApi = apiSlice.injectEndpoints({
         // ✅ Registration endpoint
     register: builder.mutation<any, { name: string; email: string; password: string }>({
       query: (formData) => ({
-        url: '/api/register',
+        url: '/registration',
         method: 'POST',
         body: formData,
       }),
@@ -74,7 +74,7 @@ export const authApi = apiSlice.injectEndpoints({
 // RTK Query automaticky generuje hooky:
 export const {
   useLoginMutation,
+  useRegisterMutation
   //   useMeQuery,
-  //   useRegisterMutation,
   //   useLogoutMutation,
 } = authApi;

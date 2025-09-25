@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     // ---------- 5. Successful registration
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('❌ Error during registration:', error);
+    //console.error('❌ Error during registration:', error);
 
     // ---------- Handle known Firebase Auth error (email already exists)
     if (error.code === 'auth/email-already-exists') {

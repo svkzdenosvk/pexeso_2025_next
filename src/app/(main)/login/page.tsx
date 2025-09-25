@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
   TextField,
@@ -18,16 +17,8 @@ import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
-
-/**
- * Imported handleLogin function
- *
- * - Validates client origin
- * - Sends login credentials to backend API
- * - Maps backend errors to i18n keys
- * - On success → saves user in Redux & navigates home
- */
-import { handleLogin } from '@pexeso/_inc/functions/loginRelated';
+import { useLoginMutation } from '@pexeso/lib/redux/services/authApi';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 // ---------- Sx styles
 
@@ -52,8 +43,6 @@ const sxStyles = {
 // ---------- Component
 
 export default function LoginFormWrapper() {
-  const { t } = useTranslation();
-
   return (
     <PublicOnlyRoute>
       {/* Fallback loading alert while content is resolving */}
@@ -67,37 +56,85 @@ export default function LoginFormWrapper() {
 /**
  * LoginForm
  *
- * Main component handling login flow:
- * - Manages local state (form, visibility, errors, loading)
- * - Renders inputs for email & password (with toggle visibility)
- * - Displays error or success alerts
- * - Resets game settings via hook
- * - Calls handleLogin() to authenticate user
- * - On success → stores user & redirects home
+ * Main login form component:
+ * - Manages local state (email, password, password visibility)
+ * - Calls RTK Query `useLoginMutation` for authentication
+ * - Maps API errors to i18n translation keys for user-friendly alerts
+ * - On success:
+ *    → resets game settings (`useResetSettings`)
+ *    → redirects to the home page
+ * - Displays success alert after redirect from registration (`useRegistrationSuccess`)
  *
  * @component
  * @client
  * @dependencies React, MUI, i18next, Redux, Next.js
  */
 
+type AuthErrorResponse = {
+  error: string;
+};
+
+// Mapping error code / alert for i18n
+const loginErrorMap: Record<string, string> = {
+  invalid_credentials: 'login_page.error_alert.invalid_credentials',
+  missing_credentials: 'login_page.error_alert.missing_credentials',
+  too_many_req: 'login_page.error_alert.too_many_req',
+  login_failed: 'login_page.error_alert.login_failed',
+  unknown_err: 'login_page.error_alert.unknown_err',
+  not_allowed_origin: 'invalid_origin',
+};
+
 // ---------- Component
 
 const LoginForm = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const [login, { isLoading, error }] = useLoginMutation();
+  const [translatedError, setTranslatedError] = useState('');
 
   // Local state for form inputs, visibility, error, loading
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   // Reset game settings by own hook
   useResetSettings();
 
   // Show success alert after redirect from registration
   const showSuccess = useRegistrationSuccess();
+
+  /**
+   * Submit handler:
+   *
+   * - Triggers login() mutation
+   * - unwrap():
+   *    → on success → redirect to '/'
+   *    → on failure → logs error (UI alert is handled by error state)
+   */
+  const onSubmit = async () => {
+    // --- Step 1: Client-side validation (email format)
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setTranslatedError('reg_page.error_alert.email_format');
+      return;
+    }
+
+    try {
+      await login({ email: form.email, password: form.password }).unwrap();
+      router.push('/');
+    } catch (err: any) {
+      
+      // Translate API error codes to i18n strings
+      const fbqError = err as FetchBaseQueryError;
+      if (fbqError?.data && typeof fbqError.data === 'object') {
+        const errData = fbqError.data as AuthErrorResponse;
+        if (errData?.error) {
+          const myTranslatedError =
+            loginErrorMap[errData.error] || 'reg_page.error_alert.unexpected';
+          setTranslatedError(myTranslatedError);
+          return;
+        }
+      }
+    }
+  };
 
   return (
     <Box sx={{ mx: 'auto' }}>
@@ -147,9 +184,10 @@ const LoginForm = () => {
           />
 
           {/* Error alert */}
-          {error && (
+          {/* {error && ( */}
+          {translatedError.length > 1 && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              {t(error)}
+              {t(translatedError)}
             </Alert>
           )}
 
@@ -160,16 +198,7 @@ const LoginForm = () => {
             fullWidth
             disabled={isLoading}
             startIcon={isLoading && <CircularProgress size={20} />}
-            onClick={() =>
-              handleLogin({
-                email: form.email,
-                password: form.password,
-                dispatch,
-                setError,
-                setIsLoading,
-                navigation: () => router.push('/'),
-              })
-            }
+            onClick={onSubmit}
           >
             {' '}
             {t('login_page.btn_login')}

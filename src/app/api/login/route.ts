@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
     // Handle failed login attempts
     if (!res.ok) {
-      console.warn('Firebase login error on login route:', data); // 
+      // console.warn('Firebase login error on login route:', data); // 
 
       const firebaseError = data.error?.message ?? 'UNKNOWN';
       const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
@@ -106,7 +106,7 @@ response.cookies.set('token', data.idToken, {
 
     return response;
   } catch (err: any) {
-    console.error('Login error:', err);
+    // console.error('Login error:', err);
 
     // ---------- 9. Network or fetch-related error
     if (err instanceof TypeError && err.message.includes('fetch')) {

@@ -11,15 +11,15 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
-import {
-  validateRegistration,
-  handleRegister,
-} from '@pexeso/_inc/functions/registerRelated';
+import { validateRegistration } from '@pexeso/_inc/functions/registerRelated';
+import { useRegisterMutation } from '@pexeso/lib/redux/services/authApi';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { registerErrorMap } from '@pexeso/_inc/constants';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
@@ -57,22 +57,27 @@ export default function RegisterFormWrapper() {
  * RegisterForm
  *
  * Main component handling user registration:
- * - Manages local state (form inputs, visibility, errors, loading)
- * - Validates fields before submission
- * - Calls handleRegister() to send request & process errors
- * - Displays error alerts when validation or API fails
- * - On success → resets form and redirects to login
+ * - Manages local form state (inputs, password visibility, translated errors)
+ * - Validates inputs before submission (`validateRegistration`)
+ * - Submits registration data via RTK Query (`useRegisterMutation`)
+ * - Handles and translates backend errors (`FetchBaseQueryError` + `registerErrorMap`)
+ * - Displays error messages or loading states
+ * - On success → clears the form and redirects to `/login`
  *
  * @component
  * @client
- * @dependencies MUI, i18next, Next.js router
+ * @dependencies React, MUI, i18next, RTK Query, Next.js router
  */
 
 //----Component
 function RegisterForm() {
   const { t } = useTranslation();
   const router = useRouter(); // next.js navigation
-  const searchParams = useSearchParams();
+  type RegisterErrorResponse = { error: string }; // type MOVE TO MY TYPES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  // State for toggling password visibility and submit state of form
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Local form state
   const [form, setForm] = useState({
@@ -82,40 +87,64 @@ function RegisterForm() {
     confirm: '',
   });
 
-  const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false); //password visibility
-  const [isLoading, setIsLoading] = useState(false);
+  // Translated error message (empty string means "no error")
+  const [translatedError, setTranslatedError] = useState('');
+
+  // RTK Query mutation hook for registration endpoint
+  const [register, { isLoading, error }] = useRegisterMutation();
 
   // Reset game settings when entering registration page
   useResetSettings();
 
-  // Utility to clear form after successful registration
-  const resetForm = () =>
-    setForm({ name: '', email: '', password: '', confirm: '' });
-
-  // Handle register button click
+  /**
+   * Handles registration submission.
+   * 1. Validate fields locally
+   * 2. Attempt to register via RTK Query mutation
+   * 3. On success → reset form and redirect
+   * 4. On failure → map backend error to translation key
+   */
   const onRegister = async () => {
-    // Validate fields before sending request
+    //  Step 1: Validate form before sending the request
     const validationError = validateRegistration(form);
     if (validationError) {
-      setError(validationError);
+      setTranslatedError(validationError);
       return;
     }
 
-    // Call API handler with form data & state handlers
-    await handleRegister({
-      form,
-      setError,
-      setIsLoading,
-      resetForm,
-      router,
-    });
+    try {
+      setIsSubmitting(true); //  Start global submit state
+
+      //  Step 2: Call API (RTK Query mutation)
+      await register({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      }).unwrap();
+
+      //  Step 3: Success → redirect and reset form
+      router.push('/login?fromRegister=true');
+      setForm({ name: '', email: '', password: '', confirm: '' });
+    } catch (err) {
+      //  Step 4: Handle server-side errors
+      const fbqError = err as FetchBaseQueryError;
+      if (fbqError?.data && typeof fbqError.data === 'object') {
+        const errData = fbqError.data as RegisterErrorResponse;
+        if (errData?.error) {
+          const myTranslatedError =
+            registerErrorMap[errData.error] ||
+            'reg_page.error_alert.unexpected';
+          setTranslatedError(myTranslatedError);
+        }
+      }
+
+      setIsSubmitting(false); //  End submit state
+    }
   };
 
   return (
     <Box sx={sxStyles.form}>
       <fieldset
-        disabled={isLoading}
+        disabled={isSubmitting}
         style={{ border: 0, padding: 0, margin: 0 }}
       >
         {/* Input for user name */}
@@ -160,9 +189,9 @@ function RegisterForm() {
         />
 
         {/* Error alert  */}
-        {error && (
+        {translatedError.length > 1 && (
           <Alert severity="error" sx={{ mb: 2 }}>
-            {t(error) !== error ? t(error) : error}
+            {t(translatedError)}
           </Alert>
         )}
 
@@ -171,9 +200,9 @@ function RegisterForm() {
           variant="contained"
           fullWidth
           onClick={onRegister}
-          disabled={isLoading}
+          disabled={isSubmitting}
           sx={{ px: 1, py: 2, fontWeight: 'bold' }}
-          startIcon={isLoading && <CircularProgress size={20} />}
+          startIcon={isSubmitting && <CircularProgress size={20} />}
         >
           {t('reg_page.btn_reg')}
         </Button>
