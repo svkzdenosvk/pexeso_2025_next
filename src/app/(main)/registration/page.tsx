@@ -19,7 +19,7 @@ import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { validateRegistration } from '@pexeso/_inc/functions/registerRelated';
 import { useRegisterMutation } from '@pexeso/lib/redux/services/authApi';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { registerErrorMap } from '@pexeso/_inc/constants';
+import { registerPageErrorMap } from '@pexeso/_inc/constants';
 
 const sxStyles = {
   input: { mb: 2, width: '100%' },
@@ -131,7 +131,7 @@ function RegisterForm() {
         const errData = fbqError.data as RegisterErrorResponse;
         if (errData?.error) {
           const myTranslatedError =
-            registerErrorMap[errData.error] ||
+            registerPageErrorMap[errData.error] ||
             'reg_page.error_alert.unexpected';
           setTranslatedError(myTranslatedError);
         }

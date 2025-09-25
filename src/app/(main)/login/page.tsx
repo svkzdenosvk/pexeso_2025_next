@@ -19,6 +19,7 @@ import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
 import { useLoginMutation } from '@pexeso/lib/redux/services/authApi';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { loginPageErrorMap } from '@pexeso/_inc/constants';
 
 // ---------- Sx styles
 
@@ -74,15 +75,6 @@ type AuthErrorResponse = {
   error: string;
 };
 
-// Mapping error code / alert for i18n
-const loginErrorMap: Record<string, string> = {
-  invalid_credentials: 'login_page.error_alert.invalid_credentials',
-  missing_credentials: 'login_page.error_alert.missing_credentials',
-  too_many_req: 'login_page.error_alert.too_many_req',
-  login_failed: 'login_page.error_alert.login_failed',
-  unknown_err: 'login_page.error_alert.unknown_err',
-  not_allowed_origin: 'invalid_origin',
-};
 
 // ---------- Component
 
@@ -92,9 +84,10 @@ const LoginForm = () => {
   const [login, { isLoading, error }] = useLoginMutation();
   const [translatedError, setTranslatedError] = useState('');
 
-  // Local state for form inputs, visibility, error, loading
+  // Local state for form inputs, visibility and submit state of form
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset game settings by own hook
   useResetSettings();
@@ -118,28 +111,29 @@ const LoginForm = () => {
     }
 
     try {
+      setIsSubmitting(true); //  Start global submit state
+
       await login({ email: form.email, password: form.password }).unwrap();
       router.push('/');
     } catch (err: any) {
-      
       // Translate API error codes to i18n strings
       const fbqError = err as FetchBaseQueryError;
       if (fbqError?.data && typeof fbqError.data === 'object') {
         const errData = fbqError.data as AuthErrorResponse;
         if (errData?.error) {
           const myTranslatedError =
-            loginErrorMap[errData.error] || 'reg_page.error_alert.unexpected';
+            loginPageErrorMap[errData.error] || 'reg_page.error_alert.unexpected';
           setTranslatedError(myTranslatedError);
-          return;
         }
       }
+      setIsSubmitting(false); //  End submit state
     }
   };
 
   return (
     <Box sx={{ mx: 'auto' }}>
       <fieldset
-        disabled={isLoading}
+        disabled={isSubmitting}
         style={{ border: 0, padding: 0, margin: 0 }}
       >
         {/* Success alert after registration redirect */}
@@ -184,7 +178,6 @@ const LoginForm = () => {
           />
 
           {/* Error alert */}
-          {/* {error && ( */}
           {translatedError.length > 1 && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {t(translatedError)}
@@ -196,8 +189,8 @@ const LoginForm = () => {
             sx={{ px: 1, py: 2, fontWeight: 'bold' }}
             variant="contained"
             fullWidth
-            disabled={isLoading}
-            startIcon={isLoading && <CircularProgress size={20} />}
+            disabled={isSubmitting}
+            startIcon={isSubmitting && <CircularProgress size={20} />}
             onClick={onSubmit}
           >
             {' '}

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
+// import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Handles user logout via GET request.

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { My_Type_Login } from '@pexeso/_inc/my_types';
 import { adminDB } from '@pexeso/lib/firebase/firebase-admin';
 import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
+import { firebaseLoginRouteErrorMap } from '@pexeso/_inc/constants';
 
 /**
  * Login API Route Handler
@@ -17,18 +18,6 @@ import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
  * @method POST
  * @returns JSON with user data + authentication cookie
  */
-
-/**
- * Mapping of Firebase error codes to custom i18n-friendly keys.
- * These keys can be used on the frontend for displaying localized error messages.
- */
-const firebaseErrorMap: Record<string, string> = {
-  INVALID_PASSWORD: 'invalid_credentials',
-  EMAIL_NOT_FOUND: 'invalid_credentials',
-  MISSING_PASSWORD: 'missing_credentials',
-  TOO_MANY_ATTEMPTS_TRY_LATER: 'too_many_req',
-  USER_DISABLED: 'login_failed',
-};
 
 // POST login handler
 export async function POST(req: Request) {
@@ -74,7 +63,7 @@ export async function POST(req: Request) {
       // console.warn('Firebase login error on login route:', data); // 
 
       const firebaseError = data.error?.message ?? 'UNKNOWN';
-      const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
+      const mappedError = firebaseLoginRouteErrorMap[firebaseError] ?? 'login_failed';
 
       return NextResponse.json({ error: mappedError }, { status: 401 });
     }
