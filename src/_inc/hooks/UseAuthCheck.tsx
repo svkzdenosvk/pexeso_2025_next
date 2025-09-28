@@ -1,4 +1,3 @@
-// hooks/useAuthCheck.ts
 'use client';
 
 import { useEffect } from 'react';
@@ -38,7 +37,7 @@ export const useAuthCheck = () => {
 
   useEffect(() => {
     // --- Step 1: Wait until the request is finished
-    if (isLoading) return; // ešte čakáme na odpoveď
+    if (isLoading) return; // during waiting for data
 
     // --- Step 2: Verify origin before processing any response data
     if (!verifyClientOrigin()) {
@@ -50,22 +49,19 @@ export const useAuthCheck = () => {
     // --- Step 3: Validate the backend response before updating the state
     const isValid =
       data?.isLoggedIn === true &&
-      typeof data?.uid === 'string' &&
-      data.uid.trim().length > 0 &&
-      typeof data?.email === 'string' &&
-      data.email.trim().length > 0 &&
-      typeof data?.name === 'string' &&
-      data.name.trim().length > 0;
+      typeof data?.user === 'object' &&
+      data?.user !== null &&
+      typeof data?.user?.uid === 'string' &&
+      data.user.uid.trim().length > 0 &&
+      typeof data?.user.email === 'string' &&
+      data.user.email.trim().length > 0 &&
+      typeof data?.user.name === 'string' &&
+      data.user.name.trim().length > 0;
 
     // --- Step 4: Update Redux store based on validation ---
     if (isValid) {
       dispatch(
-        setUser({
-          uid: data.uid!,
-          name: data.name!,
-          email: data.email!,
-        })
-      );
+        setUser({...data.user!}));
     } else {
       // Response did not meet validation criteria → clear user state
       console.warn('Auth response failed validation:', data);

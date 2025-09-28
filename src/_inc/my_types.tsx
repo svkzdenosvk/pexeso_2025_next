@@ -131,6 +131,11 @@ export type My_Type_AuthState = {
   user: My_Type_User | null;
 };
 
+// Error name as string for i18n
+export type My_Type_ErrorResponse = {
+  error: string;
+};
+
 // -------------------- Login Types --------------------
 
 import type { AppDispatch } from "@pexeso/lib/redux/store/store";

@@ -18,7 +18,8 @@ import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
 import { useRegistrationSuccess } from '@pexeso/_inc/hooks/UseRegistrationSuccess';
 import { useLoginMutation } from '@pexeso/lib/redux/services/authApi';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { handleAuthError } from '@pexeso/_inc/functions/loginRegRelated';
+
 import { loginPageErrorMap } from '@pexeso/_inc/constants';
 
 // ---------- Sx styles
@@ -71,11 +72,6 @@ export default function LoginFormWrapper() {
  * @dependencies React, MUI, i18next, Redux, Next.js
  */
 
-type AuthErrorResponse = {
-  error: string;
-};
-
-
 // ---------- Component
 
 const LoginForm = () => {
@@ -117,16 +113,9 @@ const LoginForm = () => {
       router.push('/');
     } catch (err: any) {
       // Translate API error codes to i18n strings
-      const fbqError = err as FetchBaseQueryError;
-      if (fbqError?.data && typeof fbqError.data === 'object') {
-        const errData = fbqError.data as AuthErrorResponse;
-        if (errData?.error) {
-          const myTranslatedError =
-            loginPageErrorMap[errData.error] || 'reg_page.error_alert.unexpected';
-          setTranslatedError(myTranslatedError);
-        }
-      }
-      setIsSubmitting(false); //  End submit state
+      handleAuthError(err, loginPageErrorMap, setTranslatedError);
+
+      setIsSubmitting(false); // End submit state
     }
   };
 

@@ -60,10 +60,11 @@ export async function POST(req: Request) {
 
     // Handle failed login attempts
     if (!res.ok) {
-      // console.warn('Firebase login error on login route:', data); // 
+      console.warn('Firebase login error on login route:', data); //
 
       const firebaseError = data.error?.message ?? 'UNKNOWN';
-      const mappedError = firebaseLoginRouteErrorMap[firebaseError] ?? 'login_failed';
+      const mappedError =
+        firebaseLoginRouteErrorMap[firebaseError] ?? 'login_failed';
 
       return NextResponse.json({ error: mappedError }, { status: 401 });
     }
@@ -75,20 +76,20 @@ export async function POST(req: Request) {
     const name = userSnap.exists ? (userSnap.data()?.name ?? '') : '';
 
     // ---------- 7. Construct response with user details
+
     const response = NextResponse.json({
       user: {
         uid: data.localId,
         email: data.email,
+        name,
       },
-      name,
     });
-
     // ---------- 8. Setup cookies with token for authentication
-response.cookies.set('token', data.idToken, {
- httpOnly: true, // Cookie is not accessible via JS
+    response.cookies.set('token', data.idToken, {
+      httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
       // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
-      secure: true, 
+      secure: true,
       maxAge: 60 * 60 * 24, // 1 day (in seconds)
       sameSite: 'lax',
     });

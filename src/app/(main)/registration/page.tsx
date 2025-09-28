@@ -16,9 +16,11 @@ import { useTranslation } from 'react-i18next';
 import PublicOnlyRoute from '@pexeso/components/LoginReg/PublicOnlyRoute';
 import MySuspense from '@pexeso/components/_internal/MySuspense';
 import { useResetSettings } from '@pexeso/_inc/hooks/UseResetSettings';
-import { validateRegistration } from '@pexeso/_inc/functions/registerRelated';
+import {
+  validateRegistration,
+  handleAuthError,
+} from '@pexeso/_inc/functions/loginRegRelated';
 import { useRegisterMutation } from '@pexeso/lib/redux/services/authApi';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { registerPageErrorMap } from '@pexeso/_inc/constants';
 
 const sxStyles = {
@@ -73,7 +75,6 @@ export default function RegisterFormWrapper() {
 function RegisterForm() {
   const { t } = useTranslation();
   const router = useRouter(); // next.js navigation
-  type RegisterErrorResponse = { error: string }; // type MOVE TO MY TYPES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // State for toggling password visibility and submit state of form
   const [showPassword, setShowPassword] = useState(false);
@@ -126,18 +127,9 @@ function RegisterForm() {
       setForm({ name: '', email: '', password: '', confirm: '' });
     } catch (err) {
       //  Step 4: Handle server-side errors
-      const fbqError = err as FetchBaseQueryError;
-      if (fbqError?.data && typeof fbqError.data === 'object') {
-        const errData = fbqError.data as RegisterErrorResponse;
-        if (errData?.error) {
-          const myTranslatedError =
-            registerPageErrorMap[errData.error] ||
-            'reg_page.error_alert.unexpected';
-          setTranslatedError(myTranslatedError);
-        }
-      }
+      handleAuthError(err, registerPageErrorMap, setTranslatedError);
 
-      setIsSubmitting(false); //  End submit state
+      setIsSubmitting(false); // End submit state
     }
   };
 

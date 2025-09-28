@@ -16,12 +16,9 @@ import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
 
 // GET handler -> checking if user is logged in from cookies
 export async function GET(req: NextRequest) {
-
   // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
 
   // ---------- 1. Load cookies and extract token
-  // const cookieStore = await cookies(); //this way not working correctly -  user is not logged in after refresh
-  // const token = cookieStore.get('token')?.value;
   const token = req.cookies.get('token')?.value;
 
   // if token not exists -> user is not logged in
@@ -39,9 +36,12 @@ export async function GET(req: NextRequest) {
     // ---------- 4. Return login status and user data
     return NextResponse.json({
       isLoggedIn: true,
-      uid: user.uid,
-      email: user.email,
-      name: user.displayName || '',
+      user: {
+        uid: user.uid,
+        email: user.email ?? '',
+        name: user.displayName ?? '',
+      },
+  
     });
   } catch (err) {
     // ----------  Token verification failed (expired, invalid, etc.)
