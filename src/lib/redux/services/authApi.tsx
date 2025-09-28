@@ -8,28 +8,28 @@ export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<
       { user: My_Type_User; name?: string },
-      My_Type_Login
+      My_Type_Login 
     >({
       query: (credentials) => ({
         url: '/login', // zodpovedá tvojej route /api/login
         method: 'POST',
         body: credentials,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        //maybe onQueryStarted is not needed when  useAuthCheck .. will see
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(
-            setUser({
-              uid: data.user.uid,
-              email: data.user.email,
-              name: data?.name ?? '',
-            })
-          );
-        } catch {
-          dispatch(clearUser());
-        }
-      },
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   //maybe onQueryStarted is not needed when  useAuthCheck .. will see
+      //   try {
+      //     const { data } = await queryFulfilled;
+      //     dispatch(
+      //       setUser({
+      //         uid: data.user.uid,
+      //         email: data.user.email,
+      //         name: data?.name ?? '',
+      //       })
+      //     );
+      //   } catch {
+      //     dispatch(clearUser());
+      //   }
+      // },
     }),
 
     // Registration endpoint
@@ -50,11 +50,19 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
-
-    me: builder.query<{ isLoggedIn: boolean; user?: My_Type_User }, void>({
-      query: () => '/auth/me',
+    
+    authMe: builder.query<
+      { isLoggedIn: boolean; uid?: string; email?: string; name?: string },
+      void
+    >({
+      query: () => ({
+        url: '/auth/me',
+        method: 'GET',
+        credentials: 'include',
+      }),
     }),
 
+   
     // login: builder.mutation<{ user: My_Type_User }, My_Type_Login>({
     //   query: (credentials) => ({
     //     url: '/auth/login',
@@ -79,5 +87,5 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  //   useMeQuery,
+  useAuthMeQuery,
 } = authApi;

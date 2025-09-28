@@ -6,76 +6,76 @@ import { useDispatch } from 'react-redux';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
+import { useAuthMeQuery } from '@pexeso/lib/redux/services/authApi';
 
 /**
  * useAuthCheck Hook
  *
- * Verifies user authentication on app initialization.
- * Replaces Firebase `onAuthStateChanged` with a custom API + cookie based check.
+ * Purpose:
+ * Runs an authentication check during application initialization or page refresh.
+ * This replaces Firebase's `onAuthStateChanged` with a solution based on
+ * a custom API endpoint (`/api/auth/me`) and HTTP-only cookies.
+ *
+ * Execution flow:
+ * 1. Calls the `auth/me` endpoint automatically using RTK Query (`useAuthMeQuery`).
+ * 2. Verifies the client origin before processing the result.
+ * 3. Validates the API response structure and ensures required fields are present.
+ * 4. Updates the Redux store with user data on success or clears the user state on failure.
  *
  * @hook
- * @returns void (side effects only)
+ * @returns void (only performs side effects)
  *
  * @dependencies
- * - Redux (dispatch for `setUser`, `clearUser`)
- * - Custom utils (`verifyClientOrigin`)
- * - API endpoint `/api/auth/me`
- *
- * @remarks
- * - Rejects requests from unverified client origins.
- * - Clears user if no token is found or API validation fails.
- * - On success, stores authenticated user info in Redux.
+ * - Redux store (`setUser`, `clearUser`)
+ * - RTK Query service (`useAuthMeQuery`)
+ * - Custom origin validation (`verifyClientOrigin`)
  */
 export const useAuthCheck = () => {
   const dispatch = useDispatch<AppDispatch>();
 
+  // Automatically calls /api/auth/me and provides query state and response data
+  const { data, error, isLoading } = useAuthMeQuery();
+
   useEffect(() => {
+    // --- Step 1: Wait until the request is finished
+    if (isLoading) return; // ešte čakáme na odpoveď
 
-    const checkLogin = async () => {
-      try {
+    // --- Step 2: Verify origin before processing any response data
+    if (!verifyClientOrigin()) {
+      console.error('Invalid origin detected');
+      dispatch(clearUser());
+      return;
+    }
 
-        // Protect against unknown client origins
-        if (!verifyClientOrigin()) {
-          console.error('Invalid origin detected');
-          dispatch(clearUser());
-          return;
-        }
+    // --- Step 3: Validate the backend response before updating the state
+    const isValid =
+      data?.isLoggedIn === true &&
+      typeof data?.uid === 'string' &&
+      data.uid.trim().length > 0 &&
+      typeof data?.email === 'string' &&
+      data.email.trim().length > 0 &&
+      typeof data?.name === 'string' &&
+      data.name.trim().length > 0;
 
-        // Validate session with backend
-        const res = await fetch('/api/auth/me', {
-          method: 'GET',
-          credentials: 'include', // Send cookies with request
-        });
+    // --- Step 4: Update Redux store based on validation ---
+    if (isValid) {
+      dispatch(
+        setUser({
+          uid: data.uid!,
+          name: data.name!,
+          email: data.email!,
+        })
+      );
+    } else {
+      // Response did not meet validation criteria → clear user state
+      console.warn('Auth response failed validation:', data);
+      dispatch(clearUser());
+    }
 
-        if (!res.ok) {
-          console.warn('API auth check failed, status:', res.status);
-          throw new Error('Not logged in');
-        }
-
-        const data = await res.json();
-
-        // If user is authenticated, store their data in Redux
-        if (data?.isLoggedIn) {
-          dispatch(
-            setUser({
-              uid: data.uid,
-              name: data.name,
-              email: data.email,
-            })
-          );
-
-        } else {
-
-          // API responded but no valid session
-          dispatch(clearUser());
-        }
-      } catch (err) {
-        console.error('Auth check failed:', err);
-        dispatch(clearUser());
-      }
-    };
-
-    // Run check once on mount
-    checkLogin(); 
-  }, [dispatch]);
+    // Handle network or server errors
+    if (error) {
+      console.error('Auth check failed:', error);
+      dispatch(clearUser());
+    }
+  }, [data, error, isLoading, dispatch]);
 };

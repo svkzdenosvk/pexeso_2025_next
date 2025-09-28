@@ -1,32 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@pexeso/lib/firebase/firebase-admin';
-//  import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 
 /**
  * Auth Check API Route Handler
  *
  * Flow:
- * 1. Validate request origin (basic CORS protection)
- * 2. Read authentication token from cookies
- * 3. Verify token using Firebase Admin SDK
- * 4. Retrieve user information based on UID
- * 5. Return login status and user details
+ * 1. Read authentication token from cookies
+ * 2. Verify token using Firebase Admin SDK
+ * 3. Retrieve user information based on UID
+ * 4. Return login status and user details
  *
  * @method GET
- * @returns JSON with { isLoggedIn: boolean, uid, email, name? }
+ * @returns JSON with { isLoggedIn: boolean,  uid?: string, email?: string, name?: string }
  */
 
 // GET handler -> checking if user is logged in from cookies
 export async function GET(req: NextRequest) {
 
-  // // ---------- 1. Validate request origin (basic CORS protection)
-  // const origin = req.headers.get('origin');
+  // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
 
-  // if (!verifyApiOrigin(origin)) { // this caused problem vith auth check
-  //   return NextResponse.json({ error: 'not_allowed_origin' }, { status: 403 });
-  // }
-
-  // ---------- 2. Load cookies and extract token
+  // ---------- 1. Load cookies and extract token
   // const cookieStore = await cookies(); //this way not working correctly -  user is not logged in after refresh
   // const token = cookieStore.get('token')?.value;
   const token = req.cookies.get('token')?.value;
@@ -37,13 +30,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // ---------- 3. Token validation by Firebase Admin SDK
+    // ---------- 2. Token validation by Firebase Admin SDK
     const decoded = await adminAuth.verifyIdToken(token);
 
-    // ---------- 4. Loading info about user by UID from token
+    // ---------- 3. Loading info about user by UID from token
     const user = await adminAuth.getUser(decoded.uid);
 
-    // ---------- 5. Return login status and user data
+    // ---------- 4. Return login status and user data
     return NextResponse.json({
       isLoggedIn: true,
       uid: user.uid,
@@ -51,7 +44,7 @@ export async function GET(req: NextRequest) {
       name: user.displayName || '',
     });
   } catch (err) {
-    // ---------- 6. Token verification failed (expired, invalid, etc.)
+    // ----------  Token verification failed (expired, invalid, etc.)
     console.error('Auth check error:', err);
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }
