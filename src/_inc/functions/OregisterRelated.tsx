@@ -63,9 +63,16 @@ export const validateRegistration = (
  *
  * Flow:
  * 1. Validate client origin (CSRF protection)
- * 2. POST form data to `/api/register`
+ * 2. POST form data to `/api/registration`
  * 3. Handle backend error codes by mapping them to translation keys
  * 4. On success → reset form and redirect to `/login?fromRegister=true`
+ *
+ * @param {Object} params
+ * @param {My_Type_RegistrationForm} params.form - Registration form values
+ * @param {(error: string) => void} params.setError - Sets translated error key
+ * @param {(loading: boolean) => void} params.setIsLoading - Toggles loading spinner
+ * @param {() => void} params.resetForm - Clears form fields after success
+ * @param {any} params.router - Next.js router instance (for navigation)
  */
 export const handleRegister = async ({
   form,
@@ -74,6 +81,7 @@ export const handleRegister = async ({
   resetForm,
   router,
 }: My_Type_RegisterParams) => {
+  // 1. CSRF protection: ensure request is from allowed origin
   if (!verifyClientOrigin()) {
     setError('invalid_origin');
     return;
@@ -83,6 +91,7 @@ export const handleRegister = async ({
   setError('');
 
   try {
+    // 2. Call backend registration API
     const res = await fetch('/api/registration', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,6 +104,7 @@ export const handleRegister = async ({
 
     const data = await res.json();
 
+    // Map server error codes to translation keys
     const errorMap: Record<string, string> = {
       email_registered: 'reg_page.error_alert.email_registered',
       missing_credentials: 'reg_page.error_alert.missing_credentials',
@@ -103,15 +113,23 @@ export const handleRegister = async ({
     };
 
     if (!res.ok) {
-      setError(errorMap[data.error] || 'reg_page.error_alert.unexpected');
+      const translatedKey =
+        errorMap[data.error] || 'reg_page.error_alert.unexpected';
+      setError(translatedKey);
       return;
     }
 
-    resetForm();
+    // ✅ Success: reset form & redirect to login
     router.push('/login?fromRegister=true');
+    resetForm();
   } catch (err) {
-    if (err instanceof TypeError) setError('reg_page.error_alert.network_error');
-    else setError('reg_page.error_alert.unexpected');
+
+    // Handle network errors (fetch failed, offline, etc.)
+    if (err instanceof TypeError) {
+      setError('reg_page.error_alert.network_error');
+    } else {
+      setError('reg_page.error_alert.unexpected');
+    }
     console.error('Registration error:', err);
   } finally {
     setIsLoading(false);

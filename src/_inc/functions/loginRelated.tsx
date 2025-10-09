@@ -86,7 +86,8 @@ export const handleLogin = async ({
     );
 
     // 4. Success → redirect to home (or custom callback)
-    navigation(); 
+     navigation(); 
+
   } catch (err) {
     setError('login_page.error_alert');
   } finally {

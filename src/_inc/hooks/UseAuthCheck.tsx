@@ -3,6 +3,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { usePathname } from 'next/navigation';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
@@ -28,6 +29,7 @@ import type { AppDispatch } from '@pexeso/lib/redux/store/store';
  */
 export const useAuthCheck = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const pathname = usePathname();
 
   useEffect(() => {
 
@@ -77,5 +79,5 @@ export const useAuthCheck = () => {
 
     // Run check once on mount
     checkLogin(); 
-  }, [dispatch]);
+  }, [dispatch, pathname]);
 };

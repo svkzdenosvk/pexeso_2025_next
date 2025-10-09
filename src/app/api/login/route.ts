@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
-import { My_Type_Login } from '@pexeso/_inc/my_types';
-import { adminDB } from '@pexeso/lib/firebase/firebase-admin';
+import { prisma } from '@pexeso/lib/prisma/prisma';
+// import { My_Type_Login } from '@pexeso/_inc/my_types';
+import { signToken } from '@pexeso/lib/jwt/jwt_helper';
 import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
+import bcrypt from 'bcrypt';
 
 /**
  * Login API Route Handler
@@ -42,7 +44,9 @@ export async function POST(req: Request) {
 
   try {
     // ---------- 2. Parse email and password from request body
-    const { email, password }: My_Type_Login = await req.json();
+    // const { email, password }: My_Type_Login = await req.json();
+    // ---------- 2. Parse body
+    const { email, password } = await req.json();
 
     // ---------- 3. Validate presence of credentials
     if (!email || !password) {
@@ -51,56 +55,57 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    // ---------- 3. Find user in database
+    const user = await prisma.users.findUnique({
+      where: { email },
+    });
 
-    // ---------- 4. Authenticate user via Firebase Identity Toolkit REST API
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          returnSecureToken: true,
-        }),
-      }
-    );
-
-    // ---------- 5. Decode response from Firebase
-    const data = await res.json();
-
-    // Handle failed login attempts
-    if (!res.ok) {
-      console.warn('Firebase login error on login route:', data); // 
-
-      const firebaseError = data.error?.message ?? 'UNKNOWN';
-      const mappedError = firebaseErrorMap[firebaseError] ?? 'login_failed';
-
-      return NextResponse.json({ error: mappedError }, { status: 401 });
+    if (!user) {
+      return NextResponse.json(
+        { error: 'invalid_credentials' },
+        { status: 401 }
+      );
     }
 
-    // ---------- 6. Fetch user's name from Firestore (optional enhancement)
-    const userRef = adminDB.collection('users').doc(data.localId);
-    const userSnap = await userRef.get();
+    // ---------- 4. Compare password
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return NextResponse.json(
+        { error: 'invalid_credentials' },
+        { status: 401 }
+      );
+    }
 
-    const name = userSnap.exists ? (userSnap.data()?.name ?? '') : '';
+     // ✅ Generate JWT token
+    const token = signToken(user.id, user.email);
+
+    // ---------- 5. (Optional) Create JWT or session token
+    // Na rýchlo môžeme použiť id ako pseudo-token: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // const token = Buffer.from(`${user.id}:${Date.now()}`).toString('base64');
 
     // ---------- 7. Construct response with user details
     const response = NextResponse.json({
       user: {
-        uid: data.localId,
-        email: data.email,
+        id: user.id,
+        email: user.email,
+        name: user.name,
       },
-      name,
     });
-
     // ---------- 8. Setup cookies with token for authentication
-response.cookies.set('token', data.idToken, {
- httpOnly: true, // Cookie is not accessible via JS
-      path: '/', // Applies to entire site
-      // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
-      secure: true, 
-      maxAge: 60 * 60 * 24, // 1 day (in seconds)
+    // response.cookies.set('token', data.idToken, {
+    //  httpOnly: true, // Cookie is not accessible via JS
+    //       path: '/', // Applies to entire site
+    //       // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
+    //       secure: true,
+    //       maxAge: 60 * 60 * 24, // 1 day (in seconds)
+    //       sameSite: 'lax',
+    //     });
+    // ---------- 8. Setup cookies with token for authentication
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      path: '/',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24, // 1 day
       sameSite: 'lax',
     });
 
