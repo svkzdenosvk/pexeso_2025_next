@@ -3,33 +3,40 @@ import { prisma } from '@pexeso/lib/prisma/prisma';
 import { verifyToken } from '@pexeso/lib/jwt/jwt_helper';
 
 /**
-* Auth Check API Route Handler (PostgreSQL + Prisma)
+ * Auth Check API Route Handler (JWT + PostgreSQL + Prisma)
+ *
+ * Purpose:
+ * - Verifies whether a user is currently logged in based on JWT token in cookies.
  *
  * Flow:
  * 1. Extract token from cookies
- * 2. Decode user ID from token
- * 3. Look up user in database
- * 4. Return login status and user details
+ * 2. Validate and decode JWT token
+ * 3. Verify that the decoded user still exists in the database
+ * 4. Return user's login state and basic info
  *
  * @method GET
- * @returns JSON with { isLoggedIn: boolean, uid, email, name? }
+ * @returns JSON response:
+ * {
+ *   isLoggedIn: boolean,
+ *   uid?: number,
+ *   email?: string,
+ *   name?: string
+ * }
  */
 
 // GET handler -> checking if user is logged in from cookies
 export async function GET(req: NextRequest) {
+  // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
 
-   // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
-
-
-  // ---------- 2. Load cookies and extract token
+  // ---------- 1. Extract JWT token from cookies
   const token = req.cookies.get('token')?.value;
 
-  // if token not exists -> user is not logged in
+  // if token present  -> user is not logged in
   if (!token) {
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }
 
-   // ---------- 3. Token validation
+  // ---------- 2. Validate and decode token payload
   const decoded = verifyToken(token);
 
   if (!decoded) {
@@ -37,36 +44,30 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-     // ---------- 2. Decode token (format: base64 of "id:timestamp")
-    // const decoded = Buffer.from(token, 'base64').toString('utf-8');
-    // const [id] = decoded.split(':');
-    // const userId = Number(id);
-
+    // Defensive check — ensure decoded token contains valid user ID
     if (!decoded.id || isNaN(decoded.id)) {
       throw new Error('Invalid token');
     }
 
     // ---------- 3. Find user in DB
     const user = await prisma.users.findUnique({
-      // where: { id: userId },
       where: { id: decoded.id },
     });
 
+    // If user no longer exists (deleted, etc.)
     if (!user) {
       return NextResponse.json({ isLoggedIn: false }, { status: 401 });
     }
-  
-    // ---------- 5. Return login status and user data
+
+    // ---------- 4. Return login status and user data
     return NextResponse.json({
       isLoggedIn: true,
       uid: user.id,
       email: user.email,
-      // name: user.name || '',
-      name: user.name ,
-
+      name: user.name,
     });
   } catch (err) {
-    // ---------- 6. Token verification failed (expired, invalid, etc.)
+    // ---------- 5. Catch token verification or DB lookup errors
     console.error('Auth check error:', err);
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }

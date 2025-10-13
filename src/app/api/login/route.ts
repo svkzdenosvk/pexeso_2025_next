@@ -1,28 +1,29 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@pexeso/lib/prisma/prisma';
-// import { My_Type_Login } from '@pexeso/_inc/my_types';
+import { My_Type_Login } from '@pexeso/_inc/my_types';
 import { signToken } from '@pexeso/lib/jwt/jwt_helper';
 import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 import bcrypt from 'bcrypt';
 
 /**
- * Login API Route Handler
+ * Login API Route Handler (PostgreSQL + JWT)
  *
  * Flow:
  * 1. Validate request origin (basic CORS protection)
- * 2. Parse login credentials from request body
- * 3. Authenticate user via Firebase Auth REST API
- * 4. Fetch user's name from Firestore
- * 5. Set auth token in cookie
- * 6. Return user details
+ * 2. Parse and validate login credentials
+ * 3. Find user in PostgreSQL via Prisma
+ * 4. Compare password hash with bcrypt
+ * 5. Generate JWT token
+ * 6. Set token in secure HTTP-only cookie
+ * 7. Return user data in response
  *
  * @method POST
  * @returns JSON with user data + authentication cookie
  */
 
 /**
- * Mapping of Firebase error codes to custom i18n-friendly keys.
- * These keys can be used on the frontend for displaying localized error messages.
+ * Optional: Mapping of possible login errors to frontend i18n keys.
+ * Used to standardize error messages on the frontend.
  */
 const firebaseErrorMap: Record<string, string> = {
   INVALID_PASSWORD: 'invalid_credentials',
@@ -34,7 +35,7 @@ const firebaseErrorMap: Record<string, string> = {
 
 // POST login handler
 export async function POST(req: Request) {
-  // ---------- 1. Validate origin to prevent unauthorized requests (CORS)
+  // ---------- 1. Validate origin (basic anti-CSRF)
   const origin = req.headers.get('origin');
 
   if (!verifyApiOrigin(origin)) {
@@ -44,18 +45,16 @@ export async function POST(req: Request) {
 
   try {
     // ---------- 2. Parse email and password from request body
-    // const { email, password }: My_Type_Login = await req.json();
-    // ---------- 2. Parse body
-    const { email, password } = await req.json();
+    const { email, password }: My_Type_Login = await req.json();
 
-    // ---------- 3. Validate presence of credentials
+    // ---------- 3. Basic field validation
     if (!email || !password) {
       return NextResponse.json(
         { error: 'missing_credentials' },
         { status: 400 }
       );
     }
-    // ---------- 3. Find user in database
+    // ---------- 4. Find user in database
     const user = await prisma.users.findUnique({
       where: { email },
     });
@@ -67,7 +66,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ---------- 4. Compare password
+    // ---------- 5. Compare password with bcrypt
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return NextResponse.json(
@@ -76,14 +75,10 @@ export async function POST(req: Request) {
       );
     }
 
-     // ✅ Generate JWT token
+    // ---------- 6. Generate JWT token
     const token = signToken(user.id, user.email);
 
-    // ---------- 5. (Optional) Create JWT or session token
-    // Na rýchlo môžeme použiť id ako pseudo-token: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // const token = Buffer.from(`${user.id}:${Date.now()}`).toString('base64');
-
-    // ---------- 7. Construct response with user details
+    // ---------- 7. Construct JSON response with user data
     const response = NextResponse.json({
       user: {
         id: user.id,
@@ -91,21 +86,14 @@ export async function POST(req: Request) {
         name: user.name,
       },
     });
-    // ---------- 8. Setup cookies with token for authentication
-    // response.cookies.set('token', data.idToken, {
-    //  httpOnly: true, // Cookie is not accessible via JS
-    //       path: '/', // Applies to entire site
-    //       // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
-    //       secure: true,
-    //       maxAge: 60 * 60 * 24, // 1 day (in seconds)
-    //       sameSite: 'lax',
-    //     });
+   
     // ---------- 8. Setup cookies with token for authentication
     response.cookies.set('token', token, {
-      httpOnly: true,
-      path: '/',
+      httpOnly: true, // Cookie is not accessible via JS
+      path: '/', // Applies to entire site
+       // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24, // 1 day (in seconds)
       sameSite: 'lax',
     });
 
@@ -118,7 +106,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'net_req_failed' }, { status: 503 });
     }
 
-    // ---------- 10. Unknown server error
+    // ---------- 10. Fallback for unknown errors
     return NextResponse.json({ error: 'unknown_err' }, { status: 500 });
   }
 }

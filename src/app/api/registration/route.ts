@@ -16,6 +16,7 @@ import bcrypt from 'bcrypt';
  * @method POST
  * @returns JSON response with success or error
  */
+// export async function POST(req: Request): Promise<NextResponse> { //maybe try this for TS
 export async function POST(req: Request) {
   // ---------- 1. Verify origin
   const origin = req.headers.get('origin');

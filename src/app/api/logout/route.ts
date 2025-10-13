@@ -11,10 +11,11 @@ import { NextResponse } from 'next/server';
  * @returns JSON response and clears auth cookie
  */
 
+// export async function POST(req: Request): Promise<NextResponse> { //maybe try this for TS
 // GET handler for logout user -> after click on log out buttton -> user´s cookie will be deleted
 export async function GET(req: Request) {
 
-    // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
+  // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
 
   // ---------- 1. Create response object
   const response = NextResponse.json({ success: true });
