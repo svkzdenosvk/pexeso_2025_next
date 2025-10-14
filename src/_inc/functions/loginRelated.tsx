@@ -79,7 +79,7 @@ export const handleLogin = async ({
     // 3. Save authenticated user to Redux
     dispatch(
       setUser({
-        uid: data.user.uid,
+        id: data.user.id,
         name: data?.name ?? '',
         email: data.user.email ?? '',
       })

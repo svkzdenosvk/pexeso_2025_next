@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     // ---------- 4. Return login status and user data
     return NextResponse.json({
       isLoggedIn: true,
-      uid: user.id,
+      id: user.id,
       email: user.email,
       name: user.name,
     });

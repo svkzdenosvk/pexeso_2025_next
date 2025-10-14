@@ -72,8 +72,20 @@ const ButtonLogReg = () => {
       <Typography variant="body1">{user?.name && user.name}</Typography>
 
       {/* If user is not logged in, show login and registration buttons */}
-      {!user?.uid ? (
-        <>
+      {user?.id ? (
+        // If user is logged in, show logout button
+        <Button
+          variant="contained"
+          sx={styles.linkButton}
+          onClick={handleLogout}
+        >
+          {t('reg_log_btn.log_out')}
+        </Button>
+        
+      ) : (
+      
+       // If user is logged in, show logout button
+       <>
           <Button
             component={Link}
             href={`/registration`}
@@ -91,16 +103,6 @@ const ButtonLogReg = () => {
             {t('reg_log_btn.log')}
           </Button>
         </>
-      ) : (
-      
-        // If user is logged in, show logout button
-        <Button
-          variant="contained"
-          sx={styles.linkButton}
-          onClick={handleLogout}
-        >
-          {t('reg_log_btn.log_out')}
-        </Button>
       )}
     </Box>
   );

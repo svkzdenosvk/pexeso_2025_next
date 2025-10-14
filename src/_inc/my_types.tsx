@@ -120,10 +120,14 @@ export type My_Type_Redux_Root_State = {
 // -------------------- Auth Types --------------------
 
 // Authenticated user object
-export type My_Type_User = {
-  uid: string;
-  name: string;
+export type My_Type_Unique_User = {
+  id: number;
   email: string;
+};
+
+// Authenticated user object
+export type My_Type_User = My_Type_Unique_User & {
+  name: string;
 };
 
 // Authentication state shape

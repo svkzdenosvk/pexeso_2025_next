@@ -60,7 +60,7 @@ export const useAuthCheck = () => {
         if (data?.isLoggedIn) {
           dispatch(
             setUser({
-              uid: data.uid,
+              id: data.id,
               name: data.name,
               email: data.email,
             })

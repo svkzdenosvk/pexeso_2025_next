@@ -1,12 +1,8 @@
 import jwt from 'jsonwebtoken';
+import type {  My_Type_Unique_User} from '@pexeso/_inc/my_types';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-
-interface JwtPayload {
-  id: number;
-  email: string;
-}
 
 /**
  * Generates a signed JWT token for given user data.
@@ -15,7 +11,7 @@ interface JwtPayload {
  * @returns Signed JWT string
  */
 export function signToken(id: number, email: string): string {
-      const payload: JwtPayload = { id, email };
+      const payload: My_Type_Unique_User = { id, email };
 
 //   return jwt.sign({ id, email }, JWT_SECRET, {
       return jwt.sign(payload, JWT_SECRET, {
@@ -28,9 +24,9 @@ export function signToken(id: number, email: string): string {
  * @param token - JWT string from cookies
  * @returns Decoded payload if valid, otherwise null
  */
-export function verifyToken(token: string): JwtPayload | null {
+export function verifyToken(token: string): My_Type_Unique_User | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload;
+    return jwt.verify(token, JWT_SECRET) as My_Type_Unique_User;
   } catch (error) {
     console.error('JWT verification failed:', error);
     return null;
