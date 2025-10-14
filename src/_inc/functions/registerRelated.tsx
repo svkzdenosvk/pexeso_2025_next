@@ -25,6 +25,8 @@ import type {
   My_Type_RegisterParams,
 } from '@pexeso/_inc/my_types';
 
+// Map server error codes to translation keys
+import { registerPageErrorMap } from '@pexeso/_inc/constants';
 /**
  * Validates registration form fields before sending data to the API.
  *
@@ -74,6 +76,7 @@ export const handleRegister = async ({
   resetForm,
   router,
 }: My_Type_RegisterParams) => {
+  // 1. CSRF protection: ensure request is from allowed origin
   if (!verifyClientOrigin()) {
     setError('invalid_origin');
     return;
@@ -83,6 +86,7 @@ export const handleRegister = async ({
   setError('');
 
   try {
+    // 2. Call backend registration API
     const res = await fetch('/api/registration', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,22 +99,18 @@ export const handleRegister = async ({
 
     const data = await res.json();
 
-    const errorMap: Record<string, string> = {
-      email_registered: 'reg_page.error_alert.email_registered',
-      missing_credentials: 'reg_page.error_alert.missing_credentials',
-      req_failed: 'reg_page.error_alert.reg_failed',
-      not_allowed_origin: 'invalid_origin',
-    };
-
     if (!res.ok) {
-      setError(errorMap[data.error] || 'reg_page.error_alert.unexpected');
+      setError(registerPageErrorMap[data.error] || 'reg_page.error_alert.unexpected');
       return;
     }
 
+    //  Success: reset form & redirect to login
     resetForm();
     router.push('/login?fromRegister=true');
   } catch (err) {
-    if (err instanceof TypeError) setError('reg_page.error_alert.network_error');
+    // Handle network errors (fetch failed, offline, etc.)
+    if (err instanceof TypeError)
+      setError('reg_page.error_alert.network_error');
     else setError('reg_page.error_alert.unexpected');
     console.error('Registration error:', err);
   } finally {

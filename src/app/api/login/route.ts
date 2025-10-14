@@ -21,18 +21,6 @@ import bcrypt from 'bcrypt';
  * @returns JSON with user data + authentication cookie
  */
 
-/**
- * Optional: Mapping of possible login errors to frontend i18n keys.
- * Used to standardize error messages on the frontend.
- */
-const firebaseErrorMap: Record<string, string> = {
-  INVALID_PASSWORD: 'invalid_credentials',
-  EMAIL_NOT_FOUND: 'invalid_credentials',
-  MISSING_PASSWORD: 'missing_credentials',
-  TOO_MANY_ATTEMPTS_TRY_LATER: 'too_many_req',
-  USER_DISABLED: 'login_failed',
-};
-
 // POST login handler
 export async function POST(req: Request) {
   // ---------- 1. Validate origin (basic anti-CSRF)
@@ -99,7 +87,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (err: any) {
-    console.error('Login error:', err);
+    // console.error('Login error:', err);
 
     // ---------- 9. Network or fetch-related error
     if (err instanceof TypeError && err.message.includes('fetch')) {

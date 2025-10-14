@@ -11,6 +11,9 @@ import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import type { My_Type_LoginParams } from '@pexeso/_inc/my_types';
 
+// Mapping error code / alert for i18n
+import { loginPageErrorMap } from '@pexeso/_inc/constants';
+
 /**
  * handleLogin
  *
@@ -38,7 +41,6 @@ export const handleLogin = async ({
   setIsLoading,
   navigation,
 }: My_Type_LoginParams) => {
-
   // 1. CSRF protection: ensure request is from allowed origin
   if (!verifyClientOrigin()) {
     setError('invalid_origin');
@@ -59,19 +61,9 @@ export const handleLogin = async ({
 
     const data = await res.json();
 
-    // Mapping error code / alert for i18n
-    const errorMap: Record<string, string> = {
-      invalid_credentials: 'login_page.error_alert.invalid_credentials',
-      missing_credentials: 'login_page.error_alert.missing_credentials',
-      too_many_req: 'login_page.error_alert.too_many_req',
-      login_failed: 'login_page.error_alert.login_failed',
-      unknown_err: 'login_page.error_alert.unknown_err',
-      not_allowed_origin: 'invalid_origin',
-    };
-
     if (!res.ok) {
       const translatedKey =
-        errorMap[data.error] || 'reg_page.error_alert.unexpected';
+        loginPageErrorMap[data.error] || 'reg_page.error_alert.unexpected';
       setError(translatedKey);
       return;
     }
@@ -86,8 +78,7 @@ export const handleLogin = async ({
     );
 
     // 4. Success → redirect to home (or custom callback)
-     navigation(); 
-
+    navigation();
   } catch (err) {
     setError('login_page.error_alert');
   } finally {

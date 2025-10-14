@@ -41,7 +41,6 @@ const sxStyles = {
 
 // ---------- Component
 export default function RegisterFormWrapper() {
-  const { t } = useTranslation();
 
   return (
     <PublicOnlyRoute>
@@ -72,7 +71,7 @@ export default function RegisterFormWrapper() {
 function RegisterForm() {
   const { t } = useTranslation();
   const router = useRouter(); // next.js navigation
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
   // Local form state
   const [form, setForm] = useState({
