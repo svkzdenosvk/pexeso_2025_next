@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
 
 /**
- * Handles user logout via GET request.
+ * Logout API Route
  *
- * Workflow:
- * 1. Deletes the "token" cookie by setting it to an empty value and an expired date
- * 2. Returns JSON response { success: true }
+ * Clears both access and refresh token cookies.
  *
  * @method GET
- * @returns JSON response and clears auth cookie
+ * @returns JSON { success: true } and clears auth cookies
  */
 
 // export async function POST(req: Request): Promise<NextResponse> { //maybe try this for TS
@@ -20,18 +18,22 @@ export async function GET(req: Request) {
   // ---------- 1. Create response object
   const response = NextResponse.json({ success: true });
 
-  /** ---------- 2. Clear authentication cookie ("token")
-   * Cookie is removed by:
-   * - Setting empty value
-   * - Setting expiration date in the past
-   */
-  response.cookies.set('token', '', {
-    httpOnly: true, // Prevent JS access to cookie (security best practice)
-    // secure: process.env.NODE_ENV !== 'development', //this working on deploy and localhost
-    secure: true, 
-    sameSite: 'lax', 
-    path: '/', // Applies for entire domain
-    expires: new Date(0), // Expire immediately
+  // ----------  Clear Access Token
+  response.cookies.set('shortTerm_token', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    expires: new Date(0), // expire immediately
+  });
+
+  // ----------  Clear Refresh Token
+  response.cookies.set('longTerm_token', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    expires: new Date(0), // expire immediately
   });
 
   // ---------- 3. Return the response with cookie cleared

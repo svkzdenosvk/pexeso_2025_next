@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@pexeso/lib/prisma/prisma';
 import { My_Type_Login } from '@pexeso/_inc/my_types';
-import { signToken } from '@pexeso/lib/jwt/jwt_helper';
+import { signShortToken, signLongToken } from '@pexeso/lib/jwt/jwt_helper';
 import { verifyApiOrigin } from '@pexeso/_inc/functions/originValidation';
 import bcrypt from 'bcrypt';
 
@@ -64,7 +64,9 @@ export async function POST(req: Request) {
     }
 
     // ---------- 6. Generate JWT token
-    const token = signToken(user.id, user.email);
+    const shortToken = signShortToken(user.id, user.email); 
+    const longToken = signLongToken(user.id);             
+    // const token = signToken(user.id, user.email);
 
     // ---------- 7. Construct JSON response with user data
     const response = NextResponse.json({
@@ -76,15 +78,25 @@ export async function POST(req: Request) {
     });
    
     // ---------- 8. Setup cookies with token for authentication
-    response.cookies.set('token', token, {
+    
+    // ---------- Short term access token cookie
+    response.cookies.set('shortTerm_token', shortToken, {
       httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
-       // secure: process.env.NODE_ENV !== 'development', or secure:false for localhost version
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 1 day (in seconds)
+      maxAge: 60 * 15, // 15 minutes (in seconds)
       sameSite: 'lax',
     });
 
+    // ---------- Long term refresh token cookie
+    response.cookies.set('longTerm_token', longToken, {
+      httpOnly: true, // Cookie is not accessible via JS
+      path: '/', // Applies to entire site
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 7, // 7 days (in seconds)
+      sameSite: 'lax',
+    });
+ 
     return response;
   } catch (err: any) {
     // console.error('Login error:', err);
