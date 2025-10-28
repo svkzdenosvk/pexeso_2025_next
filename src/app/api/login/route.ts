@@ -13,17 +13,19 @@ import bcrypt from 'bcrypt';
  * 2. Parse and validate login credentials
  * 3. Find user in PostgreSQL via Prisma
  * 4. Compare password hash with bcrypt
- * 5. Generate JWT token
+ * 5. Generates short-term and long-term JWT tokens.
  * 6. Set token in secure HTTP-only cookie
- * 7. Return user data in response
+ * 7. Return user data in JSON response
  *
  * @method POST
- * @returns JSON with user data + authentication cookie
+ * @returns {NextResponse} JSON response with user data and authentication cookies
  */
 
 // POST login handler
 export async function POST(req: Request) {
-  // ---------- 1. Validate origin (basic anti-CSRF)
+  console.log('DB URL', process.env.DATABASE_URL);
+
+  // ---------- 1. Validate request origin (basic anti-CSRF / CORS check)
   const origin = req.headers.get('origin');
 
   if (!verifyApiOrigin(origin)) {
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    // ---------- 4. Find user in database
+    // ---------- 4. Find user in PostgreSQL via Prisma
     const user = await prisma.users.findUnique({
       where: { email },
     });
@@ -63,9 +65,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // ---------- 6. Generate JWT token
-    const shortToken = signShortToken(user.id, user.email); 
-    const longToken = signLongToken(user.id);             
+    // ---------- 6. Generate short-term and long-term JWT tokens
+    const shortToken = signShortToken(user.id, user.email);
+    const longToken = signLongToken(user.id);
     // const token = signToken(user.id, user.email);
 
     // ---------- 7. Construct JSON response with user data
@@ -76,10 +78,10 @@ export async function POST(req: Request) {
         name: user.name,
       },
     });
-   
-    // ---------- 8. Setup cookies with token for authentication
-    
-    // ---------- Short term access token cookie
+
+    // ---------- 8. Set authentication cookies (Access & Refresh tokens)
+
+    // ---------- Short term access token cookie (expires in 15 minutes)
     response.cookies.set('shortTerm_token', shortToken, {
       httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
@@ -88,7 +90,7 @@ export async function POST(req: Request) {
       sameSite: 'lax',
     });
 
-    // ---------- Long term refresh token cookie
+    // ---------- Long term refresh token cookie (expires in 7 days)
     response.cookies.set('longTerm_token', longToken, {
       httpOnly: true, // Cookie is not accessible via JS
       path: '/', // Applies to entire site
@@ -96,10 +98,12 @@ export async function POST(req: Request) {
       maxAge: 60 * 60 * 24 * 7, // 7 days (in seconds)
       sameSite: 'lax',
     });
- 
+
     return response;
+
+    // ---------- Error handling section
   } catch (err: any) {
-    // console.error('Login error:', err);
+    console.error('Login error:', err);
 
     // ---------- 9. Network or fetch-related error
     if (err instanceof TypeError && err.message.includes('fetch')) {

@@ -1,46 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@pexeso/lib/prisma/prisma';
-import { verifyShortToken, verifyLongToken, signShortToken } from '@pexeso/lib/jwt/jwt_helper';
+import {
+  verifyShortToken,
+  verifyLongToken,
+  signShortToken,
+} from '@pexeso/lib/jwt/jwt_helper';
+import { cookies } from 'next/headers';
 
 /**
- * Auth Check API Route Handler (JWT + PostgreSQL + Prisma)
+ * Auth Check API Route Handler (JWT + Cookies + Prisma)
  *
  * Purpose:
- * - Verifies whether a user is currently logged in based on JWT token in cookies.
+ * - Verifies whether a user is currently logged in based on JWT tokens stored in cookies.
+ * - Automatically refreshes the short-term token if the long-term token is still valid.
  *
  * Flow:
- * 1. Extract token from cookies
- * 2. Validate and decode JWT token
- * 3. Verify that the decoded user still exists in the database
- * 4. Return user's login state and basic info
+ * 1. Try to verify the short-term token.
+ * 2. If invalid or expired, verify the long-term token instead.
+ * 3. If the long-term token is valid, issue a new short-term token.
+ * 4. Return the user's login state and basic profile data.
  *
  * @method GET
  * @returns JSON response:
  * {
  *   isLoggedIn: boolean,
- *   uid?: number,
+ *   id?: number,
  *   email?: string,
  *   name?: string
  * }
  */
-
-// GET handler -> checking if user is logged in from cookies
 export async function GET(req: NextRequest) {
-  // NOTE: Validation request origin (basic CORS protection) with verifyApiOrigin() not working correctly -> it triggers error
+  const cookieStore = await cookies();
+  const shortToken = cookieStore.get('shortTerm_token')?.value;
+  const longToken = cookieStore.get('longTerm_token')?.value;
 
-  // ---------- 1. Extract JWT token from cookies
-    // 1️⃣ Skús short-term token (access)
-
-  const shortToken  = req.cookies.get('shortTerm_token')?.value;
-
-  // if token present  -> user is not logged in
-  // if (!shortToken) {
-  //   return NextResponse.json({ isLoggedIn: false }, { status: 401 });
-  // }
+  // ---------- 1 Validate short-term token first
   if (shortToken) {
-    const decoded = verifyShortToken(shortToken);
-    if (decoded?.id) {
-      const user = await prisma.users.findUnique({ where: { id: decoded.id } });
+    const decodedShort = verifyShortToken(shortToken);
+    if (decodedShort?.id) {
+      const user = await prisma.users.findUnique({
+        where: { id: decodedShort.id },
+      });
+
       if (user) {
         return NextResponse.json({
           isLoggedIn: true,
@@ -52,42 +53,25 @@ export async function GET(req: NextRequest) {
     }
   }
 
-    // 2️⃣ Ak short-term token nie je platný → skús long-term (refresh)
-
- const longToken = req.cookies.get('longTerm_token')?.value;
+  // ---------- 2. Short-term token invalid or missing → check long-term (refresh) token
   if (!longToken) {
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }
-  // ---------- 2. Validate and decode token payload
-    const decodedLongToken = verifyLongToken(longToken);
-  if (!decodedLongToken?.id) {
+
+  const decodedLong = verifyLongToken(longToken);
+  if (!decodedLong?.id) {
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }
 
-   // 3️⃣ Skontroluj, či refresh token ešte existuje a neexpiroval
-  const stored = await prisma.longTermToken.findUnique({
-    where: { token: longToken },
-  });
+  // ---------- 3. Verify that the user still exists in the database (via Prisma)
 
-  if (!stored || stored.expiresAt < new Date()) {
-    return NextResponse.json({ isLoggedIn: false }, { status: 401 });
-  }
-
-  // try {
-    // Defensive check — ensure decoded token contains valid user ID
-    // if (!decoded.id || isNaN(decoded.id)) {
-    //   throw new Error('Invalid token');
-    // }
-
- // 4️⃣ Nájdeme používateľa podľa decoded.id
-  const user = await prisma.users.findUnique({ where: { id: decodedLongToken.id } });
-     // If user no longer exists (deleted, etc.)
+  const user = await prisma.users.findUnique({ where: { id: decodedLong.id } });
 
   if (!user) {
     return NextResponse.json({ isLoggedIn: false }, { status: 401 });
   }
-    
-// 5️⃣ Vygenerujeme nový short-term token
+
+  // ---------- 4 Issue a new short-term token (refresh session)
   const newShortToken = signShortToken(user.id, user.email);
 
   const response = NextResponse.json({
@@ -97,19 +81,13 @@ export async function GET(req: NextRequest) {
     name: user.name,
   });
 
-      // 6️⃣ Uložíme nový short-term token do cookies
   response.cookies.set('shortTerm_token', newShortToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-    maxAge: 15 * 60, // 15 minút
+    maxAge: 15 * 60, // 15 minutes (in seconds)
   });
-  // } catch (err) {
-  //   // ---------- 5. Catch token verification or DB lookup errors
-  //   console.error('Auth check error:', err);
-  //   return NextResponse.json({ isLoggedIn: false }, { status: 401 });
-  // }
-    return response;
 
+  return response;
 }

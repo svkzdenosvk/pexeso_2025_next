@@ -1,62 +1,55 @@
-// hooks/useAuthCheck.ts
 'use client';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { usePathname } from 'next/navigation';
-import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
+import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
+import { usePathname } from 'next/navigation';
 
 /**
  * useAuthCheck Hook
  *
- * Verifies user authentication on app initialization.
- * Replaces Firebase `onAuthStateChanged` with a custom API + cookie based check.
+ * Purpose:
+ * - Validates user authentication status on app initialization or route change.
+ * - Calls `/api/auth/me` to verify or refresh JWT tokens (short/long term).
+ * - Updates the Redux store based on authentication state.
  *
- * @hook
- * @returns void (side effects only)
- *
- * @dependencies
- * - Redux (dispatch for `setUser`, `clearUser`)
- * - Custom utils (`verifyClientOrigin`)
- * - API endpoint `/api/auth/me`
- *
- * @remarks
- * - Rejects requests from unverified client origins.
- * - Clears user if no token is found or API validation fails.
- * - On success, stores authenticated user info in Redux.
+ * Workflow:
+ * 1. Verify client origin (basic front-end CORS protection).
+ * 2. Fetch `/api/auth/me` to validate session via cookies.
+ * 3. If valid, store user data in Redux; otherwise, clear the user state.
+ * 4. Runs automatically on route change or first load.
  */
+
 export const useAuthCheck = () => {
   const dispatch = useDispatch<AppDispatch>();
   const pathname = usePathname();
 
   useEffect(() => {
-
     const checkLogin = async () => {
       try {
-
-        // Protect against unknown client origins
+        // ---------- 1. Protect against unverified client origins
         if (!verifyClientOrigin()) {
-          console.error('Invalid origin detected');
           dispatch(clearUser());
           return;
         }
 
-        // Validate session with backend
+        // ---------- 2. Validate current session with backend API
         const res = await fetch('/api/auth/me', {
           method: 'GET',
           credentials: 'include', // Send cookies with request
         });
 
+        // ---------- 3. Handle invalid or expired session
         if (!res.ok) {
-          console.warn('API auth check failed, status:', res.status);
-          throw new Error('Not logged in');
+          dispatch(clearUser());
+          return;
         }
 
         const data = await res.json();
 
-        // If user is authenticated, store their data in Redux
+        // ---------- 4. Update Redux store with authenticated user
         if (data?.isLoggedIn) {
           dispatch(
             setUser({
@@ -65,19 +58,17 @@ export const useAuthCheck = () => {
               email: data.email,
             })
           );
-
         } else {
-
-          // API responded but no valid session
           dispatch(clearUser());
         }
       } catch (err) {
-        console.error('Auth check failed:', err);
+        
+        // ---------- 5. Handle unexpected errors (network or runtime)
+        // console.error('Auth check failed:', err);
         dispatch(clearUser());
       }
     };
 
-    // Run check once on mount
-    checkLogin(); 
+    checkLogin();
   }, [dispatch, pathname]);
 };

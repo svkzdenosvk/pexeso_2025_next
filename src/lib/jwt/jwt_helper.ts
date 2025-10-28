@@ -30,12 +30,8 @@ const JWT_LONG_EXPIRES_IN : MsString = process.env.JWT_LONG_EXPIRES_IN as MsStri
 export function signShortToken(id: number, email: string): string {
   const payload: My_Type_Unique_User = { id, email };
   
-  // const options: SignOptions = {
-  //   expiresIn: JWT_SHORT_EXPIRES_IN //as unknown as string | number,
-  // };
    return jwt.sign(payload, JWT_SHORT_SECRET,{expiresIn: JWT_SHORT_EXPIRES_IN});
 
-  // return jwt.sign(payload, JWT_SHORT_SECRET,options);
 }
 
 /** Create long-lived refresh token */
