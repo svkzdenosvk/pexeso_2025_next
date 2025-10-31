@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../generated/prisma";
+import { PrismaClient } from '../../../generated/prisma';
 
 /**
  * Prisma Client Initialization
@@ -24,8 +24,9 @@ declare global {
 export const prisma =
   global.prisma ||
   new PrismaClient({
-    log: ['query'], // Log all queries in terminal (useful during development)
+    //  log: ['query'], // Log all queries in terminal (useful during development)
+    //  log: process.env.NODE_ENV === 'development' ? ['warn','error'] : [],
   });
 
-  // Prevent multiple client instances in dev environment
+// Prevent multiple client instances in dev environment
 if (process.env.NODE_ENV !== 'production') global.prisma = prisma;

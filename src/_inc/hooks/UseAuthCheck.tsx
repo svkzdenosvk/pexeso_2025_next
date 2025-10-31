@@ -6,6 +6,7 @@ import { setUser, clearUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import type { AppDispatch } from '@pexeso/lib/redux/store/store';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import { usePathname } from 'next/navigation';
+import { isLike_My_Type_User } from '@pexeso/_inc/functions/general';
 
 /**
  * useAuthCheck Hook
@@ -20,6 +21,7 @@ import { usePathname } from 'next/navigation';
  * 2. Fetch `/api/auth/me` to validate session via cookies.
  * 3. If valid, store user data in Redux; otherwise, clear the user state.
  * 4. Runs automatically on route change or first load.
+ * 5. Handle unexpected errors (e.g., network issues) by clearing user state.
  */
 
 export const useAuthCheck = () => {
@@ -49,20 +51,18 @@ export const useAuthCheck = () => {
 
         const data = await res.json();
 
+        // validation if user from api is right format
+        if (!isLike_My_Type_User(data.user)) {
+          dispatch(clearUser());
+          return;
+        }
         // ---------- 4. Update Redux store with authenticated user
         if (data?.isLoggedIn) {
-          dispatch(
-            setUser({
-              id: data.id,
-              name: data.name,
-              email: data.email,
-            })
-          );
+          dispatch(setUser(data.user));
         } else {
           dispatch(clearUser());
         }
       } catch (err) {
-        
         // ---------- 5. Handle unexpected errors (network or runtime)
         // console.error('Auth check failed:', err);
         dispatch(clearUser());

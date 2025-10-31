@@ -10,7 +10,6 @@
  * Contents:
  *   - _shuffleUnMatchedCards() → Shuffles only unmatched (face-down) cards.
  *   - createCardsArray()       → Generates the complete set of cards for a game round.
- *   - showImg()                → Reveals a card based on game rules.
  *   - preloadImages()          → Preloads all game images for smooth gameplay.
  *
  * Usage:
@@ -25,27 +24,31 @@ import type {
   My_Type_ImgCount,
 } from '../my_types';
 import { _shuffleArray } from './general';
-import { showOne } from '@pexeso/lib/redux/store/reducers/gameSlice';
-import type { AppDispatch } from '@pexeso/lib/redux/store/store';
 
 const uuid = require('uuid');
 
 /**
  * Shuffles only the unmatched (face-down) cards in the current game state.
  *
+ * Workflow:
+ * 1. Extract all cards that are still face-down (class 'mask').
+ * 2. Shuffle only these cards while keeping matched cards in place.
+ * 3. Reinsert shuffled cards back into their original positions.
+ *
  * @param afterUnMatchArr - The full array of card objects.
  * @returns A new array where only cards with the "mask" class are shuffled.
  */
+
 export function _shuffleUnMatchedCards(afterUnMatchArr: My_Type_Card_Obj[]) {
-  // Filter out cards that are still face-down (class 'mask')
+  // ---------- 1. Filter out cards that are still face-down (class 'mask')
   const maskCards = afterUnMatchArr.filter((div) =>
     div.classNames.includes('mask')
   );
 
-  // Shuffle the face-down cards
+  // ---------- 2. Shuffle the face-down cards
   const shuffled = _shuffleArray(maskCards);
 
-  // Replace original face-down cards with their shuffled counterparts
+  // ---------- 3. Replace original face-down cards with their shuffled counterparts
   let shuffledIndex = 0;
   afterUnMatchArr = afterUnMatchArr.map((div) => {
     if (div.classNames.includes('mask')) {
@@ -63,7 +66,7 @@ export function _shuffleUnMatchedCards(afterUnMatchArr: My_Type_Card_Obj[]) {
 /**
  * Creates an array of card objects for the Pexeso game.
  *
- * Steps:
+ * Workflow:
  * 1. Randomizes the received image names.
  * 2. Selects the desired number of images based on the game settings.
  * 3. Duplicates the images to create pairs.
@@ -115,6 +118,12 @@ export function createCardsArray(
 /**
  * Preloads all required images before the game starts to ensure smooth gameplay.
  *
+ * Workflow:
+ * 1. Create a new Image() element for each image name.
+ * 2. Set the correct file path and begin loading.
+ * 3. Wait for the image to load and decode before resolving.
+ * 4. Reject the Promise if decoding or loading fails.
+ *
  * @param imgNamesArr - Array of image names (without file extension).
  * @returns A Promise that resolves when all images are successfully loaded and decoded.
  */
@@ -144,6 +153,4 @@ export function preloadImages(imgNamesArr: My_Type_Img_Name[]) {
   );
 }
 
-/* ========================================================================
- * 3) ORIGIN VALIDATION – Security checks for allowed origins
- * ======================================================================*/
+

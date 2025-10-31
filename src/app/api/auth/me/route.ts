@@ -6,6 +6,7 @@ import {
   signShortToken,
 } from '@pexeso/lib/jwt/jwt_helper';
 import { cookies } from 'next/headers';
+import { isLike_My_Type_User } from '@pexeso/_inc/functions/general';
 
 /**
  * Auth Check API Route Handler (JWT + Cookies + Prisma)
@@ -23,10 +24,11 @@ import { cookies } from 'next/headers';
  * @method GET
  * @returns JSON response:
  * {
- *   isLoggedIn: boolean,
- *   id?: number,
- *   email?: string,
- *   name?: string
+ *    user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
  * }
  */
 export async function GET(req: NextRequest) {
@@ -41,13 +43,20 @@ export async function GET(req: NextRequest) {
       const user = await prisma.users.findUnique({
         where: { id: decodedShort.id },
       });
-
+       
+      // If user from prisma has not email & name & id like my_type_user type -> negative response
+       if (!isLike_My_Type_User(user)) {
+    return NextResponse.json({ isLoggedIn: false }, { status: 401 });
+  }
+  
       if (user) {
         return NextResponse.json({
           isLoggedIn: true,
-          id: user.id,
-          email: user.email,
-          name: user.name,
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          },
         });
       }
     }
@@ -76,9 +85,11 @@ export async function GET(req: NextRequest) {
 
   const response = NextResponse.json({
     isLoggedIn: true,
-    id: user.id,
-    email: user.email,
-    name: user.name,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
   });
 
   response.cookies.set('shortTerm_token', newShortToken, {

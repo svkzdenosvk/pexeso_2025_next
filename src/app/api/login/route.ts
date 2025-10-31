@@ -68,7 +68,6 @@ export async function POST(req: Request) {
     // ---------- 6. Generate short-term and long-term JWT tokens
     const shortToken = signShortToken(user.id, user.email);
     const longToken = signLongToken(user.id);
-    // const token = signToken(user.id, user.email);
 
     // ---------- 7. Construct JSON response with user data
     const response = NextResponse.json({
@@ -103,7 +102,7 @@ export async function POST(req: Request) {
 
     // ---------- Error handling section
   } catch (err: any) {
-    console.error('Login error:', err);
+    // console.error('Login error:', err);
 
     // ---------- 9. Network or fetch-related error
     if (err instanceof TypeError && err.message.includes('fetch')) {

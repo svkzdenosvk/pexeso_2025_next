@@ -14,21 +14,25 @@
  *   - _myToggle()                 → Toggles CSS classes on a DOM element.
  *   - my_Type_Guard_function()    → Type guard for narrowing strings to literal types.
  *   - my_Type_Guard_function_number() → Type guard for narrowing numbers to literal types.
- * 
+     - isMy_Type_User() -> Type guard validate object type My_Type_User
+ *   
  * Usage:
  *   - Import only what is needed in each module.
  *   - Designed to work in both browser and Node.js environments.
  * 
  */
 
-const uuid = require('uuid');
 
 /**
  * Randomly shuffles the elements of an array using the Fisher–Yates algorithm.
  *
+ * Workflow:
+ * 1. Create a shallow copy of the input array to avoid mutation.
+ * 2. Iterate backward through the array.
+ * 3. Swap each element with a randomly selected earlier element.
+ *
  * @param arrayIn - The input array to shuffle.
  * @returns A new array with the elements in randomized order.
- *
  */
 
 export function _shuffleArray(arrayIn: any[]) {
@@ -51,9 +55,12 @@ export function _shuffleArray(arrayIn: any[]) {
 /**
  * Formats a duration (in seconds) into a human-readable string.
  *
+ * Handles zero-minute cases gracefully (e.g. "45s" instead of "0m 45s").
+ *
  * @param seconds - The total number of seconds.
  * @returns A string in the format "Xm Ys" or "Ys" if minutes are zero.
  */
+
 
 export function _myFormatSeconds(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
@@ -114,4 +121,16 @@ export function my_Type_Guard_function_number<My_Type extends number>(
   arr: readonly My_Type[]
 ): value is My_Type {
   return arr.includes(value as My_Type);
+}
+
+/*-------------------------------------------------------------------------- */
+import type { My_Type_User } from '@pexeso/_inc/my_types';
+
+export function isLike_My_Type_User(obj: any): obj is My_Type_User {
+  return (
+    obj &&
+    typeof obj.id === 'number' &&
+    typeof obj.email === 'string' &&
+    typeof obj.name === 'string'
+  );
 }

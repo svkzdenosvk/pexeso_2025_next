@@ -10,6 +10,7 @@
 import { setUser } from '@pexeso/lib/redux/store/reducers/authSlice';
 import { verifyClientOrigin } from '@pexeso/_inc/functions/originValidation';
 import type { My_Type_LoginParams } from '@pexeso/_inc/my_types';
+import { isLike_My_Type_User } from '@pexeso/_inc/functions/general';
 
 // Mapping error code / alert for i18n
 import { loginPageErrorMap } from '@pexeso/_inc/constants';
@@ -60,7 +61,6 @@ export const handleLogin = async ({
     });
 
     const data = await res.json();
-
     if (!res.ok) {
       const translatedKey =
         loginPageErrorMap[data.error] || 'reg_page.error_alert.unexpected';
@@ -68,18 +68,19 @@ export const handleLogin = async ({
       return;
     }
 
+    // If user from api is not type my_type_user type -> set unexpected error
+    if (!isLike_My_Type_User (data.user)){
+      setError('reg_page.error_alert.unexpected');
+      return;
+    }
+
     // 3. Save authenticated user to Redux
     dispatch(
-      setUser({
-        id: data.user.id,
-        name: data?.name ?? '',
-        email: data.user.email ?? '',
-      })
+      setUser(data.user)
     );
 
     // 4. Success → redirect to home (or custom callback)
     navigation();
-    // window.location.reload()
   } catch (err) {
     setError('login_page.error_alert');
   } finally {
